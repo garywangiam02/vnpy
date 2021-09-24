@@ -31,3 +31,9 @@ dist
 _build
 _static
 _templates
+
+# gary
+extra
+.vscode
+.DS_Store
+.python-version
