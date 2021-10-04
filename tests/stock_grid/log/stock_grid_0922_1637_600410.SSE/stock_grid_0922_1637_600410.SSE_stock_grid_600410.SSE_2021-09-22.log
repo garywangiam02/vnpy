@@ -1,0 +1,42 @@
+ERROR  [初始化] stock_grid_600410.SSE 加载历史数据失败：
+ name 'DataSource' is not defined
+Traceback (most recent call last):
+  File "D:\vnpy-vnpy2_20210907\vnpy\app\cta_stock\strategies\strategy_stock_grid_trade_v3.py", line 189, in init_kline_data
+    ds = DataSource()
+NameError: name 'DataSource' is not defined
+
+ERROR  [初始化] stock_grid_600410.SSE 加载历史数据失败：
+ name 'DataSource' is not defined
+Traceback (most recent call last):
+  File "D:\vnpy-vnpy2_20210907\vnpy\app\cta_stock\strategies\strategy_stock_grid_trade_v2.py", line 232, in init_kline_data
+    ds = DataSource()
+NameError: name 'DataSource' is not defined
+
+ERROR  [初始化] stock_grid_600410.SSE 加载历史数据失败：
+ name 'DataSource' is not defined
+Traceback (most recent call last):
+  File "D:\vnpy-vnpy2_20210907\vnpy\app\cta_stock\strategies\strategy_stock_grid_trade_v2.py", line 232, in init_kline_data
+    ds = DataSource()
+NameError: name 'DataSource' is not defined
+
+ERROR  [初始化] stock_grid_600410.SSE 加载历史数据失败：
+ name 'DataSource' is not defined
+Traceback (most recent call last):
+  File "D:\vnpy-vnpy2_20210907\vnpy\app\cta_stock\strategies\strategy_stock_grid_trade_v2.py", line 232, in init_kline_data
+    ds = DataSource()
+NameError: name 'DataSource' is not defined
+
+ERROR  [初始化] stock_grid_600410.SSE 加载历史数据失败：
+ name 'DataSource' is not defined
+Traceback (most recent call last):
+  File "D:\vnpy-vnpy2_20210907\vnpy\app\cta_stock\strategies\strategy_stock_grid_trade_v2.py", line 232, in init_kline_data
+    ds = DataSource()
+NameError: name 'DataSource' is not defined
+
+ERROR  [初始化] stock_grid_600410.SSE 加载历史数据失败：
+ name 'DataSource' is not defined
+Traceback (most recent call last):
+  File "D:\vnpy-vnpy2_20210907\vnpy\app\cta_stock\strategies\strategy_stock_grid_trade_v2.py", line 232, in init_kline_data
+    ds = DataSource()
+NameError: name 'DataSource' is not defined
+

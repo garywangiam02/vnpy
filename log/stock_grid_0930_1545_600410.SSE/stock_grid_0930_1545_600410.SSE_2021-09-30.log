@@ -1,0 +1,594 @@
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  加载策略模块失败:StrategyStockGridTradeV3
+ERROR  加载策略模块失败:StrategyStockGridTradeV3
+ERROR  加载策略模块失败:StrategyStockGridTradeV3
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  加载策略模块失败:StrategyStockGridTradeV2
+ERROR  加载策略模块失败:StrategyStockGridTradeV2
+ERROR  加载策略模块失败:StrategyStockGridTradeV2
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  加载策略模块失败:StrategyStockGridTradeV2
+ERROR  加载策略模块失败:StrategyStockGridTradeV2
+ERROR  加载策略模块失败:StrategyStockGridTradeV2
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  加载策略模块失败:StrategyStockGridTradeV3
+ERROR  加载策略模块失败:StrategyStockGridTradeV3
+ERROR  加载策略模块失败:StrategyStockGridTradeV3
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  加载策略模块失败:StrategyStockGridTradeV2
+ERROR  加载策略模块失败:StrategyStockGridTradeV2
+ERROR  加载策略模块失败:StrategyStockGridTradeV2
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v2加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v2.py", line 31, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  策略文件vnpy.app.cta_stock.strategies.strategy_stock_grid_trade_v3加载失败，触发异常：
+Traceback (most recent call last):
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/back_testing.py", line 685, in load_strategy_class_from_module
+    module = importlib.import_module(module_name)
+  File "/Users/gary/opt/anaconda3/envs/vnpy2/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 728, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/gary/workspace/quant/vnpy/vnpy/app/cta_stock/strategies/strategy_stock_grid_trade_v3.py", line 32, in <module>
+    from vnpy.data.huafu.data_source import DataSource
+ModuleNotFoundError: No module named 'vnpy.data.huafu'
+
+ERROR  加载策略模块失败:StrategyStockGridTradeV2
+ERROR  加载策略模块失败:StrategyStockGridTradeV2
+ERROR  加载策略模块失败:StrategyStockGridTradeV2

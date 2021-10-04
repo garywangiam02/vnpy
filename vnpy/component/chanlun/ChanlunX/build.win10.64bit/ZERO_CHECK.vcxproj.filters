@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\GitHub\msincenselee_vnpy\vnpy\component\chanlun\ChanlunX\build.win10.64bit\CMakeFiles\93817b0588df9eee38debe8f353810ff\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{DA38EA22-C86A-3C6F-B08D-71C853EEBBEA}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

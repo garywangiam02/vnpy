@@ -1,0 +1,7 @@
+set(BUILD_USE_64BITS on)
+cmake_minimum_required(VERSION 3.5)
+project (ChanlunX)
+set (ChanlunX_VERSION_MAJOR 1)
+set (ChanlunX_VERSION_MINOR 0)
+aux_source_directory(. SRCS)
+add_library(ChanlunX SHARED ${SRCS})
