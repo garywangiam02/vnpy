@@ -1492,4 +1492,3 @@ class CtaStockTemplate(CtaTemplate):
         if self.backtesting:
             return
         self.cta_engine.send_wechat(msg=msg, strategy=self)
-
