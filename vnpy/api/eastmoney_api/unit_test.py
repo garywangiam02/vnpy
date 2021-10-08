@@ -14,8 +14,8 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
 
     debug = False
-    username = "310900002120"
-    password = "381820"
+    username = "xxx"
+    password = "xxx"
     if debug:
         backend = EastMoneyBackend(browser_url=None, debug=True)
     else:
