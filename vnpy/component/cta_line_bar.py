@@ -6972,7 +6972,7 @@ class CtaMinuteBar(CtaLineBar):
         if bar_is_completed:
             is_new_bar = True
 
-        if self.cur_trading_day != bar.trading_day:
+        if self.cur_trading_day > bar.trading_day:
             is_new_bar = True
 
         minutes_passed = bar.datetime.hour * 60 + bar.datetime.minute
@@ -6992,7 +6992,7 @@ class CtaMinuteBar(CtaLineBar):
         bars_passed = int(minutes_passed / self.bar_interval)
 
         # 不在同一交易日，推入新bar
-        if self.cur_trading_day != bar.trading_day:
+        if self.cur_trading_day > bar.trading_day:
             is_new_bar = True
             self.cur_trading_day = bar.trading_day
             self.bars_count = bars_passed
