@@ -25,7 +25,7 @@ from vnpy.data.stock.stock_base import update_stock_base, get_stock_base
 bar_data_folder = os.path.abspath(os.path.join(vnpy_root, 'bar_data'))
 
 # 开始日期（每年大概需要几分钟）
-start_date = '20060101'
+start_date = '20210101'
 
 if __name__ == "__main__":
 

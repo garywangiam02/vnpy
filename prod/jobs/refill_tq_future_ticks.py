@@ -28,8 +28,8 @@ if __name__ == "__main__":
         print('请使用 --help 查看说明')
     # 参数分析
     parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--symbol', type=str, default='', help='下载合约，格式： rb2010 或者 SHFE.rb2010')
-    parser.add_argument('-b', '--begin', type=str, default='20160101', help='开始日期，格式：20160101')
+    parser.add_argument('-s', '--symbol', type=str, default='ag2112', help='下载合约，格式： rb2010 或者 SHFE.rb2010')
+    parser.add_argument('-b', '--begin', type=str, default='20210505', help='开始日期，格式：20160101')
     parser.add_argument('-e', '--end', type=str, default=datetime.now().strftime('%Y%m%d'),
                         help='结束日期,格式:{}'.format(datetime.now().strftime('%Y%m%d')))
     args = parser.parse_args()

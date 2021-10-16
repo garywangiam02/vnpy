@@ -32,7 +32,7 @@ from vnpy.trader.util_wechat import send_wx_msg
 bar_data_folder = os.path.abspath(os.path.join(vnpy_root, 'bar_data'))
 
 # 开始日期（每年大概需要几分钟）
-start_date = '20160101'
+start_date = '20210101'
 
 # 创建API对象
 api_01 = TdxStockData()
@@ -107,7 +107,7 @@ def refill(symbol_info):
         data_df = data_df.sort_index()
         # print(data_df.head())
         print(data_df.tail())
-        data_df.to_csv(bar_file_path, index=True)
+        data_df.to_csv(bar_file_path, index=True, encoding='utf8')
         d2 = datetime.now()
         microseconds = (d1 - d1).microseconds
         print(f'{progress}% 首次更新{stock_code} {stock_name}数据 {microseconds} 毫秒=> 文件{bar_file_path}')
