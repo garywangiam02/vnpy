@@ -172,7 +172,11 @@ class EastmoneyGateway(BaseGateway):
             # session文件不存在，或者已经失效，需要重新通过账号密码登录
             api = EastMoneyBackend()
             import asyncio
-            loop = asyncio.get_event_loop()
+            try:
+                loop = asyncio.get_event_loop()
+            except:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
             task = api.login(accountid, password, max_retries=50)
             result = loop.run_until_complete(task)
             if not result:

@@ -10,7 +10,9 @@ http://wxpusher.zjiecode.com/
 '''
 
 from threading import Lock, Thread
+import time
 import requests
+import json
 import sys
 import traceback
 from datetime import datetime
@@ -27,49 +29,130 @@ APP_TOKEN = 'AT_aDuiQu41dmAQV2vUMXOaaTDrWyhKJN2x'
 
 
 class wechat_thread(Thread):
-    """
-    采用线程方式，不阻塞
-    """
-
-    def __init__(self, uids: list, content: str, topic_ids: list = [], url: str = '', app_token=''):
-
-        # text：消息标题，最长为256，必填。
-        # desp：消息内容，最长64Kb，可空，支持MarkDown。
-
+    def __init__(self, content):
         super(wechat_thread, self).__init__(name="wechat_thread")
-        self.request_url = "http://wxpusher.zjiecode.com/api/send/message"
-        self.uids = uids
-        self.content = content
-        self.topic_ids = topic_ids
-        self.url = url
+        self.CORPID = 'ww7006a98ef46c2b44'
+        self.CORPSECRET = 'CqvRT9iu3LwRSOqa9vhF8GETLylunZZjeU_5u_0gWNo'
+        self.AGENTID = '1000002'
+        self.TOUSER = "WangYang"  # 接收者用户名
         self.lock = wechat_lock
-        self.app_token = app_token if app_token is not None and len(app_token) > 0 else APP_TOKEN
+        self.message = content
+
+    def _get_access_token(self):
+        url = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken'
+        values = {'corpid': self.CORPID,
+                  'corpsecret': self.CORPSECRET,
+                  }
+        req = requests.post(url, params=values)
+        data = json.loads(req.text)
+        return data["access_token"]
+
+    def get_access_token(self):
+        try:
+            with open('./access_token.conf', 'r') as f:
+                t, access_token = f.read().split()
+        except:
+            with open('./access_token.conf', 'w') as f:
+                access_token = self._get_access_token()
+                cur_time = time.time()
+                f.write('\t'.join([str(cur_time), access_token]))
+                return access_token
+        else:
+            cur_time = time.time()
+            if 0 < cur_time - float(t) < 7260:
+                return access_token
+            else:
+                with open('./access_token.conf', 'w') as f:
+                    access_token = self._get_access_token()
+                    f.write('\t'.join([str(cur_time), access_token]))
+                    return access_token
 
     def run(self):
-        if self.content is None or len(self.content) == 0:
-            return
-        params = {}
-        params['appToken'] = self.app_token
-        params['content'] = self.content
-        params['contentType'] = 1
-        params['topicIds'] = self.topic_ids
-        params['uids'] = self.uids
-        params['url'] = self.url
-
-        # 发送请求
-        try:
-            response = requests.post(self.request_url, json=params).json()
-            if not response.get('success', False):
-                print(response)
-        except Exception as e:
-            print("{} 微信发送异常 ex:{},trace:{}".format(datetime.now(), str(e), traceback.format_exc()),
-                  file=sys.stderr)
-            return
-
-        print("wechat_thread sent successful!")
+        send_url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=' + self.get_access_token()
+        send_values = {
+            "touser": self.TOUSER,
+            "msgtype": "text",
+            "agentid": self.AGENTID,
+            "text": {
+                "content": self.message
+            },
+            "safe": "0"
+        }
+        send_msges = (bytes(json.dumps(send_values), 'utf-8'))
+        respone = requests.post(send_url, send_msges)
+        respone = respone.json()  # 当返回的数据是json串的时候直接用.json即可将respone转换成字典
+        return
 
 
 def send_wx_msg(*args, **kwargs):
+    """
+    发送微信Msg
+    :param content:   发送内容
+    :return:
+    """
+    content = kwargs.get('content', None)
+    if content is None:
+        if len(args) == 0:
+            return
+        content = args[0]
+    if len(content) == 0:
+        return
+
+    # dict => str, none str => str
+    if not isinstance(content, str):
+        if isinstance(content, dict):
+            content = '{}'.format(print_dict(content))
+        else:
+            content = str(content)
+
+    t = wechat_thread(content=content)
+    t.daemon = False
+    t.run()
+
+# class wechat_thread(Thread):
+#     """
+#     采用线程方式，不阻塞
+#     """
+
+#     def __init__(self, uids: list, content: str, topic_ids: list = [], url: str = '', app_token=''):
+
+#         # text：消息标题，最长为256，必填。
+#         # desp：消息内容，最长64Kb，可空，支持MarkDown。
+
+#         super(wechat_thread, self).__init__(name="wechat_thread")
+#         self.request_url = "http://wxpusher.zjiecode.com/api/send/message"
+#         self.uids = uids
+#         self.content = content
+#         self.topic_ids = topic_ids
+#         self.url = url
+#         self.lock = wechat_lock
+#         self.app_token = app_token if app_token is not None and len(app_token) > 0 else APP_TOKEN
+
+#     def run(self):
+#         if self.content is None or len(self.content) == 0:
+#             return
+#         params = {}
+#         params['appToken'] = self.app_token
+#         params['content'] = self.content
+#         params['contentType'] = 1
+#         params['topicIds'] = self.topic_ids
+#         params['uids'] = self.uids
+#         params['url'] = self.url
+
+#         # 发送请求
+#         try:
+#             response = requests.post(self.request_url, json=params).json()
+#             if not response.get('success', False):
+#                 print(response)
+#         except Exception as e:
+#             print("{} 微信发送异常 ex:{},trace:{}".format(datetime.now(), str(e), traceback.format_exc()),
+#                   file=sys.stderr)
+#             return
+
+#         print("wechat_thread sent successful!")
+
+
+def send_wx_msg_bak(*args, **kwargs):
     """
     发送微信Msg
     :param content:   发送内容

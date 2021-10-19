@@ -24,8 +24,8 @@ class TestClient(RpcClient):
 
 
 if __name__ == "__main__":
-    req_address = "tcp://localhost:2014"
-    sub_address = "tcp://localhost:4102"
+    req_address = "tcp://127.0.0.1:2014"
+    sub_address = "tcp://127.0.0.1:4102"
 
     tc = TestClient()
     tc.subscribe_topic("")

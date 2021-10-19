@@ -73,6 +73,7 @@ class StrategyStockGridTradeV2(CtaStockTemplate):
         self.cancel_seconds = 3000
 
         self.last_minute = None
+        self.em_stock_data = EastMoneyData(self)
 
         if setting:
             self.update_setting(setting)

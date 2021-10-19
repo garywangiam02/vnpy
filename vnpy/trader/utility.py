@@ -205,9 +205,9 @@ def _get_trader_dir(temp_name: str) -> Tuple[Path, Path]:
     # by incenselee
     # 原方法，当前目录必须自建.vntrader子目录，否则在用户得目录下创建
     # 为兼容多账号管理，取消此方法。
-    return Path.cwd(), Path.cwd()
+    # return Path.cwd(), Path.cwd()
 
-    cwd = Path.cwd()
+    cwd = Path(sys.argv[0]).parent
     temp_path = cwd.joinpath(temp_name)
 
     # If .vntrader folder exists in current working directory,

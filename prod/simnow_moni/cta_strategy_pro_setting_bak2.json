@@ -1,0 +1,50 @@
+{
+    "Future_grid_LONG_ni10_11": {
+        "class_name": "StrategyGridTradeFuture",
+        "vt_symbol": "ni2011-1-ni2012-1-CJ.SPD",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "backtesting": false,
+            "idx_symbol": "ni2011-1-ni2012-1-CJ.SPD",
+            "class_name": "StrategyGridTradeFuture",
+            "max_invest_rate": 0.05,
+            "grid_height_percent": 10,
+            "grid_height_pips": 6,
+            "max_invest_pos": 15,
+            "grid_lots": 15,
+            "fixed_highest_price": 300
+        }
+    },
+    "SPD_v2_NI1201": {
+        "class_name": "Strategy_SpreadGrid_v2",
+        "vt_symbol": "ni2011-1-ni2012-1-CJ.SPD",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "backtesting": false,
+            "class_name": "Strategy_SpreadGrid_v2",
+            "act_vt_symbol": "ni2011.SHFE",
+            "pas_vt_symbol": "ni2012.SHFE",
+            "max_invest_pos": 20,
+            "base_up_line": -100,
+            "base_dn_line": 100,
+            "grid_height_pips": 1,
+            "grid_win_pips": 6,
+            "spd_price_tick": 10,
+            "volume_rate_list": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            "x_minute": 3,
+            "y_minute": 10,
+            "active_mean": true,
+            "active_sar_stop": true
+        }
+    }
+}

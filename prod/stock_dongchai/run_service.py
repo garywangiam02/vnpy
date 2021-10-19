@@ -13,6 +13,7 @@ if ROOT_PATH not in sys.path:
     sys.path.append(ROOT_PATH)
     print(f'append {ROOT_PATH} into sys.path')
 
+from libs.wechat import WeChat
 from vnpy.event import EventEngine, EVENT_TIMER
 from vnpy.trader.setting import SETTINGS
 from vnpy.trader.engine import MainEngine
@@ -21,7 +22,7 @@ from vnpy.gateway.eastmoney import EastmoneyGateway
 from vnpy.app.cta_stock import CtaStockApp
 #from vnpy.app.cta_crypto.base import EVENT_CTA_LOG
 from vnpy.app.rpc_service import RpcServiceApp
-from vnpy.app.algo_broker import AlgoBrokerApp
+# from vnpy.app.algo_broker import AlgoBrokerApp
 from vnpy.app.account_recorder import AccountRecorderApp
 from vnpy.trader.util_pid import update_pid
 from vnpy.trader.util_monitor import OrderMonitor, TradeMonitor, PositionMonitor, AccountMonitor, LogMonitor
@@ -54,11 +55,11 @@ class DaemonService(object):
         self.g_count = 0
         self.last_dt = datetime.now()
         # 创建账号/持仓/委托/交易/日志记录
-        #self.acc_monitor = AccountMonitor(self.event_engine)
+        self.acc_monitor = AccountMonitor(self.event_engine)
         self.pos_monitor = PositionMonitor(self.event_engine)
         self.ord_monitor = OrderMonitor(self.event_engine)
         self.trd_monitor = TradeMonitor(self.event_engine)
-        #self.log_monitor = LogMonitor(self.event_engine)
+        self.log_monitor = LogMonitor(self.event_engine)
 
         # 创建主引擎
         self.main_engine = MainEngine(self.event_engine)
@@ -143,7 +144,7 @@ class DaemonService(object):
         cta_engine.init_engine()
 
         # 添加算法引擎代理
-        self.main_engine.add_app(AlgoBrokerApp)
+        # self.main_engine.add_app(AlgoBrokerApp)
 
         self.main_engine.write_log("主引擎创建成功")
 

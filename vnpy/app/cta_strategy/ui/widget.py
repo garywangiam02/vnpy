@@ -43,7 +43,8 @@ class CtaManager(QtWidgets.QWidget):
 
         # Create widgets
         self.class_combo = QtWidgets.QComboBox()
-
+        # fix mac ui
+        self.class_combo.setStyleSheet('QComboBox::item:checked{font-weight: bold;  height: 12px;}')
         add_button = QtWidgets.QPushButton("添加策略")
         add_button.clicked.connect(self.add_strategy)
 

@@ -45,6 +45,8 @@ class CtaManager(QtWidgets.QWidget):
 
         # Create widgets
         self.class_combo = QtWidgets.QComboBox()
+        # fix mac ui
+        self.class_combo.setStyleSheet('QComboBox::item:checked{font-weight: bold;  height: 12px;}')
 
         add_button = QtWidgets.QPushButton("添加策略")
         add_button.clicked.connect(self.add_strategy)
@@ -292,17 +294,18 @@ class StrategyManager(QtWidgets.QFrame):
         """实时查看策略切片"""
         kline_info = self.cta_engine.get_strategy_kline_names(self.strategy_name)
 
-        selector = KlineSelectDialog(kline_info,self.strategy_name)
+        selector = KlineSelectDialog(kline_info, self.strategy_name)
         n = selector.exec_()
 
         if n == selector.Accepted:
             klines = selector.get_klines()
             if len(klines) > 0:
-                snapshot = self.cta_engine.get_strategy_snapshot(self.strategy_name,klines)
+                snapshot = self.cta_engine.get_strategy_snapshot(self.strategy_name, klines)
                 if snapshot is None:
                     return
                 ui_snapshot = UiSnapshot()
                 ui_snapshot.show(snapshot_file="", d=snapshot)
+
 
 class DataMonitor(QtWidgets.QTableWidget):
     """
@@ -405,12 +408,14 @@ class LogMonitor(BaseMonitor):
         super(LogMonitor, self).insert_new_row(data)
         self.resizeRowToContents(0)
 
+
 class KlineSelectDialog(QtWidgets.QDialog):
     """
     多K线选择窗口
     """
+
     def __init__(
-        self, info: dict, strategy_name:str
+        self, info: dict, strategy_name: str
     ):
         """
         构造函数
@@ -441,8 +446,8 @@ class KlineSelectDialog(QtWidgets.QDialog):
 
             klines = QtWidgets.QTableWidgetItem()
             klines.setText(','.join(v))
-            self.t.setItem(row,1, klines)
-            row +=1
+            self.t.setItem(row, 1, klines)
+            row += 1
 
         # 单选
         self.t.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
@@ -453,10 +458,10 @@ class KlineSelectDialog(QtWidgets.QDialog):
         form.addRow(button)
         self.setLayout(form)
 
-    def cell_select(self,row,col):
+    def cell_select(self, row, col):
         try:
-            content = self.t.item(row,0).text()
-            self.select_names = self.info.get(content,[])
+            content = self.t.item(row, 0).text()
+            self.select_names = self.info.get(content, [])
         except Exception as ex:
             pass
 
