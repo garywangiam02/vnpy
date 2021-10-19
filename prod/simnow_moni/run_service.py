@@ -21,8 +21,8 @@ from vnpy.gateway.ctp import CtpGateway
 from vnpy.app.cta_strategy_pro import CtaStrategyProApp
 #from vnpy.app.cta_crypto.base import EVENT_CTA_LOG
 from vnpy.app.rpc_service import RpcServiceApp
-from vnpy.app.algo_trading import AlgoTradingApp
-from vnpy.app.algo_broker import AlgoBrokerApp
+# from vnpy.app.algo_trading import AlgoTradingApp
+# from vnpy.app.algo_broker import AlgoBrokerApp
 from vnpy.app.account_recorder import AccountRecorderApp
 from vnpy.trader.util_pid import update_pid
 from vnpy.trader.util_monitor import OrderMonitor, TradeMonitor, PositionMonitor, AccountMonitor, LogMonitor
@@ -140,14 +140,14 @@ class DaemonService(object):
         sleep(5)
 
         # 添加算法引擎
-        self.main_engine.add_app(AlgoTradingApp)
+        # self.main_engine.add_app(AlgoTradingApp)
 
         # 添加cta Pro引擎
         cta_engine = self.main_engine.add_app(CtaStrategyProApp)
         cta_engine.init_engine()
 
         # 添加算法引擎代理
-        self.main_engine.add_app(AlgoBrokerApp)
+        # self.main_engine.add_app(AlgoBrokerApp)
 
         self.main_engine.write_log("主引擎创建成功")
 
