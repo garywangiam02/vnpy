@@ -44,8 +44,8 @@ stock_list = load_json('stock_list.json')
 api_01.cache_config()
 symbol_dict = api_01.symbol_dict
 #
-# thread_executor = ThreadPoolExecutor(max_workers=1)
-# thread_tasks = []
+thread_executor = ThreadPoolExecutor(max_workers=1)
+thread_tasks = []
 
 
 def refill(symbol_info):
@@ -142,9 +142,9 @@ def refill(symbol_info):
             print(f'{progress}%,更新{stock_code}  {stock_name} 数据 {microseconds}毫秒 => 文件{bar_file_path}, 最后记录:{bars[-1]}')
 
     # 采用多线程方式输出 5、15、30分钟的数据
-    # if period == '1min' and need_resample:
-    #     task = thread_executor.submit(resample, stock_code, exchange, [5, 15, 30])
-    #     thread_tasks.append(task)
+    if period == '1min' and need_resample:
+        task = thread_executor.submit(resample, stock_code, exchange, [5, 15, 30])
+        thread_tasks.append(task)
 
 
 def resample(vt_symbol, x_mins=[5, 15, 30]):
@@ -188,7 +188,7 @@ if __name__ == '__main__':
         num_progress += 1
         task['progress'] = round(100 * num_progress / total_tasks, 2)
 
-    p = Pool(12)
+    p = Pool(4)
     p.map(refill, tasks)
     p.close()
     p.join()
