@@ -39,6 +39,9 @@ log
 .vscode
 .DS_Store
 .python-version
-*.pkb2
 app/mongo/data
 *.vntrader*
+*.csv
+*.db
+*.swp
+*.pkb2
