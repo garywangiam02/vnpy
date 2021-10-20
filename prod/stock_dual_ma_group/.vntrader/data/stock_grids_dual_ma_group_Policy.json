@@ -1,0 +1,74 @@
+{
+    "create_time": "",
+    "save_time": "2021-10-20 10:23:45",
+    "signals": {
+        "600699.SSE_f55_s89_n9_M30": {
+            "last_signal": "long",
+            "last_signal_time": "2021-10-20 10:23:45",
+            "signal_name": "类一买点",
+            "kline_name": "600699.SSE_f55_s89_n9_M30",
+            "stop_price": 17.1200008392334,
+            "open_price": 18.88,
+            "init_price": 18.88,
+            "bi_start": "2021-10-15 09:30:00",
+            "opened": false,
+            "profit_rate": 0
+        },
+        "600857.SSE_f55_s89_n9_M30": {
+            "last_signal": "long",
+            "last_signal_time": "2021-10-20 10:23:45",
+            "signal_name": "趋势反转",
+            "kline_name": "600857.SSE_f55_s89_n9_M30",
+            "stop_price": 8.109999656677246,
+            "open_price": 9.67,
+            "init_price": 9.67,
+            "bi_start": "2021-10-12 13:00:00",
+            "opened": false,
+            "profit_rate": 0
+        },
+        "600660.SSE_f55_s89_n9_M30": {
+            "last_signal": "long",
+            "last_signal_time": "2021-10-20 10:23:45",
+            "signal_name": "类一买点",
+            "kline_name": "600660.SSE_f55_s89_n9_M30",
+            "stop_price": 41.29999923706055,
+            "open_price": 49.39,
+            "init_price": 49.39,
+            "bi_start": "2021-10-15 10:00:00",
+            "opened": false,
+            "profit_rate": 0
+        },
+        "600561.SSE_f55_s89_n9_M30": {
+            "last_signal": "long",
+            "last_signal_time": "2021-10-20 10:23:45",
+            "signal_name": "趋势反转",
+            "kline_name": "600561.SSE_f55_s89_n9_M30",
+            "stop_price": 4.659999847412109,
+            "open_price": 4.84,
+            "init_price": 4.84,
+            "bi_start": "2021-10-12 09:30:00",
+            "opened": false,
+            "profit_rate": 0
+        },
+        "601028.SSE_f55_s89_n9_M30": {
+            "last_signal": "long",
+            "last_signal_time": "2021-10-20 10:23:45",
+            "signal_name": "趋势反转",
+            "kline_name": "601028.SSE_f55_s89_n9_M30",
+            "stop_price": 16.0,
+            "open_price": 17.94,
+            "init_price": 17.94,
+            "bi_start": "2021-10-14 09:30:00",
+            "opened": false,
+            "profit_rate": 0
+        }
+    },
+    "long_klines": [
+        "600561.SSE_f55_s89_n9_M30",
+        "600660.SSE_f55_s89_n9_M30",
+        "600857.SSE_f55_s89_n9_M30",
+        "600699.SSE_f55_s89_n9_M30"
+    ],
+    "short_klines": [],
+    "last_long": {}
+}

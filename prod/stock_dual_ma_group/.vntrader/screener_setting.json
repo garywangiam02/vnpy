@@ -1,4 +1,14 @@
 {
+    "stock_screener_ThreeBuy_D1": {
+        "class_name": "StrategyChanlunThreeBuy",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "vt_symbols": [],
+            "all_stocks": true,
+            "bar_name": "D1"
+        }
+    },
     "stock_screener_ThreeBuy_M30": {
         "class_name": "StrategyChanlunThreeBuy",
         "auto_init": true,
@@ -10,17 +20,7 @@
             "bar_name": "M30"
         }
     },
-     "stock_screener_ThreeBuy_D1": {
-        "class_name": "StrategyChanlunThreeBuy",
-        "auto_init": true,
-        "auto_start": true,
-        "setting": {
-            "vt_symbols": [],
-            "all_stocks": true,
-            "bar_name": "D1"
-        }
-    },
-  "stock_screener_macd": {
+    "stock_screener_macd": {
         "class_name": "StrategyMacdDiv",
         "auto_init": true,
         "auto_start": true,
