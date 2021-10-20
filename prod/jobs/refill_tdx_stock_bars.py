@@ -5,6 +5,11 @@
 深圳股票 => SZSE子目录
 修改为多进程模式
 """
+from vnpy.trader.util_wechat import send_wx_msg
+from vnpy.trader.utility import get_csv_last_dt
+from vnpy.trader.utility import load_json
+from vnpy.data.common import resample_bars_file
+from vnpy.data.tdx.tdx_stock_data import *
 import os
 import sys
 import csv
@@ -22,17 +27,12 @@ if vnpy_root not in sys.path:
 
 os.environ["VNPY_TESTING"] = "1"
 
-from vnpy.data.tdx.tdx_stock_data import *
-from vnpy.data.common import resample_bars_file
-from vnpy.trader.utility import load_json
-from vnpy.trader.utility import get_csv_last_dt
-from vnpy.trader.util_wechat import send_wx_msg
 
 # 保存的1分钟指数 bar目录
 bar_data_folder = os.path.abspath(os.path.join(vnpy_root, 'bar_data'))
 
 # 开始日期（每年大概需要几分钟）
-start_date = '20210101'
+start_date = '20210501'
 
 # 创建API对象
 api_01 = TdxStockData()
