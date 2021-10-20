@@ -254,6 +254,10 @@ class StrategyGridTradeFutureV3(CtaProFutureTemplate):
         :type tick: object
         """
         # 实盘检查是否初始化数据完毕。如果数据未初始化完毕，则不更新tick，避免影响cur_price
+        self.write_log(u'行情更新')
+        self.write_log(tick.symbol)
+        self.write_log(tick.ask_price_1)
+        self.write_log(tick.bid_price_1)
         if not self.backtesting:
             if not self.inited:
                 self.write_log(u'数据还没初始化完毕，不更新tick')
