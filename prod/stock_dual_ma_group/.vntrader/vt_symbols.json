@@ -1,0 +1,196 @@
+{
+    "vt_symbols": [
+         {
+           "vt_symbol": "000568.XSHE",
+           "cn_name": "泸州老窖",
+           "entry_date": "2021-06-02",
+           "active": true
+         },
+         {
+           "vt_symbol": "000596.XSHE",
+           "cn_name": "古井贡酒",
+           "entry_date": "2021-06-02",
+           "active": true
+         },
+           {
+             "vt_symbol": "上海机场",
+             "cn_name": "600009.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "中远海能",
+             "cn_name": "600026.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "黄山旅游",
+             "cn_name": "600054.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "林海股份",
+             "cn_name": "600099.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "金种子酒",
+             "cn_name": "600199.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "青海华鼎",
+             "cn_name": "600243.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "恒瑞医药",
+             "cn_name": "600276.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "",
+             "cn_name": "",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "羚锐制药",
+             "cn_name": "600285.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "",
+             "cn_name": "",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "宝钛股份",
+             "cn_name": "600456.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "亨通光电",
+             "cn_name": "600487.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "天士力",
+             "cn_name": "600535.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "",
+             "cn_name": "",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "江西长运",
+             "cn_name": "600561.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "大众交通",
+             "cn_name": "600611.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "老凤祥",
+             "cn_name": "600612.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "福耀玻璃",
+             "cn_name": "600660.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "均胜电子",
+             "cn_name": "600699.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "首商股份",
+             "cn_name": "600723.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "锦江酒店",
+             "cn_name": "600754.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "",
+             "cn_name": "",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "鲁银投资",
+             "cn_name": "600784.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "人民同泰",
+             "cn_name": "600829.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "宁波中百",
+             "cn_name": "600857.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "亚泰集团",
+             "cn_name": "600881.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "福成股份",
+             "cn_name": "600965.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "航民股份",
+             "cn_name": "600987.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "大秦铁路",
+             "cn_name": "601006.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           },
+           {
+             "vt_symbol": "玉龙股份",
+             "cn_name": "601028.SSE",
+             "entry_date": "2021-06-02",
+             "active": true
+           }
+        ]
+}

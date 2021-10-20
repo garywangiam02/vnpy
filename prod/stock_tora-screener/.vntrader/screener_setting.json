@@ -1,0 +1,34 @@
+{
+    "stock_screener_ThreeBuy_D1": {
+        "class_name": "StrategyChanlunThreeBuy",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "vt_symbols": [],
+            "all_stocks": true,
+            "bar_name": "D1"
+        }
+    },
+    "stock_screener_ThreeBuy_M30": {
+        "class_name": "StrategyChanlunThreeBuy",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "vt_symbols": [],
+            "all_stocks": true,
+            "exchange_": "SZSE",
+            "bar_name": "M30"
+        }
+    },
+    "stock_screener_macd": {
+        "class_name": "StrategyMacdDiv",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "vt_symbols": [],
+            "all_stocks": true,
+            "small_bar": "D1",
+            "big_bar": "W1"
+        }
+    }
+}
