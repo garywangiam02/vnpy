@@ -30,7 +30,7 @@ if __name__ == "__main__":
     bar_data_folder = os.path.abspath(os.path.join(vnpy_root, 'bar_data'))
 
     # 开始日期（每年大概需要几分钟）
-    start_date = '20160101'
+    start_date = '20210101'
 
     # 创建API对象
     api_01 = TdxFutureData()
