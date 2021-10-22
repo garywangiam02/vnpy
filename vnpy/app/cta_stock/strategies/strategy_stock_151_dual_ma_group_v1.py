@@ -271,8 +271,6 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
         try:
             # 读取源json文件 => {}
             vt_symbols = load_json(self.vt_symbols_file, auto_save=False)
-            # gary issue
-            self.vt_symbols=[]
             for d in vt_symbols["vt_symbols"]:
                 vt_symbol = d.get('vt_symbol')
                 if not vt_symbol:
@@ -724,6 +722,17 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
                         self.save_dist(d)
 
                         continue
+                try:
+                    if kline.tre_duan.height < kline.pre_duan.height < kline.cur_duan.height \
+                        and kline.cur_duan.direction == 1 \
+                        and len(kline.cur_duan.bi_list) == 1 \
+                        and kline.cur_duan.low < kline.cur_bi_zs.low < kline.cur_duan.high \
+                        and check_bi_not_rt(kline, direction=Direction.SHORT) \
+                        and kline.cur_duan.end == kline.cur_bi.start \
+                        and kline.ma12_count > 0:
+                        aa=1
+                except Exception as ex:
+                    print("")
 
                 # 进攻信号2：线段级别，形成扩张中枢，最后一个线段[单笔]反抽中枢之上，形成金叉
                 if kline.tre_duan.height < kline.pre_duan.height < kline.cur_duan.height \

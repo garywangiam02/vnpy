@@ -188,7 +188,7 @@ if __name__ == '__main__':
         num_progress += 1
         task['progress'] = round(100 * num_progress / total_tasks, 2)
 
-    p = Pool(4)
+    p = Pool(1)
     p.map(refill, tasks)
     p.close()
     p.join()

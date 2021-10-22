@@ -203,5 +203,5 @@ def send_wx_msg_bak(*args, **kwargs):
 
 if __name__ == '__main__':
     text = u'微信测试标题!!!!\n第二行'
-
-    send_wx_msg(text)
+    send_wx_msg(content=text, target="accountid", msg_type='TRADE')
+    # send_wx_msg(text)

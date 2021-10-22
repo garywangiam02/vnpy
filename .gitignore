@@ -45,3 +45,6 @@ app/mongo/data
 *.db
 *.swp
 *.pkb2
+access_token.conf
+vnpy/data/tdx/future_contracts.json
+vnpy/data/tdx/tdx_future_config.json
