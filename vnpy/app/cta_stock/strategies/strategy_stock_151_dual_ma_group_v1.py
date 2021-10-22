@@ -396,7 +396,6 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
 
         self.save_klines_to_cache(kline_names=kline_names, vt_symbol=vt_symbol)
 
-
     def on_timer(self):
         """定时器执行"""
         if self.backtesting:
@@ -559,7 +558,7 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
         # 检查9~13笔的信号
         for n in [9, 11, 13]:
             # 倒5~倒1的信号value清单
-            all_signals = [s.get('signal') for s in getattr(kline,f'xt_{n}_signals',[])[-6:-1]]
+            all_signals = [s.get('signal') for s in getattr(kline, f'xt_{n}_signals', [])[-6:-1]]
             # 判断是否有类一买点信号存在
             for signal_value in signal_values:
                 if signal_value in all_signals:
@@ -600,7 +599,7 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
                         and kline.cur_duan.direction == 1\
                         and len(kline.cur_duan.bi_list) == 1 \
                         and kline.cur_duan.low < kline.cur_bi_zs.low < kline.cur_duan.high\
-                        and check_bi_not_rt(kline,direction=Direction.SHORT)\
+                        and check_bi_not_rt(kline, direction=Direction.SHORT)\
                         and kline.cur_duan.end == kline.cur_bi.start\
                         and kline.ma12_count > 0:
 
@@ -636,9 +635,8 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
                     self.save_dist(d)
                     continue
 
-
                 # 反转信号2：倒6~倒1笔内出现类一买点，然后均线金叉+下跌分笔
-                if self.fit_xt_signal(kline, [ ChanSignals.Q1L0.value]):
+                if self.fit_xt_signal(kline, [ChanSignals.Q1L0.value]):
 
                     # 防止出现瞬间跌破一类买点
                     if kline.cur_duan.low == kline.cur_bi.low:
@@ -683,10 +681,10 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
                 xt_5_signal = kline.get_xt_signal(xt_name='xt_5_signals', x=1)
                 # 倒1笔出现三类买点形态，然后才出现金叉
                 if xt_5_signal.get('signal') == ChanSignals.LI0.value\
-                    and kline.pre_duan.height > kline.cur_duan.height \
-                    and kline.pre_duan.direction == -1\
-                    and kline.cur_bi.direction == 1\
-                    and kline.ma12_count > 0:
+                        and kline.pre_duan.height > kline.cur_duan.height \
+                        and kline.pre_duan.direction == -1\
+                        and kline.cur_bi.direction == 1\
+                        and kline.ma12_count > 0:
 
                     # 三类买点的时间，在金叉之前
                     if xt_5_signal.get('end', "") < kline.ma12_cross_list[-1].get('datetime', ""):
@@ -812,8 +810,8 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
 
             # 保本提损：开仓后，有新的中枢产生，且价格比开仓价格高
             if stop_price and stop_price < open_price\
-                and kline.cur_bi_zs.start > last_signal_time\
-                and kline.cur_bi_zs.low > open_price:
+                    and kline.cur_bi_zs.start > last_signal_time\
+                    and kline.cur_bi_zs.low > open_price:
                 # 保本+一点点利润
                 stop_price = open_price + (kline.cur_bi_zs.low - open_price) * 0.2
                 signal.update({'stop_price': stop_price})
@@ -848,11 +846,11 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
 
             # 下跌线段站稳提损：上涨过程中，出现回调线段，此时，向上一笔+死叉，提升止损
             if kline.cur_duan.direction == -1 \
-                and kline.cur_duan.start > last_signal_time \
-                and kline.cur_duan.low == kline.cur_bi.low \
-                and check_bi_not_rt(kline, Direction.LONG) \
-                and kline.ma12_count < 0 \
-                and stop_price < float(kline.cur_bi.low):
+                    and kline.cur_duan.start > last_signal_time \
+                    and kline.cur_duan.low == kline.cur_bi.low \
+                    and check_bi_not_rt(kline, Direction.LONG) \
+                    and kline.ma12_count < 0 \
+                    and stop_price < float(kline.cur_bi.low):
                 # 止损价，移动至当前笔的底部
                 stop_price = float(kline.cur_bi.low)
                 signal.update({'stop_price': stop_price})
@@ -892,7 +890,7 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
             # 使用线段判断是否存在三买,如果存在，则不离场
             duan_xt_leave = True
             if len(kline.duan_list) > 5:
-                duan_xt_signal = check_chan_xt(kline,kline.duan_list[-5:])
+                duan_xt_signal = check_chan_xt(kline, kline.duan_list[-5:])
                 if duan_xt_signal in [ChanSignals.LI0.value]:
                     duan_xt_leave = False
 
@@ -900,7 +898,7 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
             if duan_xt_leave \
                     and xt_5_signal.get('signal') == ChanSignals.SI0.value \
                     and kline.ma12_count < 0 \
-                    and xt_5_signal.get('start','') > last_signal_time:
+                    and xt_5_signal.get('start', '') > last_signal_time:
                 leave_type = '三卖+死叉'
                 self.write_log(u'{} => {} 做多信号离场'.format(leave_type, kline_name))
                 signal_leave = True
@@ -1077,7 +1075,7 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
         :return:
         """
         # 只有持有仓位的股票数量，超过共享仓位，才进行收益调整
-        if len([p.volume for p in self.positions.values() if p.volume >0]) < self.share_symbol_count *  0.8:
+        if len([p.volume for p in self.positions.values() if p.volume > 0]) < self.share_symbol_count * 0.8:
             return
 
         if len(self.pending_signals) > 0:
