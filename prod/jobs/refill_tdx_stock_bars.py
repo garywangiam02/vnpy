@@ -44,7 +44,7 @@ stock_list = load_json('stock_list.json')
 api_01.cache_config()
 symbol_dict = api_01.symbol_dict
 #
-thread_executor = ThreadPoolExecutor(max_workers=1)
+thread_executor = ThreadPoolExecutor(max_workers=os.cpu_count() * 20)
 thread_tasks = []
 
 
@@ -176,8 +176,10 @@ if __name__ == '__main__':
         for symbol in symbol_dict.keys():
             info = copy(symbol_dict[symbol])
             stock_code = info['code']
-            if ('stock_type' in info.keys() and info['stock_type'] in ['stock_cn',
-                                                                       'cb_cn']) or stock_code in stock_list:
+            # if not stock_code.startswith('0') and not stock_code.startswith('6'):
+            #     print(stock_code)
+            #     continue
+            if ('stock_type' in info.keys() and info['stock_type'] == 'stock_cn') or stock_code in stock_list:
                 info['period'] = period
                 tasks.append(info)
                 # if len(tasks) > 12:
@@ -188,7 +190,7 @@ if __name__ == '__main__':
         num_progress += 1
         task['progress'] = round(100 * num_progress / total_tasks, 2)
 
-    p = Pool(1)
+    p = Pool(os.cpu_count() * 20)
     p.map(refill, tasks)
     p.close()
     p.join()
