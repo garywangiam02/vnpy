@@ -141,7 +141,7 @@ class DaemonService(object):
         sleep(5)
 
         # 添加算法引擎
-        # self.main_engine.add_app(AlgoTradingApp)
+        self.main_engine.add_app(AlgoTradingApp)
 
         # 添加cta Pro引擎
         cta_engine = self.main_engine.add_app(CtaStrategyProApp)
