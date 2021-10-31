@@ -32,7 +32,7 @@ os.environ["VNPY_TESTING"] = "1"
 bar_data_folder = os.path.abspath(os.path.join(vnpy_root, 'bar_data'))
 
 # 开始日期（每年大概需要几分钟）
-start_date = '20180101'
+start_date = '20210501'
 
 # 创建API对象
 api_01 = TdxStockData()
@@ -44,8 +44,9 @@ stock_list = load_json('stock_list.json')
 api_01.cache_config()
 symbol_dict = api_01.symbol_dict
 #
-# thread_executor = ThreadPoolExecutor(max_workers=1)
-# thread_tasks = []
+thread_executor = ThreadPoolExecutor(max_workers=1)
+# thread_executor = ThreadPoolExecutor(max_workers=os.cpu_count() * 20)
+thread_tasks = []
 
 
 def refill(symbol_info):
@@ -107,7 +108,7 @@ def refill(symbol_info):
         data_df = data_df.sort_index()
         # print(data_df.head())
         print(data_df.tail())
-        data_df.to_csv(bar_file_path, index=True)
+        data_df.to_csv(bar_file_path, index=True, encoding='utf8')
         d2 = datetime.now()
         microseconds = (d1 - d1).microseconds
         print(f'{progress}% 首次更新{stock_code} {stock_name}数据 {microseconds} 毫秒=> 文件{bar_file_path}')
@@ -142,9 +143,11 @@ def refill(symbol_info):
             print(f'{progress}%,更新{stock_code}  {stock_name} 数据 {microseconds}毫秒 => 文件{bar_file_path}, 最后记录:{bars[-1]}')
 
     # 采用多线程方式输出 5、15、30分钟的数据
-    # if period == '1min' and need_resample:
-    #     task = thread_executor.submit(resample, stock_code, exchange, [5, 15, 30])
-    #     thread_tasks.append(task)
+    if period == '1min' and need_resample:
+        for x_min in [5, 15, 30]:
+            resample(stock_code, x_min)
+        # task = thread_executor.submit(resample, stock_code, exchange, [5, 15, 30])
+        # thread_tasks.append(task)
 
 
 def resample(vt_symbol, x_mins=[5, 15, 30]):
@@ -172,22 +175,25 @@ if __name__ == '__main__':
     num_progress = 0
     total_tasks = len(symbol_dict.keys()) * 2
     tasks = []
-    for period in ['1min', '5min', '15min', '30min', '1hour', '1day']:
+    # for period in ['1min', '5min', '15min', '30min', '1hour', '1day']:
+    for period in ['1day']:
         for symbol in symbol_dict.keys():
             info = copy(symbol_dict[symbol])
             stock_code = info['code']
             if ('stock_type' in info.keys() and info['stock_type'] == 'stock_cn') or stock_code in stock_list:
                 info['period'] = period
                 tasks.append(info)
-                # if len(tasks) > 12:
-                #     break
+                if len(tasks) > 120:
+                    break
 
     total_tasks = len(tasks)
     for task in tasks:
         num_progress += 1
         task['progress'] = round(100 * num_progress / total_tasks, 2)
-
-    p = Pool(1)
+    # for task in tasks:
+    #     refill(task)
+    p = Pool(2)
+    # # p = Pool(os.cpu_count() * 20)
     p.map(refill, tasks)
     p.close()
     p.join()
