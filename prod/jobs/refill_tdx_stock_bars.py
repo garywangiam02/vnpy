@@ -8,17 +8,12 @@
 from vnpy.trader.util_wechat import send_wx_msg
 from vnpy.trader.utility import get_csv_last_dt
 from vnpy.trader.utility import load_json
-from vnpy.data.common import resample_bars_file
 from vnpy.data.tdx.tdx_stock_data import *
 import os
 import sys
 import csv
-import json
-from collections import OrderedDict
 import pandas as pd
 from multiprocessing import Pool
-from concurrent.futures import ThreadPoolExecutor
-
 from copy import copy
 
 vnpy_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -43,20 +38,12 @@ stock_list = load_json('stock_list.json')
 # 强制更新缓存
 api_01.cache_config()
 symbol_dict = api_01.symbol_dict
-#
-# thread_executor = ThreadPoolExecutor(max_workers=1)
-# thread_tasks = []
-
 
 def refill(symbol_info):
     period = symbol_info['period']
     progress = symbol_info['progress']
-    # print("{}_{}".format(period, symbol_info['code']))
-    # return
     stock_code = symbol_info['code']
 
-    # if stock_code in stock_list:
-    # print(symbol_info['code'])
     if symbol_info['exchange'] == 'SZSE':
         exchange_name = '深交所'
         exchange = Exchange.SZSE
@@ -64,7 +51,6 @@ def refill(symbol_info):
         exchange_name = '上交所'
         exchange = Exchange.SSE
 
-    # num_stocks += 1
 
     stock_name = symbol_info.get('name')
     print(f'开始更新:{exchange_name}/{stock_name}, 代码:{stock_code}')
@@ -105,7 +91,6 @@ def refill(symbol_info):
         data_df = pd.DataFrame(bars)
         data_df.set_index('datetime', inplace=True)
         data_df = data_df.sort_index()
-        # print(data_df.head())
         print(data_df.tail())
         data_df.to_csv(bar_file_path, index=True)
         d2 = datetime.now()
@@ -141,29 +126,6 @@ def refill(symbol_info):
             microseconds = round((d2 - d1).microseconds / 100, 0)
             print(f'{progress}%,更新{stock_code}  {stock_name} 数据 {microseconds}毫秒 => 文件{bar_file_path}, 最后记录:{bars[-1]}')
 
-    # 采用多线程方式输出 5、15、30分钟的数据
-    # if period == '1min' and need_resample:
-    #     task = thread_executor.submit(resample, stock_code, exchange, [5, 15, 30])
-    #     thread_tasks.append(task)
-
-
-def resample(vt_symbol, x_mins=[5, 15, 30]):
-    """
-    更新多周期文件
-    :param vt_symbol: 代码.交易所
-    :param x_mins:
-    :return:
-    """
-    d1 = datetime.now()
-    out_files, err_msg = resample_bars_file(vt_symbol=vt_symbol,
-                                            x_mins=x_mins)
-    d2 = datetime.now()
-    microseconds = round((d2 - d1).microseconds / 100, 0)
-    if len(err_msg) > 0:
-        print(err_msg, file=sys.stderr)
-
-    if out_files:
-        print(f'{microseconds}毫秒,生成 =>{out_files}')
 
 
 if __name__ == '__main__':
@@ -187,12 +149,16 @@ if __name__ == '__main__':
         num_progress += 1
         task['progress'] = round(100 * num_progress / total_tasks, 2)
 
-    p = Pool(1)
-    p.map(refill, tasks)
-    p.close()
-    p.join()
+    # p = Pool(1)
+    # p.map(refill, tasks)
+    # p.close()
+    # p.join()
+    i = 1
+    for task in tasks:
+        refill(task)
+        print('*****已完成{}/{}***************'.format(str(i), str(total_tasks)))
+        i=i+1
 
-    #
     msg = 'tdx股票数据补充完毕: num_stocks={}'.format(total_tasks)
     send_wx_msg(content=msg)
     os._exit(0)
