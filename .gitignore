@@ -6,7 +6,6 @@
 .ipynb_checkpoints
 
 # IDE
-.vscode
 .idea
 *.wpr
 *.wpu
