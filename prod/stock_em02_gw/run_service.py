@@ -1,18 +1,5 @@
 # flake8: noqa
 
-from vnpy.app.algo_trading import AlgoTradingApp
-import traceback
-import types
-from vnpy.trader.util_monitor import OrderMonitor, TradeMonitor, PositionMonitor, AccountMonitor, LogMonitor
-from vnpy.trader.util_pid import update_pid
-from vnpy.app.account_recorder import AccountRecorderApp
-from vnpy.app.rpc_service import RpcServiceApp
-from vnpy.app.cta_strategy_pro import CtaStrategyProApp
-from vnpy.gateway.ctp import CtpGateway
-from vnpy.trader.utility import load_json
-from vnpy.trader.engine import MainEngine
-from vnpy.trader.setting import SETTINGS
-from vnpy.event import EventEngine, EVENT_TIMER
 import os
 import sys
 import multiprocessing
@@ -26,17 +13,29 @@ if ROOT_PATH not in sys.path:
     sys.path.append(ROOT_PATH)
     print(f'append {ROOT_PATH} into sys.path')
 
+from vnpy.event import EventEngine, EVENT_TIMER
+from vnpy.trader.setting import SETTINGS
+from vnpy.trader.engine import MainEngine
+from vnpy.trader.utility import load_json
+from vnpy.gateway.eastmoney import EastmoneyGateway
+#from vnpy.app.cta_stock import CtaStockApp
 #from vnpy.app.cta_crypto.base import EVENT_CTA_LOG
-# from vnpy.app.algo_broker import AlgoBrokerApp
+from vnpy.app.rpc_service import RpcServiceApp
+#from vnpy.app.algo_broker import AlgoBrokerApp
+from vnpy.app.account_recorder import AccountRecorderApp
+from vnpy.trader.util_pid import update_pid
+from vnpy.trader.util_monitor import OrderMonitor, TradeMonitor, PositionMonitor, AccountMonitor, LogMonitor
 
 SETTINGS["log.active"] = True
 SETTINGS["log.level"] = DEBUG
-SETTINGS["log.console"] = False
+SETTINGS["log.console"] = True
 SETTINGS["log.file"] = True
 
-gateway_name = 'ctp'
+gateway_name = 'em02_gw'
 gw_setting = load_json(f'connect_{gateway_name}.json')
 
+import types
+import traceback
 
 def excepthook(exctype: type, value: Exception, tb: types.TracebackType) -> None:
     """
@@ -47,7 +46,6 @@ def excepthook(exctype: type, value: Exception, tb: types.TracebackType) -> None
     msg = "".join(traceback.format_exception(exctype, value, tb))
 
     print(msg, file=sys.stderr)
-
 
 class DaemonService(object):
 
@@ -60,7 +58,7 @@ class DaemonService(object):
         self.pos_monitor = PositionMonitor(self.event_engine)
         self.ord_monitor = OrderMonitor(self.event_engine)
         self.trd_monitor = TradeMonitor(self.event_engine)
-        self.log_monitor = LogMonitor(self.event_engine)
+        #self.log_monitor = LogMonitor(self.event_engine)
 
         # 创建主引擎
         self.main_engine = MainEngine(self.event_engine)
@@ -87,7 +85,7 @@ class DaemonService(object):
 
         if dt.hour != self.last_dt.hour:
             self.last_dt = dt
-            print(u'run_server.py checkpoint:{0}'.format(dt))
+            #print(u'run_server.py checkpoint:{0}'.format(dt))
             self.main_engine.write_log(u'run_server.py checkpoint:{0}'.format(dt))
 
         # ctp 短线重连得处理
@@ -134,21 +132,18 @@ class DaemonService(object):
         self.main_engine.add_app(AccountRecorderApp)
 
         # 接入网关
-        self.main_engine.add_gateway(CtpGateway, gateway_name)
+        self.main_engine.add_gateway(EastmoneyGateway, gateway_name)
         self.main_engine.write_log(f"连接{gateway_name}接口")
         self.main_engine.connect(gw_setting, gateway_name)
 
         sleep(5)
 
-        # 添加算法引擎
-        self.main_engine.add_app(AlgoTradingApp)
-
-        # 添加cta Pro引擎
-        cta_engine = self.main_engine.add_app(CtaStrategyProApp)
-        cta_engine.init_engine()
+        # # 添加cta引擎
+        # cta_engine = self.main_engine.add_app(CtaStockApp)
+        # cta_engine.init_engine()
 
         # 添加算法引擎代理
-        # self.main_engine.add_app(AlgoBrokerApp)
+        #self.main_engine.add_app(AlgoBrokerApp)
 
         self.main_engine.write_log("主引擎创建成功")
 

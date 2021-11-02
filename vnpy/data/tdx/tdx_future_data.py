@@ -70,7 +70,7 @@ INIT_TDX_MARKET_MAP = {
     'CJL9': 28, 'CYL9': 28, 'FGL9': 28, 'JRL9': 28, 'LRL9': 28, 'MAL9': 28,
     'OIL9': 28, 'PML9': 28, 'RIL9': 28, 'RML9': 28, 'RSL9': 28, 'SFL9': 28,
     'SML9': 28, 'SRL9': 28, 'TAL9': 28, 'ICL9': 47, 'IFL9': 47, 'IHL9': 47,
-    'TFL9': 47, 'TL9': 47, 'TSL9': 47, 'SAL9': 28, 'PGL9': 29, 'PFL9': 28, 'LH':29}
+    'TFL9': 47, 'TL9': 47, 'TSL9': 47, 'SAL9': 28, 'PGL9': 29, 'PFL9': 28, 'LH': 29}
 # 常量
 QSIZE = 500
 ALL_MARKET_BEGIN_HOUR = 8
@@ -129,6 +129,7 @@ def convert_cffex_symbol(mi_symbol):
 
     return f'{underly_symbol}{next_year_month}'
 
+
 def get_pre_switch_mi_symbol(d):
     """
     根据配置，获取提前换月得主力合约
@@ -167,7 +168,7 @@ def get_pre_switch_mi_symbol(d):
         return mi_symbol
 
     # 根据持仓量排倒序
-    sorted_symbols = [(k,v) for k, v in sorted(symbols.items(), key=lambda item: item[1], reverse=True)]
+    sorted_symbols = [(k, v) for k, v in sorted(symbols.items(), key=lambda item: item[1], reverse=True)]
     if len(sorted_symbols) < 2:
         return mi_symbol
     # 主力、次主力
@@ -246,8 +247,8 @@ class TdxFutureData(object):
                             try:
                                 last_datetime = datetime.strptime(last_datetime_str, '%Y-%m-%d %H:%M:%S')
                                 ip = self.best_ip.get('ip')
-                                is_bad_ip = ip and ip in self.best_ip.get('exclude_ips',[])
-                                if (datetime.now() - last_datetime).total_seconds() > 60 * 60 * 2 or is_bad_ip :
+                                is_bad_ip = ip and ip in self.best_ip.get('exclude_ips', [])
+                                if (datetime.now() - last_datetime).total_seconds() > 60 * 60 * 2 or is_bad_ip:
                                     self.best_ip = {}
                                     if not is_bad_ip:
                                         self.exclude_ips = []
@@ -344,7 +345,9 @@ class TdxFutureData(object):
         """获取"""
         underlying_symbol = get_underlying_symbol(symbol).upper()
         info = self.future_contracts.get(underlying_symbol, None)
-        if info:
+        if info and 'exchange' in info.keys():
+            print(info)
+            print(underlying_symbol)
             return Exchange(info.get('exchange'))
         else:
             market_id = get_tdx_marketid(symbol)
