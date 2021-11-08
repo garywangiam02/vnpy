@@ -63,7 +63,7 @@ class StockScreenerEngine(BaseEngine):
 
         self.strategy_loggers = {}  # strategy_name: logger
 
-        self.thread_executor = ThreadPoolExecutor(max_workers=1)
+        self.thread_executor = ThreadPoolExecutor(max_workers=4)
         self.thread_tasks = []
 
         self.create_logger(logger_name=APP_NAME)
@@ -97,11 +97,11 @@ class StockScreenerEngine(BaseEngine):
             self.write_error(f'不存在bar数据目录:{self.bar_data_folder}')
             self.bar_data_folder = None
 
-    def get_all_vt_symbols(self, exchange: Exchange = None, stock_types: List[StockType] = []):
+    def get_all_vt_symbols(self, exchange: Exchange = None, stock_types: List[StockType] = [StockType.STOCK]):
         """
         获取所有股票列表
         :param exchange: 交易所过滤器
-        :param stock_types: 合约类型：
+        :param stock_types: 合约类型：stock_cn, index_cn,etf_cn,bond_cn,cb_cn
         :return:
         """
         vt_symbols = []
@@ -421,7 +421,7 @@ class StockScreenerEngine(BaseEngine):
             check_date = datetime.now().strftime('%Y-%m-%d')
 
         for d in stock_adjust_factor_list:
-            if d.get("dividOperateDate","") < check_date:
+            if d.get("dividOperateDate", "") < check_date:
                 return d
         return None
 

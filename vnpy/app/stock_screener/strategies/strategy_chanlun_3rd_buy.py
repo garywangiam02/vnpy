@@ -111,9 +111,17 @@ class StrategyChanlunThreeBuy(ScreenerTemplate):
             stock_name = self.engine.get_name(vt_symbol)
             if self.exclude_st and ('ST' in stock_name or '退' in stock_name):
                 continue
+
             symbol, ex = extract_vt_symbol(vt_symbol)
-            # if symbol < '002094':
-            #     continue
+            if (symbol.startswith('900')
+                    or symbol.startswith('200')
+                    or symbol.startswith('30')
+                    or symbol.startswith('730')
+                    or symbol.startswith('399')
+                    or symbol.startswith('000')
+                    or symbol.startswith('003')
+                    ):
+                continue
 
             # 创建K线
             kline_name = f'{vt_symbol}_{self.bar_name}'
@@ -184,11 +192,11 @@ class StrategyChanlunThreeBuy(ScreenerTemplate):
             new_progress = c * 100 / n
             # if int(new_progress) != int(progress):
             progress = new_progress
-            self.write_log(f'当前进度:{progress}%')
+            self.write_log(f'第:{str(c)}, 共:{str(n)}当前进度:{progress}%')
 
         if progress > 99:
             self.running = False
-            msg = f'{self.strategy_name}运行运行，一共:{len(self.results)}条结果'
+            msg = f'{self.strategy_name}运行结束，一共:{len(self.results)}条结果'
             self.engine.send_wechat(msg)
             self.write_log(msg)
             self.completed = True
@@ -236,13 +244,12 @@ class StrategyChanlunThreeBuy(ScreenerTemplate):
 
         # 这里自行添加更多的三买信号
 
-
         # 发现了三买信号
         if signal_type:
             # 检查上升线段的最后一笔，对应的次级别走势，是否有背驰，并且当前是否存在三卖
 
             self.write_log(
-                f'{vt_symbol},发现{signal_type}信号，'            
+                f'{vt_symbol},发现{signal_type}信号，'
                 f'段:{kline.cur_duan.start} => {kline.cur_duan.end}, '
                 f'low:{kline.cur_duan.low}, high: {kline.cur_duan.high}')
             return True, signal_type

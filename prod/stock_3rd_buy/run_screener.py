@@ -17,16 +17,8 @@ from vnpy.event import EventEngine, EVENT_TIMER
 from vnpy.trader.setting import SETTINGS
 from vnpy.trader.engine import MainEngine
 from vnpy.trader.utility import load_json
-# from vnpy.gateway.gj import GjGateway
 from vnpy.app.stock_screener import ScreenerApp
-# from vnpy.app.cta_stock import CtaStockApp
-# from vnpy.app.cta_crypto.base import EVENT_CTA_LOG
-from vnpy.app.rpc_service import RpcServiceApp
-# from vnpy.app.algo_broker import AlgoBrokerApp
-from vnpy.app.account_recorder import AccountRecorderApp
-from vnpy.trader.util_pid import update_pid
 
-# from vnpy.trader.util_monitor import OrderMonitor, TradeMonitor, PositionMonitor, AccountMonitor, LogMonitor
 
 SETTINGS["log.active"] = True
 SETTINGS["log.level"] = DEBUG

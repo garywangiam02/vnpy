@@ -24,7 +24,7 @@ from vnpy.component.cta_grid_trade import (
     CtaGridTrade,
     CtaGrid
 )
-
+from vnpy.trader.util_wechat import send_wx_msg
 from vnpy.component.cta_policy import (
     TNS_STATUS_OPENED,
     TNS_STATUS_ORDERING,
@@ -132,6 +132,7 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
         if self.backtesting:
             # 回测时,自动初始化
             self.on_init()
+        send_wx_msg(content="StrategyStockDualMaGroupV1 启动成功")
 
     def create_klines(self, vt_symbol):
         """创建K线"""
@@ -722,13 +723,13 @@ class StrategyStockDualMaGroupV1(CtaStockTemplate):
                         continue
                 try:
                     if kline.tre_duan.height < kline.pre_duan.height < kline.cur_duan.height \
-                        and kline.cur_duan.direction == 1 \
-                        and len(kline.cur_duan.bi_list) == 1 \
-                        and kline.cur_duan.low < kline.cur_bi_zs.low < kline.cur_duan.high \
-                        and check_bi_not_rt(kline, direction=Direction.SHORT) \
-                        and kline.cur_duan.end == kline.cur_bi.start \
-                        and kline.ma12_count > 0:
-                        aa=1
+                            and kline.cur_duan.direction == 1 \
+                            and len(kline.cur_duan.bi_list) == 1 \
+                            and kline.cur_duan.low < kline.cur_bi_zs.low < kline.cur_duan.high \
+                            and check_bi_not_rt(kline, direction=Direction.SHORT) \
+                            and kline.cur_duan.end == kline.cur_bi.start \
+                            and kline.ma12_count > 0:
+                        aa = 1
                 except Exception as ex:
                     print("")
 

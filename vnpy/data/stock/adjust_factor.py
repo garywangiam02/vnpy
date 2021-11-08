@@ -3,6 +3,11 @@
 # 追加/更新股票复权因子
 """
 
+from vnpy.data.stock.stock_base import get_stock_base
+from vnpy.data.tdx.tdx_common import get_stock_type
+from vnpy.trader.utility import load_json, load_data_from_pkb2, save_data_to_pkb2, extract_vt_symbol
+from vnpy.trader.constant import Exchange
+import baostock as bs
 import os
 import sys
 import json
@@ -15,17 +20,10 @@ if vnpy_root not in sys.path:
     sys.path.append(vnpy_root)
 
 os.environ["VNPY_TESTING"] = "1"
-import baostock as bs
-from vnpy.trader.constant import Exchange
-from vnpy.trader.utility import load_json, load_data_from_pkb2, save_data_to_pkb2, extract_vt_symbol
-from vnpy.data.tdx.tdx_common import get_stock_type
-from vnpy.data.stock.stock_base import get_stock_base
-import baostock as bs
-import pandas as pd
 
 ADJUST_FACTOR_FILE = 'stock_adjust_factor.pkb2'
 # 格式： {vt_symbol: [{dict},{dict}]
-#d = {
+# d = {
 #  'exchange': exchange.value,  # 证券交易所
 #  'code': stock_code,  # 证券代码
 #  'name': stock_name,  # 证券中文名称
@@ -34,6 +32,7 @@ ADJUST_FACTOR_FILE = 'stock_adjust_factor.pkb2'
 #  'backAdjustFactor': float(row[3]),  # 向后复权因子 除权除息日最近的一个交易日的前收盘价/除权除息日前一个交易日的收盘价
 #  'adjustFactor': float(row[4])  # 本次复权因子
 #   }
+
 
 def get_all_adjust_factor():
     """ 获取所有股票复权因子"""
@@ -44,6 +43,7 @@ def get_all_adjust_factor():
         return download_adjust_factor()
     else:
         return data
+
 
 def get_adjust_factor(vt_symbol: str, stock_name: str = '', need_login: bool = True):
     """
@@ -129,10 +129,11 @@ def download_adjust_factor():
 
     return factor_dict
 
+
 if __name__ == '__main__':
 
     # 下载所有复权数据
-    # download_adjust_factor()
+    download_adjust_factor()
 
     # 下载某个股票的复权数据
     # f = get_adjust_factor(vt_symbol='000651.SZSE',stock_name='格力电器',need_login=True)
@@ -141,10 +142,10 @@ if __name__ == '__main__':
     #     print(d)
 
     # 读取缓存文件中某只股票的复权数据
-    factors = get_all_adjust_factor()
-    f = factors.get('000651.SZSE',None)
-    if f is None:
-        print('获取不到数据')
-    else:
-        for d in f:
-             print(d)
+    # factors = get_all_adjust_factor()
+    # f = factors.get('000651.SZSE',None)
+    # if f is None:
+    #     print('获取不到数据')
+    # else:
+    #     for d in f:
+    #          print(d)
