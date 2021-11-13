@@ -30,7 +30,7 @@ if __name__ == "__main__":
     bar_data_folder = os.path.abspath(os.path.join(vnpy_root, 'bar_data'))
 
     # 开始日期（每年大概需要几分钟）
-    start_date = '20150101'
+    start_date = '20170101'
 
     # 创建API对象
     api_01 = TdxFutureData()
@@ -104,6 +104,6 @@ if __name__ == "__main__":
 
             print(f'更新{index_symbol} 数据 => 文件{bar_file_path}, 最后记录:{bars[-1]}')
 
-    msg = '更新完毕'
+    msg = 'future数据更新完毕'
     send_wx_msg(content=msg)
     os._exit(0)

@@ -1,8 +1,14 @@
 {
     "ip": "119.97.185.5",
     "port": 7727,
+<<<<<<< Updated upstream
     "name": "扩展市场武汉主站1",
     "speed": 70.563,
     "datetime": "2021-11-13 15:20:44",
+=======
+    "name": "扩展市场上海双线",
+    "speed": 105.294,
+    "datetime": "2021-11-13 14:24:45",
+>>>>>>> Stashed changes
     "exclude_ips": []
 }
