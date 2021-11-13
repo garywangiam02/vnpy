@@ -64,7 +64,7 @@ INIT_TDX_MARKET_MAP = {
     'CL9': 29, 'CSL9': 29, 'EBL9': 29, 'EGL9': 29, 'FBL9': 29, 'IL9': 29,
     'JDL9': 29, 'JL9': 29, 'JML9': 29, 'LL9': 29, 'ML9': 29, 'PL9': 29,
     'PPL9': 29, 'RRL9': 29, 'VL9': 29, 'YL9': 29, 'AGL9': 30, 'ALL9': 30,
-    'AUL9': 30, 'BUL9': 30, 'CUL9': 30, 'FUL9': 30, 'HCL9': 30, 'NIL9': 30,
+    'AUL9': 30, 'BUL9': 30, 'CUL9': 30, 'FUL9': 30, 'HCL9': 30, 'NIL9': 30, 'LUL9': 30,
     'NRL9': 30, 'PBL9': 30, 'RBL9': 30, 'RUL9': 30, 'SCL9': 30, 'SNL9': 30,
     'SPL9': 30, 'SSL9': 30, 'WRL9': 30, 'ZNL9': 30, 'APL9': 28, 'CFL9': 28,
     'CJL9': 28, 'CYL9': 28, 'FGL9': 28, 'JRL9': 28, 'LRL9': 28, 'MAL9': 28,
@@ -80,6 +80,8 @@ ALL_MARKET_END_HOUR = 16
 @lru_cache()
 def get_tdx_marketid(symbol):
     """普通合约/指数合约=》tdx合约所在市场id"""
+    if symbol == 'LU':
+        aa = 1
     underlying_symbol = get_underlying_symbol(symbol)
     tdx_index_symbol = underlying_symbol.upper() + 'L9'
     market_id = INIT_TDX_MARKET_MAP.get(tdx_index_symbol, None)

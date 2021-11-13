@@ -2,6 +2,8 @@
 """
 下载通达信指数合约1分钟bar => vnpy项目目录/bar_data/tdx/
 """
+from vnpy.trader.utility import get_csv_last_dt
+from vnpy.data.tdx.tdx_future_data import *
 import os
 import sys
 import json
@@ -16,9 +18,6 @@ if vnpy_root not in sys.path:
 
 os.environ["VNPY_TESTING"] = "1"
 
-from vnpy.data.tdx.tdx_future_data import *
-from vnpy.trader.utility import get_csv_last_dt
-
 
 if __name__ == "__main__":
 
@@ -31,7 +30,7 @@ if __name__ == "__main__":
     bar_data_folder = os.path.abspath(os.path.join(vnpy_root, 'bar_data'))
 
     # 开始日期（每年大概需要几分钟）
-    start_date = '20170101'
+    start_date = '20150101'
 
     # 创建API对象
     api_01 = TdxFutureData()
@@ -65,10 +64,10 @@ if __name__ == "__main__":
             print(f'文件{bar_file_path}不存在，开始时间:{start_date}')
 
         result, bars = api_01.get_bars(symbol=index_symbol,
-                               period='1min',
-                               callback=None,
-                               start_dt=start_dt,
-                               return_bar=False)
+                                       period='1min',
+                                       callback=None,
+                                       start_dt=start_dt,
+                                       return_bar=False)
         # [dict] => dataframe
         if not result or len(bars) == 0:
             continue
@@ -82,7 +81,6 @@ if __name__ == "__main__":
             data_df.to_csv(bar_file_path, index=True)
             print(f'首次更新{index_symbol} 数据 => 文件{bar_file_path}')
             continue
-
 
         # 获取标题
         headers = []
@@ -105,7 +103,6 @@ if __name__ == "__main__":
                 writer.writerow(bar)
 
             print(f'更新{index_symbol} 数据 => 文件{bar_file_path}, 最后记录:{bars[-1]}')
-
 
     msg = '更新完毕'
     send_wx_msg(content=msg)
