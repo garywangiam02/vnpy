@@ -2,6 +2,9 @@
 """
 更新主力合约
 """
+from vnpy.trader.utility import load_json, save_json, append_data
+from vnpy.trader.util_wechat import send_wx_msg
+from vnpy.data.tdx.tdx_future_data import *
 import os
 import sys
 import json
@@ -14,9 +17,6 @@ if vnpy_root not in sys.path:
 
 os.environ["VNPY_TESTING"] = "1"
 
-from vnpy.data.tdx.tdx_future_data import *
-from vnpy.trader.util_wechat import send_wx_msg
-from vnpy.trader.utility import load_json, save_json, append_data
 
 log_csv_name = 'dominat_change_history.csv'
 field_names = ['account_name', 'strategy_name', 'old_vt_symbol', 'new_vt_symbol', 'datetime']
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         # 更新本地合约缓存信息
         api_01.update_mi_contracts()
 
-        setting_file_path = os.path.abspath(os.path.join(cta_path, 'cta_strategy_pro_setting.json'))
+        setting_file_path = os.path.abspath(os.path.join(cta_path, '.vntrader', 'cta_strategy_pro_setting.json'))
         settings = load_json(setting_file_path, auto_save=False)
 
         if len(settings) == 0:

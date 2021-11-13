@@ -9,4 +9,4 @@ export PATH=$PATH:/usr/local/bin
 ############ Ended
 export PYTHONPATH=/root/workspace/vnpy/
 PROGRAM_NAME=/root/workspace/vnpy/prod/jobs/check_dominat_symbol.py
-/root/anaconda3/envs/vnpy2/bin/python $PROGRAM_NAME feature_hz01 >/root/workspace/vnpy/prod/jobs/crontab/log/check_dominat_symbol.log 2>>/root/workspace/vnpy/prod/jobs/crontab/log/check_dominat_symbol-error.log &
+/root/anaconda3/envs/vnpy2/bin/python $PROGRAM_NAME prod/future_hz01 >/root/workspace/vnpy/prod/jobs/crontab/log/check_dominat_symbol.log 2>>/root/workspace/vnpy/prod/jobs/crontab/log/check_dominat_symbol-error.log &
