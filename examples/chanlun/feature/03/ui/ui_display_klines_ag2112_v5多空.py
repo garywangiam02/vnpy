@@ -29,18 +29,18 @@ if __name__ == '__main__':
 
             "M5":
                 {
-                    "data_file": "log/FutureGrid0530_v5_ag2112/Future_grid_tick_ag2112_ag2112.SHFE_M5.csv",
+                    "data_file": "log/FutureGrid1114_1714_rb2112/Future_grid_tick_rb2112_rb99.SHFE_M5.csv",
                     "main_indicators": [
 
                     ],
                     "sub_indicators": [
 
                     ],
-                    "trade_file": "log/FutureGrid0530_v5_ag2112/Future_grid_tick_ag2112_trade.csv",
-                    "dist_file": "log/FutureGrid0530_v5_ag2112/Future_grid_tick_ag2112_dist.csv",
-                    "bi_file": "log/FutureGrid0530_v5_ag2112/Future_grid_tick_ag2112_ag2112.SHFE_M5_bi.csv",
-                    "duan_file": "log/FutureGrid0530_v5_ag2112/Future_grid_tick_ag2112_ag2112.SHFE_M5_duan.csv",
-                    "bi_zs_file": "log/FutureGrid0530_v5_ag2112/Future_grid_tick_ag2112_ag2112.SHFE_M5_zs.csv",
+                    "trade_file": "log/FutureGrid1114_1714_rb2112/Future_grid_tick_rb2112_trade.csv",
+                    "dist_file": "log/FutureGrid1114_1714_rb2112/Future_grid_tick_rb2112_dist.csv",
+                    "bi_file": "log/FutureGrid1114_1714_rb2112/Future_grid_tick_rb2112_rb99.SHFE_M5_bi.csv",
+                    "duan_file": "log/FutureGrid1114_1714_rb2112/Future_grid_tick_rb2112_rb99.SHFE_M5_duan.csv",
+                    "bi_zs_file": "log/FutureGrid1114_1714_rb2112/Future_grid_tick_rb2112_rb99.SHFE_M5_zs.csv",
                     "dist_include_list": ["buy","sell",'short','cover',
                                           'change close1', 'change close2','change close3',
                                           'append long', 'append short','remove long', 'remove short'
