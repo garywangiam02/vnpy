@@ -5,7 +5,7 @@ import sys
 from copy import copy
 
 # 将repostory的目录，作为根目录，添加到系统环境中。
-VNPY_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', ))
+VNPY_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', ))
 if VNPY_ROOT not in sys.path:
     sys.path.append(VNPY_ROOT)
     print(f'append {VNPY_ROOT} into sys.path')
@@ -41,9 +41,9 @@ test_setting = {}
 test_setting['name'] = 'FutureGrid{}'.format(datetime.now().strftime('%m%d_%H%M'))
 
 # 测试时间段, 从开始日期计算，过了init_days天，才全部激活交易
-test_setting['start_date'] = '20210501'
+test_setting['start_date'] = '20180501'
 test_setting['init_days'] = 5
-test_setting['end_date'] = '20210701'
+test_setting['end_date'] = '20181001'
 
 # 测试资金相关, 资金最大仓位， 期初资金
 test_setting['percent_limit'] = 20
@@ -52,8 +52,8 @@ test_setting['init_capital'] = 2000000
 # 测试日志相关， Ture，开始详细日志， False, 只记录简单日志
 test_setting['debug'] = True
 test_setting['mode'] = 'tick'
-test_setting['tick_path'] = os.path.abspath(os.path.join(VNPY_ROOT, 'tick_data', 'tq', 'future'))
-test_setting['use_tq'] = True   # 使用天勤下载tick数据
+test_setting['tick_path'] = os.path.abspath(os.path.join(VNPY_ROOT, 'tick_data'))
+test_setting['use_tq'] = False   # 使用天勤下载tick数据
 test_setting['using_99_contract'] = False  # 不强制转换使用99合约符号
 
 # 配置是当前运行目录的相对路径
@@ -89,7 +89,7 @@ execute.apply_async(kwargs={'func': 'vnpy.app.cta_strategy_pro.portfolio_testing
 # 创建回测任务
 count = 0
 
-symbol = 'ag2112'
+symbol = 'ag1812'
 
 underlying_symbol = get_underlying_symbol(symbol).upper()
 symbol_info = symbol_datas.get(f'{underlying_symbol}99')

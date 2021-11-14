@@ -81,7 +81,7 @@ class FutureRenkoRebuilder(FakeStrategy):
 
         return bar, last_renko_close_dt
 
-    def start(self, symbol, price_tick, height, start_date='2016-01-01', end_date='2099-01-01', refill=False):
+    def start(self, symbol, price_tick, height, start_date='2018-01-01', end_date='2099-01-01', refill=False):
         """启动重建工作"""
         self.underlying_symbol = get_underlying_symbol(symbol).upper()
         self.symbol = symbol.upper()

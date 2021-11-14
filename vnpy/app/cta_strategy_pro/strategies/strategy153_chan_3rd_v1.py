@@ -460,8 +460,8 @@ class Strategy153_Chan_Three_V1(CtaProFutureTemplate):
                                 "zs_low": max(float(self.kline_x.bi_list[-5].low), float(self.kline_x.bi_list[-7].low),
                                               float(self.kline_x.bi_list[-9].low))
                             }
-                        zs_info["zs_height"] = float(zs_info['high'] - zs_info['low'])
-                        zs_info["zs_middle"] = float(zs_info['high'] - zs_info['low']) / 2
+                        zs_info["zs_height"] = float(zs_info['zs_high'] - zs_info['zs_low'])
+                        zs_info["zs_middle"] = float(zs_info['zs_high'] - zs_info['zs_low']) / 2
                     else:
                         zs_info = {
                             "zs_start": str(self.kline_x.cur_bi_zs.start),
@@ -574,8 +574,8 @@ class Strategy153_Chan_Three_V1(CtaProFutureTemplate):
                                 "zs_low": max(float(self.kline_x.bi_list[-5].low), float(self.kline_x.bi_list[-7].low),
                                               float(self.kline_x.bi_list[-9].low))
                             }
-                        zs_info["zs_height"] = float(zs_info['high'] - zs_info['low'])
-                        zs_info["zs_middle"] = float(zs_info['high'] - zs_info['low']) / 2
+                        zs_info["zs_height"] = float(zs_info['zs_high'] - zs_info['zs_low'])
+                        zs_info["zs_middle"] = float(zs_info['zs_high'] - zs_info['zs_low']) / 2
                     else:
                         zs_info = {
                             "zs_start": str(self.kline_x.cur_bi_zs.start),
@@ -1180,19 +1180,19 @@ class Strategy153_Chan_Three_V1(CtaProFutureTemplate):
                                            in
                                            range(5, 15, 2)]
                     # 识别1.1：分笔形态顶背驰
-                    if ChanSignals.LA0.values in duan_beichi_signals:
-                        self.write_log(f'{self.kline_x.name}出现{ChanSignals.LA0.values}，空单告警')
+                    if ChanSignals.LA0.value in duan_beichi_signals:
+                        self.write_log(f'{self.kline_x.name}出现{ChanSignals.LA0.value}，空单告警')
                         if sub_tns['stop_price'] > float(self.kline_x.cur_bi_zs.low):
                             self.write_log(f'修改止损价至{self.kline_x.name}线段中枢顶部{float(self.kline_x.cur_bi_zs.low)}')
                             sub_tns['stop_price'] = float(self.kline_x.cur_bi_zs.low)
-                        x_signal_type = f"本级别{ChanSignals.LA0.values}"
+                        x_signal_type = f"本级别{ChanSignals.LA0.value}"
                     # 识别1.2：分笔形态双重顶背驰
-                    if ChanSignals.LB0.values in duan_beichi_signals:
-                        self.write_log(f'{self.kline_x.name}出现{ChanSignals.LB0.values}，空单告警')
+                    if ChanSignals.LB0.value in duan_beichi_signals:
+                        self.write_log(f'{self.kline_x.name}出现{ChanSignals.LB0.value}，空单告警')
                         if sub_tns['stop_price'] > float(self.kline_x.cur_bi_zs.low):
                             self.write_log(f'修改止损价至{self.kline_x.name}线段中枢顶部{float(self.kline_x.cur_bi_zs.low)}')
                             sub_tns['stop_price'] = float(self.kline_x.cur_bi_zs.low)
-                        x_signal_type = f"本级别{ChanSignals.LB0.values}"
+                        x_signal_type = f"本级别{ChanSignals.LB0.value}"
 
                     # 识别1.3：判断是否有下跌趋势底背驰一买信号
                     if check_qsbc_1st(big_kline=self.kline_x, small_kline=None, signal_direction=Direction.LONG):
