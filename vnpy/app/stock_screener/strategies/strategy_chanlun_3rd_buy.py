@@ -109,94 +109,92 @@ class StrategyChanlunThreeBuy(ScreenerTemplate):
         n = len(self.vt_symbols)
         for vt_symbol in self.vt_symbols:
             stock_name = self.engine.get_name(vt_symbol)
-            if self.exclude_st and ('ST' in stock_name or '退' in stock_name):
-                continue
-
-            symbol, ex = extract_vt_symbol(vt_symbol)
-            if (symbol.startswith('900')
-                    or symbol.startswith('200')
-                    or symbol.startswith('30')
-                    or symbol.startswith('730')
-                    or symbol.startswith('399')
-                    or symbol.startswith('000')
-                    or symbol.startswith('003')
-                    ):
-                continue
-
-            # 创建K线
-            kline_name = f'{vt_symbol}_{self.bar_name}'
-            # kline = self.klines.get(kline_name, None)
-            kline_setting = {}
-            kline_setting['name'] = f'{vt_symbol}_{self.bar_name}'  # k线名称
-            kline_setting['bar_interval'] = self.bar_interval  # X K线得周期
-            kline_setting['para_pre_len'] = 60
-            kline_setting['para_ma1_len'] = 55
-            kline_setting['para_ma2_len'] = 89
-            kline_setting['para_macd_fast_len'] = 12
-            kline_setting['para_macd_slow_len'] = 26
-            kline_setting['para_macd_signal_len'] = 9
-            kline_setting['para_active_chanlun'] = True
-            kline_setting['price_tick'] = 0.01  # 合约最小跳动
-            kline_setting['is_stock'] = True
-            kline = self.bar_class(self, self.on_bar_x, kline_setting)
-            self.klines[kline_name] = kline
-
-            last_bar_dt = None
-            if not self.check_adjust(vt_symbol):
-                # 从缓存中获取K线
-                last_bar_dt = self.load_klines_from_cache(symbol=symbol, kline_names=[kline_name])
-
-            if isinstance(last_bar_dt, datetime):
-                self.pre_load_days = (datetime.now() - last_bar_dt).days + 1
-
-            # 获取历史bar
-            self.write_log(f'开始获取{vt_symbol}[{stock_name}]bar数据')
-            bars = self.engine.get_bars(
-                vt_symbol=vt_symbol,
-                days=self.pre_load_days,
-                interval=self.interval,
-                interval_num=self.bar_interval
-            )
-
-            if len(bars) == 0:
-                continue
-            self.write_log('推送{}K线，共{}根bar'.format(vt_symbol, len(bars)))
-
-            # 逐一推送bar
-            for bar in bars:
-                if np.isnan(bar.close_price):
+            try:
+                if self.exclude_st and ('ST' in stock_name or '退' in stock_name):
                     continue
-                kline.add_bar(bar, bar_is_completed=True)
+                symbol, ex = extract_vt_symbol(vt_symbol)
+                # if symbol < '002094':
+                #     continue
 
-            # 更新缓存=》文件
-            self.save_klines_to_cache(symbol=vt_symbol.split('.')[0])
+                # 创建K线
+                kline_name = f'{vt_symbol}_{self.bar_name}'
+                # kline = self.klines.get(kline_name, None)
+                kline_setting = {}
+                kline_setting['name'] = f'{vt_symbol}_{self.bar_name}'  # k线名称
+                kline_setting['bar_interval'] = self.bar_interval  # X K线得周期
+                kline_setting['para_pre_len'] = 60
+                kline_setting['para_ma1_len'] = 55
+                kline_setting['para_ma2_len'] = 89
+                kline_setting['para_macd_fast_len'] = 12
+                kline_setting['para_macd_slow_len'] = 26
+                kline_setting['para_macd_signal_len'] = 9
+                kline_setting['para_active_chanlun'] = True
+                kline_setting['price_tick'] = 0.01  # 合约最小跳动
+                kline_setting['is_stock'] = True
+                kline = self.bar_class(self, self.on_bar_x, kline_setting)
+                self.klines[kline_name] = kline
 
-            ret, signal = self.calculate_signal(kline=kline, vt_symbol=vt_symbol)
-            if ret and signal:
-                result = {'vt_symbol': vt_symbol,
-                          'name': self.engine.get_name(vt_symbol),
-                          'bar_name': self.bar_name,
-                          'signal': signal,
-                          'datetime': bars[-1].datetime}
+                last_bar_dt = None
+                if self.check_adjust(vt_symbol):
+                    # 从缓存中获取K线
+                    last_bar_dt = self.load_klines_from_cache(symbol=symbol, kline_names=[kline_name])
 
-                self.results.append(
-                    result
+                if isinstance(last_bar_dt, datetime):
+                    self.pre_load_days = (datetime.now() - last_bar_dt).days + 1
+
+                # 获取历史bar
+                self.write_log(f'开始获取{vt_symbol}[{stock_name}]bar数据')
+                bars = self.engine.get_bars(
+                    vt_symbol=vt_symbol,
+                    days=self.pre_load_days,
+                    interval=self.interval,
+                    interval_num=self.bar_interval
                 )
-                append_data(file_name=export_file, dict_data=result)
 
-            else:
-                # 移除kline
-                self.klines.pop(kline_name, None)
+                if len(bars) == 0:
+                    continue
+                self.write_log('推送{}K线，共{}根bar'.format(vt_symbol, len(bars)))
+
+                # 逐一推送bar
+                for bar in bars:
+                    if np.isnan(bar.close_price):
+                        continue
+                    kline.add_bar(bar, bar_is_completed=True)
+
+                # 更新缓存=》文件
+                self.save_klines_to_cache(symbol=vt_symbol.split('.')[0])
+
+                ret, signal = self.calculate_signal(kline=kline, vt_symbol=vt_symbol)
+                if ret and signal:
+                    result = {'vt_symbol': vt_symbol,
+                              'name': self.engine.get_name(vt_symbol),
+                              'bar_name': self.bar_name,
+                              'signal': signal,
+                              'datetime': bars[-1].datetime}
+
+                    self.results.append(
+                        result
+                    )
+                    fields = ['vt_symbol', 'name', 'bar_name', 'datetime',
+                              'signal']
+                    append_data(file_name=export_file, dict_data=result,field_names=fields)
+
+                else:
+                    # 移除kline
+                    self.klines.pop(kline_name, None)
+
+            except Exception as ex:
+                self.write_error(f'处理{vt_symbol}[{stock_name}]异常:{str(ex)}')
 
             c += 1
             new_progress = c * 100 / n
             # if int(new_progress) != int(progress):
             progress = new_progress
-            self.write_log(f'第:{str(c)}, 共:{str(n)}当前进度:{progress}%')
+            self.write_log(f'当前进度:{progress}%')
 
         if progress > 99:
             self.running = False
-            msg = f'{self.strategy_name}运行结束，一共:{len(self.results)}条结果'
+            msg = f'{self.strategy_name}运行运行，一共:{len(self.results)}条结果'
             self.engine.send_wechat(msg)
             self.write_log(msg)
             self.completed = True
@@ -244,12 +242,13 @@ class StrategyChanlunThreeBuy(ScreenerTemplate):
 
         # 这里自行添加更多的三买信号
 
+
         # 发现了三买信号
         if signal_type:
             # 检查上升线段的最后一笔，对应的次级别走势，是否有背驰，并且当前是否存在三卖
 
             self.write_log(
-                f'{vt_symbol},发现{signal_type}信号，'
+                f'{vt_symbol},发现{signal_type}信号，'            
                 f'段:{kline.cur_duan.start} => {kline.cur_duan.end}, '
                 f'low:{kline.cur_duan.low}, high: {kline.cur_duan.high}')
             return True, signal_type

@@ -17,15 +17,23 @@ from vnpy.event import EventEngine, EVENT_TIMER
 from vnpy.trader.setting import SETTINGS
 from vnpy.trader.engine import MainEngine
 from vnpy.trader.utility import load_json
+# from vnpy.gateway.gj import GjGateway
 from vnpy.app.stock_screener import ScreenerApp
+# from vnpy.app.cta_stock import CtaStockApp
+# from vnpy.app.cta_crypto.base import EVENT_CTA_LOG
+from vnpy.app.rpc_service import RpcServiceApp
+# from vnpy.app.algo_broker import AlgoBrokerApp
+from vnpy.app.account_recorder import AccountRecorderApp
+from vnpy.trader.util_pid import update_pid
 
+# from vnpy.trader.util_monitor import OrderMonitor, TradeMonitor, PositionMonitor, AccountMonitor, LogMonitor
 
 SETTINGS["log.active"] = True
 SETTINGS["log.level"] = DEBUG
 SETTINGS["log.console"] = True
 SETTINGS["log.file"] = True
 
-gateway_name = 'em02'
+screener_name = '日线选股'
 
 import types
 import traceback
@@ -69,10 +77,17 @@ class DaemonService(object):
         self.g_count = 0
         dt = datetime.now()
 
-        if dt.hour != self.last_dt.hour:
-            self.last_dt = dt
-            print(u'run_screener.py checkpoint:{0}'.format(dt))
-            self.main_engine.write_log(u'run_screener.py checkpoint:{0}'.format(dt))
+        # if dt.hour != self.last_dt.hour:
+        self.last_dt = dt
+        print(u'run_screener.py checkpoint:{0}'.format(dt))
+        self.main_engine.write_log(u'run_screener.py checkpoint:{0}'.format(dt))
+        if self.main_engine.get_all_completed_status():
+            from vnpy.trader.util_wechat import send_wx_msg
+            msg = f'{screener_name}完成所有选股任务'
+            send_wx_msg(content=msg)
+            self.main_engine.write_log(msg)
+            sleep(10)
+            os._exit(0)
 
     def start(self):
         """
@@ -88,17 +103,13 @@ class DaemonService(object):
 
         while True:
             sleep(1)
-            if screen_engine.get_all_completed_status():
-                from vnpy.trader.util_wechat import send_wx_msg
-                msg = f'{gateway_name}完成所有选股任务'
-                send_wx_msg(content=msg)
-                self.main_engine.write_log(msg)
-                sleep(10)
-                os._exit(0)
+
 
 
 if __name__ == "__main__":
-    sys.excepthook = excepthook
+    # from vnpy.trader.ui import create_qapp
+    # qApp = create_qapp()
+    # sys.excepthook = excepthook
 
     s = DaemonService()
     s.start()

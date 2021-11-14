@@ -63,7 +63,7 @@ class StockScreenerEngine(BaseEngine):
 
         self.strategy_loggers = {}  # strategy_name: logger
 
-        self.thread_executor = ThreadPoolExecutor(max_workers=4)
+        self.thread_executor = ThreadPoolExecutor(max_workers=1)
         self.thread_tasks = []
 
         self.create_logger(logger_name=APP_NAME)
@@ -421,7 +421,7 @@ class StockScreenerEngine(BaseEngine):
             check_date = datetime.now().strftime('%Y-%m-%d')
 
         for d in stock_adjust_factor_list:
-            if d.get("dividOperateDate", "") < check_date:
+            if d.get("dividOperateDate","") < check_date:
                 return d
         return None
 
@@ -437,7 +437,7 @@ class StockScreenerEngine(BaseEngine):
         register the funcs to main_engine
         :return:
         """
-        pass
+        self.main_engine.get_all_completed_status = self.get_all_completed_status
 
     def init_engine(self):
         """
