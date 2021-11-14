@@ -28,6 +28,7 @@ if __name__ == "__main__":
     print(sys.argv)
 
     for account_folder in sys.argv[1:]:
+    # for account_folder in ['prod/future_hz01']:
         cta_path = os.path.abspath(os.path.join(vnpy_root, account_folder))
         if not os.path.exists(cta_path):
             print(f'{cta_path}不存在', file=sys.stderr)
