@@ -35,6 +35,7 @@ _templates
 # gary
 extra
 bar_data
+tick_data
 log
 .vscode
 .DS_Store
