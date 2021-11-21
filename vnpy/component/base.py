@@ -89,5 +89,7 @@ class MyEncoder(json.JSONEncoder):
             return obj.tolist()
         elif isinstance(obj, datetime):
             return obj.strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(obj, bytes):
+            return str(obj, encoding='utf-8')
         else:
             return super(MyEncoder, self).default(obj)

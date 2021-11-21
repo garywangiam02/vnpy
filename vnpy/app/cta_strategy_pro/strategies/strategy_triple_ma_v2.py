@@ -22,7 +22,6 @@ from vnpy.app.cta_strategy_pro import (
 from vnpy.component.cta_policy import CtaPolicy
 from vnpy.component.cta_grid_trade import CtaGrid
 from vnpy.component.cta_line_bar import CtaMinuteBar
-
 from vnpy.trader.utility import get_underlying_symbol, round_to, append_data, extract_vt_symbol
 from vnpy.trader.util_wechat import send_wx_msg
 

@@ -22,13 +22,13 @@ log_csv_name = 'dominat_change_history.csv'
 field_names = ['account_name', 'strategy_name', 'old_vt_symbol', 'new_vt_symbol', 'datetime']
 if __name__ == "__main__":
 
-    if len(sys.argv) < 2:
-        print(f'请输入{vnpy_root}下检查目录，例如 prod/account01', file=sys.stderr)
-        exit()
-    print(sys.argv)
+    # if len(sys.argv) < 2:
+    #     print(f'请输入{vnpy_root}下检查目录，例如 prod/account01', file=sys.stderr)
+    #     exit()
+    # print(sys.argv)
 
-    for account_folder in sys.argv[1:]:
-    # for account_folder in ['prod/future_hz01']:
+    # for account_folder in sys.argv[1:]:
+    for account_folder in ['prod/future_simnow']:
         cta_path = os.path.abspath(os.path.join(vnpy_root, account_folder))
         if not os.path.exists(cta_path):
             print(f'{cta_path}不存在', file=sys.stderr)

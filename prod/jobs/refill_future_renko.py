@@ -7,6 +7,7 @@ vnpy_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 if vnpy_root not in sys.path:
     print(f'append {vnpy_root} into sys.path')
     sys.path.append(vnpy_root)
+from vnpy.trader.util_wechat import send_wx_msg
 
 os.environ["VNPY_TESTING"] = "1"
 
@@ -30,9 +31,11 @@ if __name__ == "__main__":
 
     symbol = sys.argv[2]
     price_tick = float(sys.argv[3])
+    send_wx_msg(content="start build {} renko bar".format(symbol))
 
     print(f'启动期货renko补全,数据库:{host}/{FUTURE_RENKO_DB_NAME} 合约:{symbol}')
     builder.start(symbol=symbol, price_tick=price_tick, height=[3, 5, 10, 'K3', 'K5', 'K10'], refill=True)
 
+    send_wx_msg(content="end build {} renko bar".format(symbol))
     print(f'exit refill {symbol} renkos')
 
