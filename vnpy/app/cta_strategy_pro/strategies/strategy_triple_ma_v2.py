@@ -630,9 +630,9 @@ class Strategy_TripleMa_v2(CtaProTemplate):
             return
 
         if self.kline_x.line_ma3[-1] > self.kline_x.line_ma3[-2] and self.cur_99_price > self.kline_x.line_ma3[-1]:
-            if self.policy.tns_direction != Direction.LONG:
+            if self.policy.tns_direction != Direction.LONG.value:
                 self.write_log(u'开启做多趋势事务')
-                self.policy.tns_direction = Direction.LONG
+                self.policy.tns_direction = Direction.LONG.value
                 self.policy.tns_count = 0
                 self.policy.tns_high_price = self.kline_x.line_pre_high[-1]
                 self.policy.tns_low_price = self.kline_x.line_pre_low[-1]
@@ -647,9 +647,9 @@ class Strategy_TripleMa_v2(CtaProTemplate):
             return
 
         if self.kline_x.line_ma3[-1] < self.kline_x.line_ma3[-2] and self.cur_99_price < self.kline_x.line_ma3[-1]:
-            if self.policy.tns_direction != Direction.SHORT:
+            if self.policy.tns_direction != Direction.SHORT.value:
                 self.write_log(u'开启做空趋势事务')
-                self.policy.tns_direction = Direction.SHORT
+                self.policy.tns_direction = Direction.SHORT.value
                 self.policy.tns_count = 0
                 self.policy.tns_high_price = self.kline_x.line_pre_high[-1]
                 self.policy.tns_low_price = self.kline_x.line_pre_low[-1]
@@ -674,7 +674,7 @@ class Strategy_TripleMa_v2(CtaProTemplate):
             return
 
         # MA10 上穿MA20，
-        if self.policy.tns_direction == Direction.LONG \
+        if self.policy.tns_direction == Direction.LONG.value \
                 and self.kline_x.ma12_count > 0 \
                 and self.position.pos == 0:
 
@@ -693,7 +693,7 @@ class Strategy_TripleMa_v2(CtaProTemplate):
             return
 
         # MA10 下穿MA20，
-        if self.policy.tns_direction == Direction.SHORT \
+        if self.policy.tns_direction == Direction.SHORT.value \
                 and self.kline_x.ma12_count < 0 \
                 and self.position.pos == 0:
 
@@ -743,6 +743,8 @@ class Strategy_TripleMa_v2(CtaProTemplate):
         symbol_margin_rate = self.cta_engine.get_margin_rate(self.vt_symbol)
         # 投资资金总额允许的开仓数量
         max_unit = max(1, int(invest_money / (self.cur_mi_price * symbol_size * symbol_margin_rate)))
+        msg = u'{}开仓价格：{}'.format(self.vt_symbol, self.cur_mi_price * symbol_size * symbol_margin_rate)
+        send_wx_msg(msg)
         self.write_log(u'投资资金总额{}允许的开仓数量：{},当前已经开仓手数:{}'
                        .format(invest_money, max_unit,
                                self.position.long_pos + abs(self.position.short_pos)))
@@ -859,7 +861,7 @@ class Strategy_TripleMa_v2(CtaProTemplate):
                 return
 
             # 转空事务
-            if self.policy.tns_direction != Direction.LONG:
+            if self.policy.tns_direction != Direction.LONG.value:
                 self.write_log(
                     u'{},事务与持仓不一致，平仓多单{}手,价格:{}'.format(self.cur_datetime, abs(self.position.pos), self.cur_99_price))
                 self.tns_sell()
@@ -890,7 +892,7 @@ class Strategy_TripleMa_v2(CtaProTemplate):
                 return
 
             # 转多事务
-            if self.policy.tns_direction != Direction.SHORT:
+            if self.policy.tns_direction != Direction.SHORT.value:
                 self.write_log(
                     u'{},事务与持仓不一致，平仓空单{}手,价格:{}'.format(self.cur_datetime, abs(self.position.short_pos),
                                                         self.cur_99_price))

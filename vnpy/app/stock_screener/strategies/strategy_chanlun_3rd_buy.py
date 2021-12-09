@@ -110,6 +110,11 @@ class StrategyChanlunThreeBuy(ScreenerTemplate):
         for vt_symbol in self.vt_symbols:
             stock_name = self.engine.get_name(vt_symbol)
             try:
+                c += 1
+                new_progress = c * 100 / n
+                # if int(new_progress) != int(progress):
+                progress = new_progress
+                self.write_log(f'当前进度:{progress}%')
                 if self.exclude_st and ('ST' in stock_name or '退' in stock_name):
                     continue
                 symbol, ex = extract_vt_symbol(vt_symbol)
@@ -185,16 +190,10 @@ class StrategyChanlunThreeBuy(ScreenerTemplate):
 
             except Exception as ex:
                 self.write_error(f'处理{vt_symbol}[{stock_name}]异常:{str(ex)}')
-
-            c += 1
-            new_progress = c * 100 / n
-            # if int(new_progress) != int(progress):
-            progress = new_progress
-            self.write_log(f'当前进度:{progress}%')
-
+ 
         if progress > 99:
             self.running = False
-            msg = f'{self.strategy_name}运行运行，一共:{len(self.results)}条结果'
+            msg = f'{self.strategy_name}运行，一共:{len(self.results)}条结果'
             self.engine.send_wechat(msg)
             self.write_log(msg)
             self.completed = True

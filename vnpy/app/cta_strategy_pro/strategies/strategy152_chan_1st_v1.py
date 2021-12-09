@@ -12,7 +12,7 @@ from typing import List
 
 # 然后是自己编写的模块
 from vnpy.trader.utility import round_to
-from vnpy.app.cta_strategy_pro.template import (CtaProFutureTemplate, Direction, get_underlying_symbol, Interval, \
+from vnpy.app.cta_strategy_pro.template import (CtaProFutureTemplate, Direction, get_underlying_symbol, Interval,
                                                 TickData, BarData, OrderType, Offset, Status, TradeData, OrderData)
 from vnpy.component.cta_policy import (
     CtaPolicy, TNS_STATUS_OBSERVATE, TNS_STATUS_READY, TNS_STATUS_ORDERING, TNS_STATUS_OPENED, TNS_STATUS_CLOSED
@@ -311,6 +311,7 @@ class Strategy152_Chan_First_V1(CtaProFutureTemplate):
             self.last_minute = tick.datetime.minute
             self.write_log(f'[心跳] {self.cur_datetime} process_sub_tns & check grids')
             self.display_tns()
+            self.tns_process_sub()
 
     # ----------------------------------------------------------------------
     def on_bar(self, bar):
@@ -615,8 +616,8 @@ class Strategy152_Chan_First_V1(CtaProFutureTemplate):
             # 盘整背驰一买，直接 => 就绪状态
             # 其他：寻找次级别的二买，当前次级别线段下跌，末笔是下跌+底分型
             if sub_tns['signal_type'] == '盘整背驰一买' or \
-                    (self.kline_y.bi_list[-2].start == self.kline_y.cur_duan.end \
-                    and check_bi_not_rt(self.kline_x, Direction.SHORT)):
+                    (self.kline_y.bi_list[-2].start == self.kline_y.cur_duan.end
+                     and check_bi_not_rt(self.kline_x, Direction.SHORT)):
                 status = TNS_STATUS_READY
                 sub_tns.update({"status": status})
                 self.policy.sub_tns.update({signal: sub_tns})
@@ -626,7 +627,7 @@ class Strategy152_Chan_First_V1(CtaProFutureTemplate):
         # 买入就绪状态
         if status == TNS_STATUS_READY:
 
-                        # 止损价, 当前一买信号的下跌线段最低点
+            # 止损价, 当前一买信号的下跌线段最低点
             stop_price = float(self.kline_x.cur_duan.low)
             # 止盈价：当前线段高点+当前线段高度
             win_price = float(self.kline_x.cur_duan.high + self.kline_x.cur_duan.height)
@@ -732,8 +733,8 @@ class Strategy152_Chan_First_V1(CtaProFutureTemplate):
             # 盘整背驰一卖 => 就绪状态
             # 其他 => 寻找次级别的二卖, 当前次级别线段上涨，末笔是上涨+顶分型
             if sub_tns['signal_type'] == '盘整背驰一卖' or \
-                    (self.kline_y.bi_list[-2].start == self.kline_y.cur_duan.end \
-                    and check_bi_not_rt(self.kline_x, Direction.LONG)):
+                    (self.kline_y.bi_list[-2].start == self.kline_y.cur_duan.end
+                     and check_bi_not_rt(self.kline_x, Direction.LONG)):
                 status = TNS_STATUS_READY
                 sub_tns.update({"status": status})
                 self.policy.sub_tns.update({signal: sub_tns})

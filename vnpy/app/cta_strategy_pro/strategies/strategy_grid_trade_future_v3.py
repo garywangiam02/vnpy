@@ -451,7 +451,7 @@ class StrategyGridTradeFutureV3(CtaProFutureTemplate):
             if self.is_chanlun_fit(direction=Direction.LONG, vt_symbol=vt_symbol):
                 long_prices = grid_plan.get('long_prices', {})
                 # 找出能满足当前价的多单开仓价
-                plan_long_prices = sorted([p for p in long_prices.keys() if p >= cur_price])
+                plan_long_prices = sorted([float(p) for p in long_prices.keys() if float(p) >= cur_price])
 
                 # 找出当前持有仓位的最小开仓价格
                 last_opened_price = self.get_last_opened_price(direction=Direction.LONG, vt_symbol=vt_symbol)
@@ -562,7 +562,7 @@ class StrategyGridTradeFutureV3(CtaProFutureTemplate):
 
         # 如果K线得线段为空白，则不开仓
         if self.kline_x.cur_duan is None and self.kline_x.cur_bi is None:
-            #self.write_log(f'{vt_symbol}的K线线段、分笔都未生成')
+            # self.write_log(f'{vt_symbol}的K线线段、分笔都未生成')
             return False
 
         if self.kline_x.cur_duan:

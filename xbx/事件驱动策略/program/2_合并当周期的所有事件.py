@@ -1,3 +1,11 @@
+"""
+《邢不行-2021新版|Python股票量化投资课程》
+author: 邢不行
+微信: xbx2626
+# 本节课程内容
+12.3 筛选事件股票
+通过因子筛选事件选出的股票
+"""
 import pandas as pd
 from program.Function import *
 from program.Config import *

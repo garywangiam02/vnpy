@@ -431,7 +431,7 @@ class StrategyGridTradeFutureV5(CtaProFutureTemplate):
             # 当前价格距离最高价很远，并存在做多线段时，看是否可以补充下做多计划
             else:
                 # 计划中得网格最高价格
-                max_open_price = max([p for p in grid_plan.get('long_prices').keys()])
+                max_open_price = max([float(p) for p in grid_plan.get('long_prices').keys()])
 
                 # 当前线段向上，最高价下两个格，线段搞掂距离计划最高价，还要高出一个网格
                 if self.kline_x.cur_duan and self.kline_x.cur_duan.direction == 1 \
@@ -473,7 +473,7 @@ class StrategyGridTradeFutureV5(CtaProFutureTemplate):
             #  当前价格距离最低价很远，并存在做空线段时，看是否可以补充下做空计划
             else:
                 # 计划中得最低价开空价
-                min_open_price = min([p for p in grid_plan.get('short_prices').keys()])
+                min_open_price = min([float(p) for p in grid_plan.get('short_prices').keys()])
                 # 当前下跌线段， 线段低点，就计划的最低开空价，超过一个格子的距离
                 if self.kline_x.cur_duan and self.kline_x.cur_duan.direction == -1 \
                         and self.kline_x.cur_duan.end == self.kline_x.cur_bi.end \
@@ -502,7 +502,7 @@ class StrategyGridTradeFutureV5(CtaProFutureTemplate):
             if self.is_chanlun_fit(direction=Direction.LONG, vt_symbol=vt_symbol):
                 long_prices = grid_plan.get('long_prices', {})
                 # 找出能满足当前价的多单开仓价
-                plan_long_prices = sorted([p for p in long_prices.keys() if p >= cur_price])
+                plan_long_prices = sorted([float(p) for p in long_prices.keys() if p >= cur_price])
 
                 # 找出当前持有仓位的最小开仓价格
                 last_opened_price,_ = self.get_last_opened_price(direction=Direction.LONG, vt_symbol=vt_symbol)
@@ -564,7 +564,7 @@ class StrategyGridTradeFutureV5(CtaProFutureTemplate):
                 # 找出能满足当前价的空开仓价
                 short_prices = grid_plan.get('short_prices', {})
                 # 找出能满足当前价的空单开仓价
-                plan_short_prices = sorted([p for p in short_prices.keys() if p <= cur_price])
+                plan_short_prices = sorted([float(p) for p in short_prices.keys() if p <= cur_price])
                 # 找出当前持有仓位的最大开空仓价格
                 last_opened_price,_ = self.get_last_opened_price(direction=Direction.SHORT, vt_symbol=vt_symbol)
 

@@ -1,0 +1,25 @@
+{
+    "em01_3rd_buy_v1": {
+        "class_name": "StrategyStock3rdBuyGroupV1",
+        "vt_symbols": [],
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "comment": "日线三买",
+            "backtesting": false,
+            "max_invest_rate": 1,
+            "max_invest_margin": 10000,
+            "max_single_margin": 3000,
+            "stock_name_filters": [
+                "st",
+                "退",
+                "地产"
+            ],
+            "export_kline": true,
+            "screener_strategies": [
+                "screener_ThreeBuy_D1",
+                "screener_ThreeBuy_M30"
+            ]
+        }
+    }
+}

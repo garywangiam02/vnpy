@@ -11,6 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from decimal import Decimal, ROUND_HALF_UP
 from tqdm import tqdm
+
 pd.set_option('expand_frame_repr', False)  # 当列太多时不换行
 pd.set_option('display.max_rows', 5000)  # 最多显示数据的行数
 
@@ -230,7 +231,18 @@ def evaluate_investment(source_data, tittle, date='交易日期'):
     return results.T
 
 
-def draw_equity_curve(df, time, data_dict, pic_size=[16, 9], dpi=72, font_size=25):
+# 绘制策略曲线
+def draw_equity_curve(df, data_dict, time=None, pic_size=[16, 9], dpi=72, font_size=25):
+    """
+    绘制策略曲线
+    :param df: 包含净值数据的df
+    :param data_dict: 要展示的数据字典格式：｛图片上显示的名字:df中的列名｝
+    :param time: 时间列的名字，如果为None将用索引作为时间列
+    :param pic_size: 图片的尺寸
+    :param dpi: 图片的dpi
+    :param font_size: 字体大小
+    :return:
+    """
     plt.rcParams['font.sans-serif'] = ['SimHei']
     plt.rcParams['axes.unicode_minus'] = False
     # plt.style.use('dark_background')
@@ -238,8 +250,12 @@ def draw_equity_curve(df, time, data_dict, pic_size=[16, 9], dpi=72, font_size=2
     plt.xticks(fontsize=font_size)
     plt.yticks(fontsize=font_size)
     for key in data_dict:
-        plt.plot(df[time], df[data_dict[key]], label=key)
+        if time:
+            plt.plot(df[time], df[data_dict[key]], label=key)
+        else:
+            plt.plot(df.index, df[data_dict[key]], label=key)
     plt.legend(fontsize=font_size)
+    plt.grid()
     plt.show()
 
 
@@ -268,17 +284,29 @@ def cal_today_stock_cap_line(data, hold_period):
     return list(array)
 
 
-def create_update_info(data, start_index, cap_num, cap):
+def update_df(today_event, start_index, cap_num, cap):
+    """
+    :param today_event:  当天的事件数据
+    :param start_index:  开始的index，为update使用
+    :param cap_num:  使用哪一份资金进行投资
+    :param cap:  投资金额是多少
+    :return:
+    """
 
-    net_value = data['持仓每日净值'].apply(lambda x: np.array(x) * cap)[-1]
-    hold = data['买入股票代码'][-1]
-    index = range(start_index, start_index + len(net_value))
+    # 获取持仓每日净值
+    value_list = today_event.iloc[0]['持仓每日净值']
 
-    res = pd.DataFrame(index=index)
-    res['资金%s_资产' % cap_num] = net_value
-    res['资金%s_持仓标的' % cap_num] = hold
-    rest_days = range(len(net_value), 0, -1)
-    res['资金%s_剩余时间' % cap_num] = range(len(net_value), 0, -1)
-    return res
+    # 创建用来更新的df
+    index = range(start_index, start_index + len(value_list))
+    df = pd.DataFrame(index=index)
+
+    # 给更新的df赋值
+    df['%s_资金' % cap_num] = value_list
+    df['%s_资金' % cap_num] *= cap
+
+    df['%s_股票' % cap_num] = today_event.iloc[0]['买入股票代码']
+    df['%s_余数' % cap_num] = range(len(value_list), 0, -1)
+
+    return df
 
 # endregion

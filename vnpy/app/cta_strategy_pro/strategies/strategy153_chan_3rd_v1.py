@@ -311,6 +311,7 @@ class Strategy153_Chan_Three_V1(CtaProFutureTemplate):
             self.last_minute = tick.datetime.minute
             self.write_log(f'[心跳] {self.cur_datetime} process_sub_tns & check grids')
             self.display_tns()
+            self.tns_process_sub()
 
     # ----------------------------------------------------------------------
     def on_bar(self, bar):

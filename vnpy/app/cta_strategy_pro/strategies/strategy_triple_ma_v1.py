@@ -440,7 +440,6 @@ class Strategy_TripleMa(CtaTemplate):
         # 更新最新价
         self.cur_mi_price = tick.last_price
 
-
         # 推送Tick到lineM5
         self.kline_x.on_tick(tick)
 
@@ -540,9 +539,9 @@ class Strategy_TripleMa(CtaTemplate):
             return
 
         if self.kline_x.line_ma3[-1] > self.kline_x.line_ma3[-2] and self.cur_mi_price > self.kline_x.line_ma3[-1]:
-            if self.policy.tns_direction != Direction.LONG:
+            if self.policy.tns_direction != Direction.LONG.value:
                 self.write_log(u'开启做多趋势事务')
-                self.policy.tns_direction = Direction.LONG
+                self.policy.tns_direction = Direction.LONG.value
                 self.policy.tns_count = 0
                 self.policy.tns_high_price = self.kline_x.line_pre_high[-1]
                 self.policy.tns_low_price = self.kline_x.line_pre_low[-1]
@@ -557,9 +556,9 @@ class Strategy_TripleMa(CtaTemplate):
             return
 
         if self.kline_x.line_ma3[-1] < self.kline_x.line_ma3[-2] and self.cur_mi_price < self.kline_x.line_ma3[-1]:
-            if self.policy.tns_direction != Direction.SHORT:
+            if self.policy.tns_direction != Direction.SHORT.value:
                 self.write_log(u'开启做空趋势事务')
-                self.policy.tns_direction = Direction.SHORT
+                self.policy.tns_direction = Direction.SHORT.value
                 self.policy.tns_count = 0
                 self.policy.tns_high_price = self.kline_x.line_pre_high[-1]
                 self.policy.tns_low_price = self.kline_x.line_pre_low[-1]
@@ -584,14 +583,14 @@ class Strategy_TripleMa(CtaTemplate):
             return
 
         # MA10 上穿MA20，
-        if self.policy.tns_direction == Direction.LONG \
+        if self.policy.tns_direction == Direction.LONG.value \
                 and self.kline_x.ma12_count > 0 \
                 and self.position.pos == 0:
 
             # 计算开仓数量
+            count = self.add_pos_under_price_count + self.add_pos_under_price_count + 1
             first_open_volume = self.tns_get_volume(stop_price=self.kline_x.line_pre_low[-1],
-                                                    invest_percent=self.max_invest_percent / (
-                                                            self.add_pos_under_price_count + self.add_pos_under_price_count + 1))
+                                                    invest_percent=self.max_invest_percent / count)
 
             self.write_log(u'{},开仓多单{}手,价格:{}'.format(self.cur_datetime, first_open_volume, self.cur_mi_price))
             orderid = self.buy(price=self.cur_mi_price, volume=first_open_volume, order_time=self.cur_datetime)
@@ -610,13 +609,13 @@ class Strategy_TripleMa(CtaTemplate):
             return
 
         # MA10 下穿MA20，
-        if self.policy.tns_direction == Direction.SHORT \
+        if self.policy.tns_direction == Direction.SHORT.value \
                 and self.kline_x.ma12_count < 0 \
                 and self.position.pos == 0:
             # 计算开仓数量
             first_open_volume = self.tns_get_volume(stop_price=self.kline_x.line_pre_high[-1],
                                                     invest_percent=self.max_invest_percent / (
-                                                            self.add_pos_under_price_count + self.add_pos_under_price_count + 1))
+                self.add_pos_under_price_count + self.add_pos_under_price_count + 1))
 
             # 如果要实现海龟仓位管理方法，或者凯莉公式，在这里，先计算第一笔开仓是多少，再传给volume
             self.write_log(u'{},开仓空单{}手,价格:{}'.format(self.cur_datetime, first_open_volume, self.cur_mi_price))
@@ -713,7 +712,7 @@ class Strategy_TripleMa(CtaTemplate):
                 # 计算开仓数量
                 add_volume = self.tns_get_volume(stop_price=new_stop_price,
                                                  invest_percent=self.max_invest_percent / (
-                                                         self.add_pos_under_price_count + self.add_pos_under_price_count + 1))
+                                                     self.add_pos_under_price_count + self.add_pos_under_price_count + 1))
 
                 self.write_log(u'{},顺势加仓多单{}手,价格:{}'.format(self.cur_datetime, add_volume, self.cur_mi_price))
                 orderid = self.buy(price=self.cur_mi_price, volume=add_volume, order_time=self.cur_datetime)
@@ -736,7 +735,7 @@ class Strategy_TripleMa(CtaTemplate):
                 # 计算开仓数量
                 add_volume = self.tns_get_volume(stop_price=self.policy.tns_stop_price,
                                                  invest_percent=self.max_invest_percent / (
-                                                         self.add_pos_under_price_count + self.add_pos_under_price_count + 1))
+                                                     self.add_pos_under_price_count + self.add_pos_under_price_count + 1))
 
                 self.write_log(u'{},逆势加仓多单{}手,价格:{}'.format(self.cur_datetime, add_volume, self.cur_mi_price))
                 orderid = self.buy(price=self.cur_mi_price, volume=add_volume, order_time=self.cur_datetime)
@@ -757,7 +756,7 @@ class Strategy_TripleMa(CtaTemplate):
                 # 计算开仓数量
                 add_volume = self.tns_get_volume(stop_price=new_stop_price,
                                                  invest_percent=self.max_invest_percent / (
-                                                         self.add_pos_under_price_count + self.add_pos_under_price_count + 1))
+                                                     self.add_pos_under_price_count + self.add_pos_under_price_count + 1))
 
                 self.write_log(u'{},顺势加仓空单{}手,价格:{}'.format(self.cur_datetime, add_volume, self.cur_mi_price))
                 orderid = self.short(price=self.cur_mi_price, volume=add_volume, order_time=self.cur_datetime)
@@ -776,7 +775,7 @@ class Strategy_TripleMa(CtaTemplate):
                 # 计算开仓数量
                 add_volume = self.tns_get_volume(stop_price=self.policy.tns_stop_price,
                                                  invest_percent=self.max_invest_percent / (
-                                                         self.add_pos_under_price_count + self.add_pos_under_price_count + 1))
+                                                     self.add_pos_under_price_count + self.add_pos_under_price_count + 1))
                 self.write_log(u'{},逆势加仓空单{}手,价格:{}'.format(self.cur_datetime, add_volume, self.cur_mi_price))
                 orderid = self.short(price=self.cur_mi_price, volume=add_volume, order_time=self.cur_datetime)
                 if orderid:
@@ -804,7 +803,7 @@ class Strategy_TripleMa(CtaTemplate):
                 return
 
             # 转空事务
-            if self.policy.tns_direction != Direction.LONG:
+            if self.policy.tns_direction != Direction.LONG.value:
                 self.write_log(
                     u'{},事务与持仓不一致，平仓多单{}手,价格:{}'.format(self.cur_datetime, abs(self.position.pos), sell_price))
                 self.sell(price=sell_price, volume=abs(self.position.pos), order_time=self.cur_datetime)
@@ -837,7 +836,7 @@ class Strategy_TripleMa(CtaTemplate):
                 return
 
             # 转多事务
-            if self.policy.tns_direction != Direction.SHORT:
+            if self.policy.tns_direction != Direction.SHORT.value:
                 self.write_log(
                     u'{},事务与持仓不一致，平仓空单{}手,价格:{}'.format(self.cur_datetime, abs(self.position.short_pos),
                                                         cover_price))

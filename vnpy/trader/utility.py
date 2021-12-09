@@ -208,12 +208,13 @@ def _get_trader_dir(temp_name: str) -> Tuple[Path, Path]:
     # return Path.cwd(), Path.cwd()
 
     cwd = Path(sys.argv[0]).parent
+    return cwd, cwd
     temp_path = cwd.joinpath(temp_name)
 
     # If .vntrader folder exists in current working directory,
     # then use it as trader running path.
     if temp_path.exists():
-        return cwd, temp_path
+        return cwd, cwd
 
     # Otherwise use home path of system.
     home_path = Path.home()
@@ -616,6 +617,7 @@ def save_images_to_excel(file_name, sheet_name, image_names):
         print(u'save_images_to_excel exception:{}'.format(str(ex)), traceback.format_exc(), file=sys.stderr)
         return False
 
+
 def display_dual_axis(df, columns1, columns2=[], invert_yaxis1=False, invert_yaxis2=False, file_name=None,
                       sheet_name=None,
                       image_name=None,
@@ -644,7 +646,7 @@ def display_dual_axis(df, columns1, columns2=[], invert_yaxis1=False, invert_yax
     fig, ax1 = plt.subplots()
     if invert_yaxis1:
         ax1.invert_yaxis()
-    df1.plot(ax=ax1,cmap='tab20b')
+    df1.plot(ax=ax1, cmap='tab20b')
 
     if len(columns2) > 0:
         df2 = df[columns2]
@@ -653,7 +655,6 @@ def display_dual_axis(df, columns1, columns2=[], invert_yaxis1=False, invert_yax
         if invert_yaxis2:
             ax2.invert_yaxis()
         df2.plot(ax=ax2, cmap='tab20c')
-
 
     # 修改x轴得label为时间
     xt = ax1.get_xticks()
@@ -1445,4 +1446,3 @@ def get_remote_file(remote_ip, remote_file_path, mode='rb'):
     except Exception as ex:
         print(u'打开远程目录异常:{}'.format(str(ex)))
         return None
-

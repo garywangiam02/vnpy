@@ -1,0 +1,12 @@
+{
+  "mongo_db": {
+    "host": "localhost",
+    "port": 27017
+  },
+  "accounts": {
+    "simnow": {
+      "copy_history_trades": true,
+      "copy_history_orders": true
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+    "create_time": "",
+    "save_time": "2021-12-09 02:32:00",
+    "last_long_bi_start": "",
+    "last_short_bi_start": "",
+    "chan_signals": {
+        "M30": {
+            "bi_end": "2021-12-07 22:30:00",
+            "ding_bi_end": "2021-12-07 22:30:00",
+            "ding_price": 2127.0,
+            "signal_type": "SA0~顶背驰"
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "stock_grids_dual_ma_group": {
+        "class_name": "StrategyStockDualMaGroupV1",
+        "vt_symbols": [],
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "comment": [
+                "光伏50ETF(2.5份)516880.SSE",
+                "华鲁恒升600426.SSE",
+                "紫金矿业 601899.SSE"
+            ],
+            "backtesting": false,
+            "class_name": "StrategyStockDualMaGroupV1",
+            "max_invest_rate": 0.9,
+            "max_invest_margin": 20000,
+            "max_single_margin": 4000
+        }
+    }
+}
