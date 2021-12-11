@@ -16,4 +16,4 @@ for hold in [3, 5, 8, 13, 21]:
         if os.path.exists(back_test_path):
             print('回测结果已存在')
         else:
-            os.system('python 2_事件策略回测.py %s %s ' % (hold, stk_num))
+            os.system('python /Users/gary/workspace/quant/vnpy/xbx/money_flow/program/2_事件策略回测.py %s %s ' % (hold, stk_num))
