@@ -225,7 +225,7 @@ class Strategy154_ChannelBreak_v5(CtaProFutureTemplate):
             self.trading = True  # 控制是否启动交易
 
         self.write_log(u'策略初始化完成')
-        send_wx_msg(content="Strategy154_ChannelBreak_v5 启动成功")
+        send_wx_msg(content="{}Strategy154_ChannelBreak_v5 启动成功".format(self.symbol))
 
     def init_data(self):
         """初始化数据"""
@@ -639,8 +639,8 @@ class Strategy154_ChannelBreak_v5(CtaProFutureTemplate):
 
         # 投资资金总额允许的开仓数量
         max_unit = max(1, int(invest_money / (self.cur_mi_price * self.symbol_size * self.margin_rate)))
-        msg = u'{}开仓价格：{}'.format(self.vt_symbol, self.cur_mi_price * self.symbol_size * self.margin_rate)
-        send_wx_msg(msg)
+        # msg = u'{}开仓价格：{}'.format(self.vt_symbol, self.cur_mi_price * self.symbol_size * self.margin_rate)
+        # send_wx_msg(msg)
         if self.max_invest_pos > 0:
             max_unit = min(max_unit, self.max_invest_pos)
 

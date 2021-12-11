@@ -9,5 +9,4 @@ export PATH=$PATH:/usr/local/bin
 ############ Ended
 export PYTHONPATH=/root/workspace/vnpy/
 PROGRAM_NAME=/root/workspace/vnpy/prod/jobs/daily_stock_adjust_grids.py
-/root/anaconda3/envs/vnpy2/bin/python $PROGRAM_NAME stock_em01 >/root/workspace/vnpy/prod/jobs/crontab/log/daily_stock_adjust_grids.log 2>>/root/workspace/vnpy/prod/jobs/crontab/log/daily_stock_adjust_grids-error.log &
-/root/anaconda3/envs/vnpy2/bin/python $PROGRAM_NAME stock_3rd_buy >/root/workspace/vnpy/prod/jobs/crontab/log/daily_stock_adjust_grids.log 2>>/root/workspace/vnpy/prod/jobs/crontab/log/daily_stock_adjust_grids-error.log &
+/root/anaconda3/envs/vnpy2/bin/python $PROGRAM_NAME gary_stock_em01 >/root/workspace/vnpy/prod/jobs/crontab/log/daily_stock_adjust_grids.log 2>>/root/workspace/vnpy/prod/jobs/crontab/log/daily_stock_adjust_grids-error.log &

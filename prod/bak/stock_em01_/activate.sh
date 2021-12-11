@@ -11,5 +11,5 @@ export PATH=$PATH:/usr/local/bin
 BASE_PATH=$(cd `dirname $0`; pwd)
 echo $BASE_PATH
 cd `dirname $0`
-PROGRAM_NAME=/root/workspace/vnpy/prod/stock_em01/run_service.py
+PROGRAM_NAME=/root/workspace/vnpy/prod/gary_stock_em01/run_service.py
 /root/anaconda3/envs/vnpy2/bin/python $PROGRAM_NAME >$BASE_PATH/.vntrader/log/service.log 2>>$BASE_PATH/.vntrader/log/service-error.log &

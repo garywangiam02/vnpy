@@ -1,0 +1,14 @@
+{
+    "c_Strategy_Renko_Reverse": {
+        "class_name": "Strategy_Renko_Reverse",
+        "vt_symbol": "c2205.DCE",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "backtesting": false,
+            "single_lost_rate": 0.02,
+            "max_invest_percent": 10,
+            "renko_height": "K3"
+        }
+    }
+}
