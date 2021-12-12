@@ -1,0 +1,19 @@
+[
+  {
+    "strategy_name": "account",
+    "pos": [
+
+      {
+        "vt_symbol": "ETHUSDT.BINANCE",
+        "direction": "long",
+        "volume": 0
+      },
+
+      {
+        "vt_symbol": "BTCUSDT.BINANCE",
+        "direction": "long",
+        "volume": 0.0
+      }
+    ]
+  }
+]

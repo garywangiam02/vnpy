@@ -9,7 +9,6 @@ import time
 import json
 from copy import copy
 from datetime import datetime, timedelta
-from time import sleep
 from enum import Enum
 from threading import Lock
 from typing import Dict, List
@@ -61,8 +60,7 @@ STATUS_BINANCEF2VT: Dict[str, Status] = {
 
 ORDERTYPE_VT2BINANCEF: Dict[OrderType, str] = {
     OrderType.LIMIT: "LIMIT",
-    OrderType.MARKET: "MARKET",
-    OrderType.STOP: "STOP_MARKET"
+    OrderType.MARKET: "MARKET"
 }
 ORDERTYPE_BINANCEF2VT: Dict[str, OrderType] = {v: k for k, v in ORDERTYPE_VT2BINANCEF.items()}
 
@@ -174,7 +172,7 @@ class BinancefGateway(BaseGateway):
             self.status.update({'con': True})
 
         self.count += 1
-        if self.count < 60:
+        if self.count < 2:
             return
         self.count = 0
         if len(self.query_functions) > 0:
@@ -552,6 +550,9 @@ class BinancefRestApi(RestClient):
         for d in data:
             # self.gateway.write_log(d)
             volume = float(d["positionAmt"])
+
+
+
             if d.get('positionSide') != 'BOTH':
                 continue
             position = PositionData(
@@ -565,6 +566,10 @@ class BinancefRestApi(RestClient):
                 pnl=float(d["unRealizedProfit"]),
                 gateway_name=self.gateway_name,
             )
+
+            # if position.symbol=='BTCUSDT':
+            #     print(position)
+
 
             # 如果持仓数量为0，且不在之前缓存过的合约信息中，不做on_position
             if position.volume == 0:
@@ -815,7 +820,7 @@ class BinancefRestApi(RestClient):
                 # Update start time
                 start_dt = bar.datetime + TIMEDELTA_MAP[req.interval]
                 start_time = int(datetime.timestamp(start_dt))
-                sleep(0.1)
+
         return history
 
 
@@ -1016,11 +1021,6 @@ class BinancefDataWebsocketApi(WebsocketClient):
             self.gateway.write_log(f"找不到该合约代码{req.symbol}")
             return
 
-        if req.symbol.lower() in self.ticks:
-            self.gateway.write_log(f'{req.symbol}已订阅过,不重复订阅')
-            return
-
-        self.gateway.write_log(f'开始订阅合约{req.symbol}')
         # Create tick buf data
         tick = TickData(
             symbol=req.symbol,
@@ -1033,13 +1033,8 @@ class BinancefDataWebsocketApi(WebsocketClient):
 
         # Close previous connection
         if self._active:
-            try:
-                self.stop()
-                from time import sleep
-                sleep(0.1)
-                self.join()
-            except Exception as ex:
-                self.gateway.write_error(f'订阅合约{req.symbol},关闭前一个ws连接异常:{str(ex)}')
+            self.stop()
+            self.join()
 
         # Create new connection
         channels = []

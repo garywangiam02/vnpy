@@ -325,13 +325,6 @@ class BackTestingEngine(object):
     def get_price(self, vt_symbol: str):
         return self.price_dict.get(vt_symbol, None)
 
-    def get_margin(self, vt_symbol:str):
-        """获取某合约的单位为1的保证金"""
-        cur_price = self.get_price(vt_symbol)
-        if cur_price is None:
-            return None
-        return cur_price * self.get_margin_rate(vt_symbol)
-
     def set_commission_rate(self, vt_symbol: str, rate: float):
         """设置佣金比例"""
         self.commission_rate.update({vt_symbol: rate})
@@ -1798,7 +1791,7 @@ class BackTestingEngine(object):
             # 计算每个策略实例的持仓盈亏
             strategy_pnl.update({longpos.strategy_name: strategy_pnl.get(longpos.strategy_name, 0) + holding_profit})
 
-            positionMsg += "{},long,p={},v={},m={};\n".format(symbol, longpos.price, longpos.volume, holding_profit)
+            positionMsg += "{},long,p={},v={},m={};".format(symbol, longpos.price, longpos.volume, holding_profit)
 
         for shortpos in self.short_position_list:
 
@@ -1815,7 +1808,7 @@ class BackTestingEngine(object):
             # 计算每个策略实例的持仓盈亏
             strategy_pnl.update({shortpos.strategy_name: strategy_pnl.get(shortpos.strategy_name, 0) + holding_profit})
 
-            positionMsg += "{},short,p={},v={},m={};\n".format(symbol, shortpos.price, shortpos.volume, holding_profit)
+            positionMsg += "{},short,p={},v={},m={};".format(symbol, shortpos.price, shortpos.volume, holding_profit)
 
         data['net'] = c + today_holding_profit  # 当日净值（含持仓盈亏）
         data['rate'] = (c + today_holding_profit) / self.init_capital
@@ -1841,7 +1834,7 @@ class BackTestingEngine(object):
             self.daily_max_drawdown_rate = drawdown_rate
             self.max_drawdown_rate_time = data['date']
 
-        msg = u'{}:  net={}, capital={} max={} holding_profit={} commission={}， pos: \n{}' \
+        msg = u'{}:  net={}, capital={} max={} margin={} commission={}， pos: {}' \
             .format(data['date'],
                     data['net'], c, m,
                     today_holding_profit,
@@ -1921,8 +1914,7 @@ class BackTestingEngine(object):
         # 返回回测结果
         d = {}
         d['init_capital'] = self.init_capital
-        d['profit'] = self.net_capital - self.init_capital
-        d['net_capital'] = self.net_capital
+        d['profit'] = self.cur_capital - self.init_capital
         d['max_capital'] = self.max_net_capital  # 取消原 maxCapital
 
         if len(self.pnl_list) == 0:
@@ -2002,9 +1994,6 @@ class BackTestingEngine(object):
 
         result_info.update({u'期初资金': d['init_capital']})
         self.output(u'期初资金：\t%s' % format_number(d['init_capital']))
-
-        result_info.update({u'期末资金': d['net_capital']})
-        self.output(u'期末资金：\t%s' % format_number(d['net_capital']))
 
         result_info.update({u'总盈亏': d['profit']})
         self.output(u'总盈亏：\t%s' % format_number(d['profit']))
