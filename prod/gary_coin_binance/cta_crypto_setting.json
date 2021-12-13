@@ -8,9 +8,9 @@
             "activate_market": false,
             "backtesting": false,
             "max_invest_rate": 0.1,
-            "grid_height_percent": 4,
-            "grid_lots": 8,
-            "x_minute": 5
+            "grid_height_percent": 1,
+            "grid_lots": 10,
+            "x_minute": 15
         }
     }
 }

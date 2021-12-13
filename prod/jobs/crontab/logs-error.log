@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/root/workspace/vnpy/prod/jobs/refill_binance_future_bars.py", line 77, in <module>
+    download_symbol(symbol, start_dt, bar_file_path, interval_type, interval_num)
+  File "/root/workspace/vnpy/prod/jobs/refill_binance_future_bars.py", line 61, in download_symbol
+    future_data.export_to(bars, file_name=bar_file_path)
+  File "/root/workspace/vnpy/vnpy/data/binance/binance_future_data.py", line 169, in export_to
+    df = pd.DataFrame(bars)
+  File "/root/anaconda3/envs/vnpy2/lib/python3.7/site-packages/pandas/core/frame.py", line 509, in __init__
+    arrays, columns = to_arrays(data, columns, dtype=dtype)
+  File "/root/anaconda3/envs/vnpy2/lib/python3.7/site-packages/pandas/core/internals/construction.py", line 527, in to_arrays
+    data, columns, coerce_float=coerce_float, dtype=dtype
+  File "/root/anaconda3/envs/vnpy2/lib/python3.7/site-packages/pandas/core/internals/construction.py", line 645, in _list_of_dict_to_arrays
+    content = list(lib.dicts_to_array(data, list(columns)).T)
+  File "pandas/_libs/lib.pyx", line 379, in pandas._libs.lib.dicts_to_array
+numpy.core._exceptions.MemoryError: Unable to allocate 102. MiB for an array with shape (1025070, 13) and data type object

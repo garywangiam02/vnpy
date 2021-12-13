@@ -18,13 +18,13 @@ from vnpy.trader.utility import get_csv_last_dt, append_data
 
 # 获取币安合约交易的所有期货合约
 future_data = BinanceFutureData()
-
-# 获取全量合约信息
-future_data.save_contracts()
 contracts = BinanceFutureData.load_contracts()
+if len(contracts) == 0:
+    future_data.save_contracts()
+    contracts = BinanceFutureData.load_contracts()
 
 # 开始下载日期
-start_date = '20190101'
+start_date = '20200101'
 
 if __name__ == "__main__":
 
