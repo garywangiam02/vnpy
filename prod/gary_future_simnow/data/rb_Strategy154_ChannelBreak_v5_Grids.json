@@ -1,4 +1,28 @@
 {
     "up_grids": [],
-    "dn_grids": []
+    "dn_grids": [
+        {
+            "id": "209d809a-5bba-11ec-89b9-fa163e8cf687",
+            "direction": "多",
+            "open_price": 4349.0,
+            "close_price": 8698.0,
+            "stop_price": 4265.0,
+            "vt_symbol": "rb2205.SHFE",
+            "volume": 1,
+            "traded_volume": 0,
+            "order_status": false,
+            "order_ids": [],
+            "open_status": true,
+            "close_status": false,
+            "lock_grid_ids": [],
+            "reuse_count": 0,
+            "type": "break_buy",
+            "snapshot": {
+                "mi_symbol": "rb2205.SHFE",
+                "open_price": 4349.0
+            },
+            "open_time": "2021-12-13 10:12:30",
+            "order_time": null
+        }
+    ]
 }
