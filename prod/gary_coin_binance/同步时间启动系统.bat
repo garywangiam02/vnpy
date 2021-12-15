@@ -1,1 +1,0 @@
-timesync.exe -s && activate py37 && python run_binance_yuan.py
