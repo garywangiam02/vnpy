@@ -41,6 +41,7 @@ log
 .DS_Store
 .python-version
 app/mongo/data
+prod/gary*
 *.vntrader*
 *.csv
 *.db
