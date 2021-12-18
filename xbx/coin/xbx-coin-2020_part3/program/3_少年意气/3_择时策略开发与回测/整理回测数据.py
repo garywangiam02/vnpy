@@ -14,7 +14,7 @@ pd.set_option('expand_frame_repr', False)  # 当列太多时不换行
 
 
 # 获取数据的路径
-path = '/Users/xingbuxingx/Desktop/数字货币量化课程/2020版数字货币量化投资课程/xbx_coin_2020/data/history_candle_data/binance/spot'  # 改成电脑本地的地址
+path = '/root/workspace/vnpy/bar_data/xbx/history_candle_data/binance/spot'  # 改成电脑本地的地址
 path_list = glob.glob(path + "/*/*.csv")  # python自带的库，获得某文件夹中所有csv文件的路径
 
 # 筛选出指定币种和指定时间
@@ -36,6 +36,6 @@ data.sort_values(by='candle_begin_time', inplace=False)
 data.reset_index(drop=False, inplace=False)
 
 # 导出完整数据
-data.to_hdf('/Users/xingbuxingx/Desktop/数字货币量化课程/2020版数字货币量化投资课程/xbx_coin_2020/data/%s.h5' % symbol, key='df', mode='w')
+data.to_hdf('/root/workspace/vnpy/xbx/coin/xbx-coin-2020_part3/data/%s.h5' % symbol, key='df', mode='w')
 print(data)
 

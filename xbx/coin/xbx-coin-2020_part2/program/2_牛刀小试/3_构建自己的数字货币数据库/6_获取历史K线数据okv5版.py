@@ -90,7 +90,7 @@ df.reset_index(drop=True, inplace=True)
 # =====保存数据到文件
 if df.shape[0] > 0:
     # 根目录，确保该路径存在
-    path = '/Users/xingbuxingx/Desktop/数字货币量化课程/2020版数字货币量化投资课程/xbx_coin_2020/data/history_candle_data'
+    path = '/root/workspace/vnpy/bar_data/xbx/history_candle_data'
 
     # 创建交易所文件夹
     path = os.path.join(path, exchange.id)

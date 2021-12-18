@@ -16,7 +16,7 @@ pd.set_option('display.max_rows', 5000)  # 最多显示数据的行数
 
 
 # =====导入数据
-df = pd.read_hdf('/Users/xingbuxingx/Desktop/数字货币量化课程/2020版数字货币量化投资课程/xbx_coin_2020/data/pos.h5', key='df')
+df = pd.read_hdf('/root/workspace/vnpy/xbx/coin/xbx-coin-2020_part3/data/pos.h5', key='df')
 # 选取数据：币种上线10天之后的日期
 t = df.iloc[0]['candle_begin_time'] + timedelta(days=10)
 df = df[df['candle_begin_time'] > t]
@@ -117,5 +117,5 @@ df.drop(['next_open', 'contract_num', 'open_pos_price', 'cash', 'close_pos_price
          'profit', 'net_value', 'price_min', 'profit_min', 'net_value_min', 'margin_ratio', '是否爆仓'],
         axis=1, inplace=True)
 
-df.to_hdf('/Users/xingbuxingx/Desktop/数字货币量化课程/2020版数字货币量化投资课程/xbx_coin_2020/data/equity_curve.h5', key='df', mode='w')
+df.to_hdf('/root/workspace/vnpy/xbx/coin/xbx-coin-2020_part3/data/equity_curve.h5', key='df', mode='w')
 

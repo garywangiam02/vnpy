@@ -1,6 +1,9 @@
 # flake8: noqa
 
 
+from vnpy.trader.utility import get_csv_last_dt, append_data
+from vnpy.data.binance.binance_spot_data import BinanceSpotData, HistoryRequest, Exchange, Interval
+from datetime import datetime, timedelta
 import os
 import sys
 import csv
@@ -12,9 +15,6 @@ if ROOT_PATH not in sys.path:
     sys.path.append(ROOT_PATH)
     print(f'append {ROOT_PATH} into sys.path')
 
-from datetime import datetime, timedelta
-from vnpy.data.binance.binance_spot_data import BinanceSpotData, HistoryRequest, Exchange, Interval
-from vnpy.trader.utility import get_csv_last_dt, append_data
 
 # 获取币安现货交易的所有合约
 spot_data = BinanceSpotData()
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     # 逐一合约进行下载
     for vt_symbol, contract_info in contracts.items():
         symbol = contract_info.get('symbol')
-        if symbol not in ['BTCUSDT', 'ETHUSDT']:
+        if symbol not in ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'EOSUSDT']:
             continue
 
         bar_file_path = os.path.abspath(os.path.join(
@@ -127,5 +127,3 @@ if __name__ == "__main__":
                 writer.writerow(bar)
 
             print(f'更新{symbol}数据 => 文件{bar_file_path}, 最后记录:{bars[-1]}')
-
-

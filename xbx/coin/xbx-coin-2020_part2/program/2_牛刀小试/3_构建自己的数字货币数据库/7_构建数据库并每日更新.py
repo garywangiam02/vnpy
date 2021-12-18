@@ -26,19 +26,20 @@ def save_spot_candle_data_from_exchange(exchange, symbol, time_interval, start_t
     :param path: 文件保存根目录
     :return:
     """
-    
+
     # ===对火币的limit做特殊处理
     limit = None
     if exchange.id == 'huobipro':
         limit = 2000
-    
+
     # ===开始抓取数据
     df_list = []
     start_time_since = exchange.parse8601(start_time)
-    end_time = pd.to_datetime(start_time) + datetime.timedelta(days=1)
+    end_time = pd.to_datetime(start_time) + datetime.timedelta(days=1810)
 
     while True:
         # 获取数据
+        print(symbol, time_interval, start_time_since)
         df = exchange.fetch_ohlcv(symbol=symbol, timeframe=time_interval, since=start_time_since, limit=limit)
         # 整理数据
         df = pd.DataFrame(df, dtype=float)  # 将数据转换为dataframe
@@ -87,13 +88,13 @@ def save_spot_candle_data_from_exchange(exchange, symbol, time_interval, start_t
     df.to_csv(path, index=False)
 
 
-start_time = '2020-03-18 00:00:00'
-path = '/Users/xingbuxingx/Desktop/数字货币量化课程/2020版数字货币量化投资课程/xbx_coin_2020/data/history_candle_data'
+start_time = '2017-01-01 00:00:00'
+path = '/root/workspace/vnpy/bar_data/xbx/history_candle_data'
 error_list = []
 
 
 # 遍历交易所
-for exchange in [ccxt.huobipro(), ccxt.binance()]:
+for exchange in [ccxt.binance()]:
 
     # 获取交易所需要的数据
     market = exchange.load_markets()

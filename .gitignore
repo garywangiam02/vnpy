@@ -47,6 +47,9 @@ prod/gary*
 *.db
 *.swp
 *.pkb2
+*.h5
+*.zip
+*.xlsx
 access_token.conf
 vnpy/data/tdx/future_contracts.json
 vnpy/data/tdx/tdx_future_config.json

@@ -20,43 +20,28 @@ pd.set_option('display.unicode.east_asian_width', True)
 
 # ==========配置运行相关参数==========
 # =k线周期
-time_interval = '15m'  # 目前支持5m，15m，30m，1h，2h等。得交易所支持的K线才行。最好不要低于5m
+time_interval = '1m'  # 目前支持5m，15m，30m，1h，2h等。得交易所支持的K线才行。最好不要低于5m
 
 # =交易所配置
 BINANCE_CONFIG = {
-    'apiKey': '',
-    'secret': '',
+    'apiKey': 'RNEt4NGJ96Ppk9BsBL9zoYFK3ZxuU9fXWNniRlH6t4Vh2e8ZLknGgEReJ9lbY8vz',
+    'secret': 'TkHZYSP2uTIKkoBMpKYr06IX9ptxiJIivNRfBRf5vJtA6aJzcGZJIrgfOhZNOB0n',
     'timeout': exchange_timeout,
     'rateLimit': 10,
     'verbose': False,
-    'hostname': 'fapi.binance.com',
     'enableRateLimit': False}
 exchange = ccxt.binance(BINANCE_CONFIG)  # 交易所api
 
 
 # ==========配置策略相关参数==========
 # =symbol_config，更新需要交易的合约、策略参数、下单量等配置信息。主键为u本位合约的symbol。比特币永续为BTCUSDT，交割为BTCUSDT_210625
+# real_signal_none, real_signal_simple_bolling
 symbol_config = {
-    '1000SHIBUSDT': {'leverage': 1,
-                     'strategy_name': 'real_signal_simple_bolling',
-                     'para': [10, 2],
-                     'position': 0.1,
-                     },
-    'AAVEUSDT': {'leverage': 1,
-                 'strategy_name': 'real_signal_simple_bolling',
-                 'para': [10, 2],
-                 'position': 0.1,
-                 },
-    'UNIUSDT': {'leverage': 1,
-                'strategy_name': 'real_signal_simple_bolling',
-                'para': [10, 2],
-                'position': 0.1,
+    'ETHUSDT': {'leverage': 3,  # 控制实际交易的杠杆倍数，在实际交易中可以自己修改。此处杠杆数，必须小于页面上的最大杠杆数限制
+                'strategy_name': 'real_signal_none',  # 使用的策略的名称
+                'para': [20, 2],  # 策略参数
+                'position': 0.9,  # 该币种在总体资金中占比，几个币种相加要小于1
                 },
-    'DOGEUSDT': {'leverage': 1,  # 控制实际交易的杠杆倍数，在实际交易中可以自己修改。此处杠杆数，必须小于页面上的最大杠杆数限制
-                 'strategy_name': 'real_signal_simple_bolling',  # 使用的策略的名称
-                 'para': [10, 2],  # 策略参数
-                 'position': 0.1,  # 该币种在总体资金中占比，几个币种相加要小于1
-                 },
 }
 
 # =获取交易精度
