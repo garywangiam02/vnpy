@@ -24,8 +24,8 @@ time_interval = '1m'  # 目前支持5m，15m，30m，1h，2h等。得交易所�
 
 # =交易所配置
 BINANCE_CONFIG = {
-    'apiKey': 'RNEt4NGJ96Ppk9BsBL9zoYFK3ZxuU9fXWNniRlH6t4Vh2e8ZLknGgEReJ9lbY8vz',
-    'secret': 'TkHZYSP2uTIKkoBMpKYr06IX9ptxiJIivNRfBRf5vJtA6aJzcGZJIrgfOhZNOB0n',
+    'apiKey': 'upnTOU5z6IUEV5UzZKlNgwuOSO5emRCapiG3vbSLcZv4Zfm56xV5eSSetTx8NiGw',
+    'secret': 'sIMOaZmViF6URu4ABGzXk4SRHEj7CW7jxXMLijtyAOIcIx7M5dKi0lv26Qnh5KQI',
     'timeout': exchange_timeout,
     'rateLimit': 10,
     'verbose': False,

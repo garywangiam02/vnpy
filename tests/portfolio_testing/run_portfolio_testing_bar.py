@@ -39,13 +39,13 @@ test_setting = {}
 test_setting['name'] = 'FutureGrid_cta_crypto_portfolio_testing_{}'.format(datetime.now().strftime('%m%d_%H%M'))
 
 # 测试时间段, 从开始日期计算，过了init_days天，才全部激活交易
-test_setting['start_date'] = '20190101'
+test_setting['start_date'] = '20200101'
 test_setting['init_days'] = 10
 test_setting['end_date'] = '20211231'
 
 # 测试资金相关, 资金最大仓位， 期初资金
 test_setting['percent_limit'] = 100
-test_setting['init_capital'] = 10000
+test_setting['init_capital'] = 2000
 
 # 测试日志相关， Ture，开始详细日志， False, 只记录简单日志
 test_setting['debug'] = False
@@ -71,26 +71,61 @@ test_setting['symbol_datas'] = symbol_datas
 # test_setting.update({'name': test_setting['name'] + f"_{symbol}"})
 
 strategy_setting = {
-    f"S144_BTCUSDT_M30_n6_v1.7": {
-        "class_name": "StrategyMacdChannelGroup_v1_7",
-        "vt_symbol": "BTCUSDT.BINANCE",
-        "auto_init": True,
-        "setting": {
-            "backtesting": True,
-            "max_invest_rate": 0.01,
-            "bar_names": ['f12_s26_n6_M30']
-        }
-    },
     f"S144_BTCUSDT_M120": {
         "class_name": "StrategyMacdChannelGroup_v1_7",
         "vt_symbol": "BTCUSDT.BINANCE",
         "auto_init": True,
         "setting": {
             "backtesting": True,
-            "max_invest_rate": 0.01,
-            "bar_names": ['f12_s26_n9_M120']
+            "max_invest_rate": 0.05,
+            "bar_names": ['f12_s26_n9_M120','f12_s26_n6_M30']
+        }
+    }, 
+
+    
+    f"S144_ETHUSDT_M120": {
+        "class_name": "StrategyMacdChannelGroup_v1_7",
+        "vt_symbol": "ETHUSDT.BINANCE",
+        "auto_init": True,
+        "setting": {
+            "backtesting": True,
+            "max_invest_rate": 0.05,
+            "bar_names": ['f12_s26_n9_M120','f12_s26_n6_M30']
         }
     },
+    # f"S144_ETHUSDT_M30_n6_v1.7": {
+    #     "class_name": "StrategyMacdChannelGroup_v1_7",
+    #     "vt_symbol": "ETHUSDT.BINANCE",
+    #     "auto_init": True,
+    #     "setting": {
+    #         "activate_market": False,
+    #         "backtesting": True,
+    #         "max_invest_rate": 0.05,
+    #         "bar_names": ['f12_s26_n6_M30']
+    #     }
+    # },
+    f"Future_grid_tick_ETHUSDT": {
+        "class_name": "StrategyGridTradeFuture_v2",
+        "vt_symbol": "ETHUSDT.BINANCE",
+        "setting": {
+            "backtesting": True,
+            "class_name": "StrategyGridTradeFuture_v2",
+            "max_invest_rate": 0.05,
+            "grid_height_percent": 3.5,
+            "grid_lots": 8,
+            "x_minute": 15
+        }
+    },
+    # f"S144_BTCUSDT_M30_n6_v1.7": {
+    #     "class_name": "StrategyMacdChannelGroup_v1_7",
+    #     "vt_symbol": "BTCUSDT.BINANCE",
+    #     "auto_init": True,
+    #     "setting": {
+    #         "backtesting": True,
+    #         "max_invest_rate": 0.05,
+    #         "bar_names": ['f12_s26_n6_M30']
+    #     }
+    # },
     f"Future_grid_tick_BTCUSDT": {
         "class_name": "StrategyGridTradeFuture_v2",
         "vt_symbol": "BTCUSDT.BINANCE",
@@ -98,81 +133,48 @@ strategy_setting = {
             "activate_market": False,
             "backtesting": True,
             "class_name": "StrategyGridTradeFuture_v2",
-            "max_invest_rate": 0.01,
-            "grid_height_percent": 7.5,
+            "max_invest_rate": 0.05,
+            "grid_height_percent": 3.5,
             "grid_lots": 8,
             "x_minute": 15
         }
     },
+    # f"Future_grid_tick_BNBUSDT": {
+    #     "class_name": "StrategyGridTradeFuture_v2",
+    #     "vt_symbol": "BNBUSDT.BINANCE",
+    #     "setting": {
+    #         "activate_market": False,
+    #         "backtesting": True,
+    #         "class_name": "StrategyGridTradeFuture_v2",
+    #         "max_invest_rate": 0.05,
+    #         "grid_height_percent": 2,
+    #         "grid_lots": 5,
+    #         "x_minute": 15
+    #     }
+    # },
 
-    f"S144_ETHUSDT_M30_n6_v1.7": {
-        "class_name": "StrategyMacdChannelGroup_v1_7",
-        "vt_symbol": "ETHUSDT.BINANCE",
-        "auto_init": True,
-        "setting": {
-            "activate_market": False,
-            "backtesting": True,
-            "max_invest_rate": 0.01,
-            "bar_names": ['f12_s26_n6_M30']
-        }
-    },
-    f"S144_ETHUSDT_M120": {
-        "class_name": "StrategyMacdChannelGroup_v1_7",
-        "vt_symbol": "ETHUSDT.BINANCE",
-        "auto_init": True,
-        "setting": {
-            "backtesting": True,
-            "max_invest_rate": 0.01,
-            "bar_names": ['f12_s26_n9_M120']
-        }
-    },
-    f"Future_grid_tick_ETHUSDT": {
-        "class_name": "StrategyGridTradeFuture_v2",
-        "vt_symbol": "ETHUSDT.BINANCE",
-        "setting": {
-            "backtesting": True,
-            "class_name": "StrategyGridTradeFuture_v2",
-            "max_invest_rate": 0.0,
-            "grid_height_percent": 7.5,
-            "grid_lots": 8,
-            "x_minute": 15
-        }
-    },
 
-    f"S144_BNBUSDT_M30_n6_v1.7": {
-        "class_name": "StrategyMacdChannelGroup_v1_7",
-        "vt_symbol": "BNBUSDT.BINANCE",
-        "auto_init": True,
-        "setting": {
-            "backtesting": True,
-            "max_invest_rate": 0.01,
-            "bar_names": ['f12_s26_n6_M30']
-        }
-    },
-    f"S144_BNBUSDT_M120": {
-        "class_name": "StrategyMacdChannelGroup_v1_7",
-        "vt_symbol": "BNBUSDT.BINANCE",
-        "auto_init": True,
-        "setting": {
-            "backtesting": True,
-            "max_invest_rate": 0.01,
-            "bar_names": ['f12_s26_n9_M120']
-        }
-    },
-    f"Future_grid_tick_BNBUSDT": {
-        "class_name": "StrategyGridTradeFuture_v2",
-        "vt_symbol": "BNBUSDT.BINANCE",
-        "setting": {
-            "activate_market": False,
-            "backtesting": True,
-            "class_name": "StrategyGridTradeFuture_v2",
-            "max_invest_rate": 0.01,
-            "grid_height_percent": 7.5,
-            "grid_lots": 8,
-            "x_minute": 15
-        }
-    },
-
+    # f"S144_BNBUSDT_M30_n6_v1.7": {
+    #     "class_name": "StrategyMacdChannelGroup_v1_7",
+    #     "vt_symbol": "BNBUSDT.BINANCE",
+    #     "auto_init": True,
+    #     "setting": {
+    #         "backtesting": True,
+    #         "max_invest_rate": 0.01,
+    #         "bar_names": ['f12_s26_n6_M30']
+    #     }
+    # },
+    # f"S144_BNBUSDT_M120": {
+    #     "class_name": "StrategyMacdChannelGroup_v1_7",
+    #     "vt_symbol": "BNBUSDT.BINANCE",
+    #     "auto_init": True,
+    #     "setting": {
+    #         "backtesting": True,
+    #         "max_invest_rate": 0.01,
+    #         "bar_names": ['f12_s26_n9_M120']
+    #     }
+    # },
+    
     # f"S144_VETUSDT_M30_n6_v1.7": {
     #     "class_name": "StrategyMacdChannelGroup_v1_7",
     #     "vt_symbol": "VETUSDT.BINANCE",

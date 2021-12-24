@@ -1,0 +1,54 @@
+Error response from daemon: No such container: vnpy-mongo
+Error: No such container: vnpy-mongo
+Unable to find image 'mongo:latest' locally
+latest: Pulling from library/mongo
+7b1a6ab2e44d: Pulling fs layer
+90eb44ebc60b: Pulling fs layer
+5085b59f2efb: Pulling fs layer
+c7499923d022: Pulling fs layer
+019496b6c44a: Pulling fs layer
+c0df4f407f69: Pulling fs layer
+351daa315b6c: Pulling fs layer
+a233e6240acc: Pulling fs layer
+a3f57d6be64f: Pulling fs layer
+dd1b5b345323: Pulling fs layer
+c0df4f407f69: Waiting
+351daa315b6c: Waiting
+a233e6240acc: Waiting
+c7499923d022: Waiting
+a3f57d6be64f: Waiting
+dd1b5b345323: Waiting
+019496b6c44a: Waiting
+5085b59f2efb: Verifying Checksum
+5085b59f2efb: Download complete
+90eb44ebc60b: Verifying Checksum
+90eb44ebc60b: Download complete
+019496b6c44a: Verifying Checksum
+019496b6c44a: Download complete
+7b1a6ab2e44d: Verifying Checksum
+7b1a6ab2e44d: Download complete
+c0df4f407f69: Verifying Checksum
+c0df4f407f69: Download complete
+c7499923d022: Verifying Checksum
+c7499923d022: Download complete
+351daa315b6c: Verifying Checksum
+351daa315b6c: Download complete
+a3f57d6be64f: Verifying Checksum
+a3f57d6be64f: Download complete
+7b1a6ab2e44d: Pull complete
+90eb44ebc60b: Pull complete
+5085b59f2efb: Pull complete
+c7499923d022: Pull complete
+019496b6c44a: Pull complete
+dd1b5b345323: Verifying Checksum
+dd1b5b345323: Download complete
+c0df4f407f69: Pull complete
+351daa315b6c: Pull complete
+a233e6240acc: Verifying Checksum
+a233e6240acc: Download complete
+a233e6240acc: Pull complete
+a3f57d6be64f: Pull complete
+dd1b5b345323: Pull complete
+Digest: sha256:5be752bc5f2ac4182252d0f15d74df080923aba39700905cb26d9f70f39e9702
+Status: Downloaded newer image for mongo:latest
+cbe8d74ebcb47031a1834a910275600e8484c20836171101e9783942d769d377

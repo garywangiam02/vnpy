@@ -37,6 +37,7 @@ extra
 bar_data
 tick_data
 log
+zcodes
 .vscode
 .DS_Store
 .python-version
