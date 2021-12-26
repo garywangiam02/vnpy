@@ -17,8 +17,8 @@ File_Name = 'trade_usdt_history.txt'  # 保存历史trade_usdt的文件
 
 # ===创建交易所
 BINANCE_CONFIG = {
-    'apiKey': '',
-    'secret': '',
+    'apiKey': '2qJN1Id5BXvTPbPUqzKxEiHSDxhdDd8uEXmqk8YmeaO0U6HdE59A4Ek0do1pYBDQ',
+    'secret': 'PgrYNuX7jI83n3d6z4yM1TNsMn19Gr3IiIt1dS0wAfotmr9YbkAjdUYT0AauYF11',
     'timeout': 3000,
     'rateLimit': 10,
     'hostname': 'binancezh.com',  # 无法fq的时候启用
@@ -28,22 +28,28 @@ exchange = ccxt.binance(BINANCE_CONFIG)
 
 # ===交易策略列表
 stratagy_list = [
-    # 策略1
-    {
-        'factor': 'zhenfu',   # 选币时参考的因子
-        'para': 8,  # 策略的参数
-        'hold_period': '3H',  # 持仓周期
-        'selected_coin_num': 1,  # 做空或做多币的数量
-    },
+    # # 策略1
+    # {
+    #     'factor': 'zhenfu',   # 选币时参考的因子
+    #     'para': 8,  # 策略的参数
+    #     'hold_period': '3H',  # 持仓周期
+    #     'selected_coin_num': 1,  # 做空或做多币的数量
+    # },
 
-    # 策略2
+    # # 策略2
+    # {
+    #     'factor': 'contrarian',
+    #     'para': 6,
+    #     'hold_period': '3H',
+    #     'selected_coin_num': 1,
+    # },
+    # 策略3
     {
-        'factor': 'contrarian',
+        'factor': 'cmo',
         'para': 6,
         'hold_period': '3H',
         'selected_coin_num': 1,
     },
-
 ]
 
 

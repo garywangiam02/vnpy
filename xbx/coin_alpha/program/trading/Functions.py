@@ -460,6 +460,25 @@ def send_dingding_msg_every_loop(equity, select_coin, symbol_info, symbol_amount
     print('发送钉钉成功')
 
 
+def build_message(equity, select_coin, symbol_info, symbol_amount, symbol_last_price):
+    """
+    发送钉钉
+    """
+    # 获取多头仓位
+    long_position_equity = (symbol_last_price * symbol_info[symbol_info['当前持仓量'] > 0]['当前持仓量']).dropna()
+    # 获取空头仓位
+    short_position_equity = (symbol_last_price * symbol_info[symbol_info['当前持仓量'] < 0]['当前持仓量']).dropna()
+
+    dingding_msg = f'账户净值： {equity:8.2f}\n'
+    dingding_msg += f'多仓净值: {sum(long_position_equity):8.2f}\n'
+    dingding_msg += f'空仓净值: {sum(short_position_equity):8.2f}\n'
+    dingding_msg += '策略持仓\n\n'
+    dingding_msg += select_coin[['key', 'symbol', '方向']].to_string(index=False)
+    dingding_msg += '\n下单信息\n'
+    dingding_msg += symbol_amount.to_string(index=False)
+    return dingding_msg
+
+
 # ===依据时间间隔, 自动计算并休眠到指定时间
 def sleep_until_run_time(time_interval, ahead_time=1, if_sleep=True):
     """

@@ -4,6 +4,7 @@
 邢不行微信：xbx9025
 """
 import pandas as pd
+import numpy as np
 import glob
 import os
 from xbx.coin_alpha.program.backtest.Function import *
@@ -12,9 +13,9 @@ pd.set_option('display.max_rows', 500)  # 最多显示数据的行数
 
 
 # 持币周期
-hold_hour_list = ['1H', '2H', '3H', '4H', '6H', '8H', '12H', '24H']
+hold_hour_list = ['3H', '4H', '6H', '8H', '12H', '24H']
 # 计算各个指标的回溯周期
-back_hour_list = [1, 2, 3, 4, 6, 8, 12, 24]
+back_hour_list = [3, 4, 6, 8, 9, 12, 24, 36, 48, 72, 96]
 
 # 获取每个币种的数据路径
 hdf_file_list = glob.glob(root_path + '/data/backtest/output/pickle_data/*USDT.pkl')
@@ -39,18 +40,28 @@ for hold_hour in hold_hour_list:
         # ========需要修改的代码
         # ===计算各项选币指标
         extra_agg_dict = {}
-        # 涨跌幅
+        # com
         for n in back_hour_list:
-            df['前%dh涨跌幅' % n] = df['close'].pct_change(n)
-            df['前%dh涨跌幅' % n] = df['前%dh涨跌幅' % n].shift(1)
-            extra_agg_dict['前%dh涨跌幅' % n] = 'first'
-        # 振幅
-        for n in back_hour_list:
-            high = df['high'].rolling(n, min_periods=1).max()
-            low = df['low'].rolling(n, min_periods=1).min()
-            df['前%dh振幅' % n] = high / low - 1
-            df['前%dh振幅' % n] = df['前%dh振幅' % n].shift(1)
-            extra_agg_dict['前%dh振幅' % n] = 'first'
+            df['momentum'] = df['close'] - df['close'].shift(1)
+            df['up'] = np.where(df['momentum'] > 0, df['momentum'], 0)
+            df['dn'] = np.where(df['momentum'] < 0, abs(df['momentum']), 0)
+            df['up_sum'] = df['up'].rolling(window=n, min_periods=1).sum()
+            df['dn_sum'] = df['dn'].rolling(window=n, min_periods=1).sum()
+            df[f'cmo_bh_{n}'] = (df['up_sum'] - df['dn_sum']) / (df['up_sum'] + df['dn_sum'])
+            df[f'cmo_bh_{n}'] = df[f'cmo_bh_{n}'].shift(1)
+            extra_agg_dict[f'cmo_bh_{n}'] = 'first'
+        # # 涨跌幅
+        # for n in back_hour_list:
+        #     df['前%dh涨跌幅' % n] = df['close'].pct_change(n)
+        #     df['前%dh涨跌幅' % n] = df['前%dh涨跌幅' % n].shift(1)
+        #     extra_agg_dict['前%dh涨跌幅' % n] = 'first'
+        # # 振幅
+        # for n in back_hour_list:
+        #     high = df['high'].rolling(n, min_periods=1).max()
+        #     low = df['low'].rolling(n, min_periods=1).min()
+        #     df['前%dh振幅' % n] = high / low - 1
+        #     df['前%dh振幅' % n] = df['前%dh振幅' % n].shift(1)
+        #     extra_agg_dict['前%dh振幅' % n] = 'first'
         # ========需要修改的代码
 
         # ===将数据转化为需要的周期

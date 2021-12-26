@@ -19,15 +19,15 @@ c_rate = 4 / 10000  # 手续费
 rtn = pd.DataFrame()
 
 # 持币周期
-hold_hour_list = ['1H', '2H', '3H', '4H', '6H', '8H', '12H', '24H']
+hold_hour_list = ['3H', '4H', '6H', '8H', '12H', '24H']
 
 # 计算各个指标的回溯周期
-back_hour_list = [1, 2, 3, 4, 6, 8, 12, 24]
+back_hour_list = [3, 4, 6, 8, 9, 12, 24, 36, 48, 72, 96]
 
 if_reverse = True
 
 for if_reverse in [True, False]:
-    for factor_name in ['涨跌幅', '振幅']:
+    for factor_name in ['momentum']:
         for back_hour in back_hour_list:
             for hold_hour in hold_hour_list:
                 if back_hour < int(hold_hour[:-1]):

@@ -22,7 +22,7 @@ rtn = pd.DataFrame()
 hold_hour = '2H'  # 持币周期
 offset = 0
 back_hour = 12  # 计算各个指标的回溯周期
-factor_name = '涨跌幅'
+factor_name = 'momentum'
 if_reverse = True
 print(back_hour, hold_hour, factor_name, offset)
 

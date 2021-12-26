@@ -6,6 +6,7 @@
 from xbx.coin_alpha.program.trading.Signals import *
 from xbx.coin_alpha.program.trading.Functions import *
 from xbx.coin_alpha.program.trading.Config import *
+from vnpy.trader.util_wechat import send_wx_msg
 pd.options.mode.chained_assignment = None
 pd.set_option('expand_frame_repr', False)  # 当列太多时不换行
 
@@ -28,6 +29,7 @@ def main():
     while True:
 
         # =====sleep直到下一个整点小时
+        # run_time = sleep_until_run_time('1h')
         run_time = sleep_until_run_time('1h', if_sleep=False)
 
         # =====并行获取所有币种的1小时K线
@@ -69,7 +71,9 @@ def main():
         # 数据监测
         equity = fetch_binance_swap_equity(exchange)  # 更新账户净值
         # 账户净值、持仓、下单信息等发送钉钉
-        send_dingding_msg_every_loop(equity, select_coin, symbol_info, symbol_amount, symbol_last_price)
+        msg = build_message(equity, select_coin, symbol_info, symbol_amount, symbol_last_price)
+        send_wx_msg(msg)
+        # send_dingding_msg_every_loop(equity, select_coin, symbol_info, symbol_amount, symbol_last_price)
 
         # 本次循环结束
         print('\n', '-' * 20, '本次循环结束，%f秒后进入下一次循环' % long_sleep_time, '-' * 20, '\n\n')
