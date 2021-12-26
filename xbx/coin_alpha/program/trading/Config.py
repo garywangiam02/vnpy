@@ -47,7 +47,7 @@ stratagy_list = [
     {
         'factor': 'cmo',
         'para': 6,
-        'hold_period': '3H',
+        'hold_period': '5H',
         'selected_coin_num': 1,
     },
 ]

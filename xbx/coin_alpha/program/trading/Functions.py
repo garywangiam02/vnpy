@@ -188,6 +188,17 @@ def cal_factor_and_select_coin(stratagy_list, symbol_candle_data, run_time):
                 period_df['offset'] = offset
                 # 保存策略信息到结果当中
                 period_df['key'] = f'{factor}_{para}_{hold_period}_{offset}H'  # 创建主键值
+                n = 34  # 指标的时间窗口参数
+                period_df['median'] = period_df['close'].rolling(window=n).mean()  # 计算中轨
+                period_df['std'] = period_df['close'].rolling(n, min_periods=1).std(ddof=0)  # 计算标准差
+                period_df['m'] = abs(period_df['close'] - period_df['median']) / period_df['std']  # 计算自适应m
+                period_df['up'] = period_df['m'].rolling(window=n).max().shift(1)  # 计算z_score 上限
+                period_df['dn'] = period_df['m'].rolling(window=n).min().shift(1)  # 计算z_score 下限
+                period_df['upper'] = period_df['median'] + period_df['std'] * period_df['up']  # 计算布林上轨
+                period_df['lower'] = period_df['median'] - period_df['std'] * period_df['up']  # 计算布林下轨
+                period_df['condition_long'] = (period_df['close'] >= period_df['lower'])  # 允许做多的条件：破下轨，不做多
+                period_df['condition_short'] = (period_df['close'] <= period_df['upper'])  # 允许做空的条件：破上轨，不做空
+
                 # 截取指定周期的数据
                 period_df = period_df[
                     (period_df['s_time'] <= run_time - timedelta(hours=int(hold_period[:-1]))) &
@@ -207,8 +218,11 @@ def cal_factor_and_select_coin(stratagy_list, symbol_candle_data, run_time):
         # 关于rank的first参数的说明https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rank.html
         # 删除不要的币
         df['方向'] = 0
-        df.loc[df['rank'] <= selected_coin_num, '方向'] = 1
-        df.loc[(df['币总数'] - df['rank']) < selected_coin_num, '方向'] = -1
+        # df.loc[df['rank'] <= selected_coin_num, '方向'] = 1
+        # df.loc[(df['币总数'] - df['rank']) < selected_coin_num, '方向'] = -1
+        # df = df[df['方向'] != 0]
+        df.loc[(df['rank'] <= selected_coin_num) & (df['condition_long'] == True), '方向'] = 1
+        df.loc[((df['币总数'] - df['rank']) < selected_coin_num) & (df['condition_short'] == True), '方向'] = -1
         df = df[df['方向'] != 0]
 
         # ===将每个币种的数据保存到dict中
