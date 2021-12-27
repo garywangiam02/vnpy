@@ -164,6 +164,7 @@ def cal_factor_and_select_coin(stratagy_list, symbol_candle_data, run_time):
         # 获取策略参数
         para = strategy['para']
         factor = strategy['factor']
+        if_reverse = strategy['if_reverse']
         hold_period = strategy['hold_period']
         selected_coin_num = strategy['selected_coin_num']
 
@@ -180,7 +181,9 @@ def cal_factor_and_select_coin(stratagy_list, symbol_candle_data, run_time):
             df['s_time'] = df['candle_begin_time']
             df['e_time'] = df['candle_begin_time']
             df.set_index('candle_begin_time', inplace=True)
-            agg_dict = {'symbol': 'first', 's_time': 'first', 'e_time': 'last', 'close': 'last', factor: 'last'}
+
+            agg_dict = {'symbol': 'first', 's_time': 'first', 'e_time': 'last', 'close': 'last', factor: 'first' if if_reverse else 'last'}
+
             # 转换生成每个策略所有offset的因子
             for offset in range(int(hold_period[:-1])):
                 # 转换周期
@@ -188,6 +191,7 @@ def cal_factor_and_select_coin(stratagy_list, symbol_candle_data, run_time):
                 period_df['offset'] = offset
                 # 保存策略信息到结果当中
                 period_df['key'] = f'{factor}_{para}_{hold_period}_{offset}H'  # 创建主键值
+
                 n = 34  # 指标的时间窗口参数
                 period_df['median'] = period_df['close'].rolling(window=n).mean()  # 计算中轨
                 period_df['std'] = period_df['close'].rolling(n, min_periods=1).std(ddof=0)  # 计算标准差
@@ -204,6 +208,7 @@ def cal_factor_and_select_coin(stratagy_list, symbol_candle_data, run_time):
                     (period_df['s_time'] <= run_time - timedelta(hours=int(hold_period[:-1]))) &
                     (period_df['s_time'] > run_time - 2 * timedelta(hours=int(hold_period[:-1])))
                 ]
+
                 # 合并数据
                 period_df_list.append(period_df)
 
@@ -214,17 +219,15 @@ def cal_factor_and_select_coin(stratagy_list, symbol_candle_data, run_time):
         # ===选币数据整理完成，接下来开始选币
         # 多空双向rank
         df['币总数'] = df.groupby(df.index).size()
+        # ranks assigned in order they appear in the array
         df['rank'] = df.groupby('s_time')[factor].rank(method='first')
-        # 关于rank的first参数的说明https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rank.html
         # 删除不要的币
         df['方向'] = 0
-        # df.loc[df['rank'] <= selected_coin_num, '方向'] = 1
-        # df.loc[(df['币总数'] - df['rank']) < selected_coin_num, '方向'] = -1
-        # df = df[df['方向'] != 0]
+
         df.loc[(df['rank'] <= selected_coin_num) & (df['condition_long'] == True), '方向'] = 1
         df.loc[((df['币总数'] - df['rank']) < selected_coin_num) & (df['condition_short'] == True), '方向'] = -1
-        df = df[df['方向'] != 0]
 
+        df = df[df['方向'] != 0]
         # ===将每个币种的数据保存到dict中
         # 删除不需要的列
         df.drop([factor, '币总数', 'rank'], axis=1, inplace=True)
@@ -233,7 +236,9 @@ def cal_factor_and_select_coin(stratagy_list, symbol_candle_data, run_time):
 
     select_coin = pd.concat(select_coin_list)
     print('完成选币数据整理 & 选币，花费时间：', time.time() - s_time)
-
+    # debug
+    print(select_coin)
+    # exit()
     return select_coin
 
 

@@ -40,3 +40,19 @@ def signal_cmo(df, n=1):
     df['dn_sum'] = df['dn'].rolling(window=n, min_periods=1).sum()
     df['cmo'] = (df['up_sum'] - df['dn_sum']) / (df['up_sum'] + df['dn_sum'])
     return df
+
+# 反转策略
+
+
+def signal_cci(df, n=1):
+    df['tp'] = (df['high'] + df['low'] + df['close']) / 3
+    df['ma'] = df['tp'].rolling(window=n, min_periods=1).mean()
+    df['md'] = abs(df['close'] - df['ma']).rolling(window=n, min_periods=1).mean()
+    df['cci'] = (df['tp'] - df['ma']) / df['md'] / 0.015
+    return df
+
+
+def signal_bias(df, n=1):
+    ma = df['close'].rolling(n, min_periods=1).mean()
+    df['bias'] = (df['close'] / ma - 1)
+    return df

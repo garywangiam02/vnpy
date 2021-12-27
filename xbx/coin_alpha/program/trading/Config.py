@@ -28,33 +28,32 @@ exchange = ccxt.binance(BINANCE_CONFIG)
 
 # ===交易策略列表
 stratagy_list = [
-    # # 策略1
-    # {
-    #     'factor': 'zhenfu',   # 选币时参考的因子
-    #     'para': 8,  # 策略的参数
-    #     'hold_period': '3H',  # 持仓周期
-    #     'selected_coin_num': 1,  # 做空或做多币的数量
-    # },
-
-    # # 策略2
-    # {
-    #     'factor': 'contrarian',
-    #     'para': 6,
-    #     'hold_period': '3H',
-    #     'selected_coin_num': 1,
-    # },
-    # 策略3
     {
         'factor': 'cmo',
-        'para': 6,
-        'hold_period': '5H',
+        'para': 2,
+        'if_reverse': False,
+        'hold_period': '2H',
+        'selected_coin_num': 1,
+    },
+    {
+        'factor': 'cci',
+        'para': 36,
+        'if_reverse': True,
+        'hold_period': '6H',
+        'selected_coin_num': 1,
+    },
+    {
+        'factor': 'bias',
+        'para': 4,
+        'if_reverse': False,
+        'hold_period': '6H',
         'selected_coin_num': 1,
     },
 ]
 
 
 # ===每次获取K线数据的数量
-LIMIT = 100
+LIMIT = 500
 
 
 # ===选币交易的币种
