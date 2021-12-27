@@ -25,7 +25,7 @@ def draw_equity_curve(df, data_dict, date_col=None, right_axis=None, pic_size=[1
     # 复制数据
     draw_df = df.copy()
     # 模块基础设置
-    plt.rcParams['font.sans-serif'] = ['SimHei']
+    plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
     plt.rcParams['axes.unicode_minus'] = False
     plt.tick_params(labelsize=font_size)
     # plt.style.use('dark_background')
@@ -63,8 +63,8 @@ def draw_equity_curve(df, data_dict, date_col=None, right_axis=None, pic_size=[1
         ax_r.set_ylabel(key, fontsize=font_size)
         ax_r.legend(loc=1, fontsize=font_size)
         plt.tick_params(labelsize=font_size)
-    # plt.show()
-    fig.show()
+    plt.show()
+    # fig.show()
 
 
 def frequency_statistics(all_data, index_df, event, date_col='交易日期'):
@@ -125,7 +125,7 @@ def evaluate_investment_for_event_driven(pos_data, day_event_df, rule_type='A', 
 
     # ===计算年化收益
     annual_return = (t['净值'].iloc[-1]) ** (
-            '1 days 00:00:00' / (t[date_col].iloc[-1] - t[date_col].iloc[0]) * 365) - 1
+        '1 days 00:00:00' / (t[date_col].iloc[-1] - t[date_col].iloc[0]) * 365) - 1
     results.loc[0, '年化收益'] = num_to_pct(annual_return)
 
     # ===计算最大回撤，最大回撤的含义：《如何通过3行代码计算最大回撤》https://mp.weixin.qq.com/s/Dwt4lkKR_PEnWRprLlvPVw

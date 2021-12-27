@@ -15,7 +15,7 @@ indexer = pd.api.indexers.FixedForwardWindowIndexer(window_size=N_days)  # 反�
 
 # ===读取相关数据
 # 批量读取事件数据
-event_list = ['event_资金流_1', 'event_资金流_2']
+event_list = ['event_资金流_1']
 event_df = read_event_data(root_path + '/data/事件策略event合集', event_list)  # 见excel数据展示
 
 # 事件相关的股票

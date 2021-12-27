@@ -4,6 +4,7 @@ author: 邢不行
 微信: xbx2626
 事件小组基础代码
 """
+import talib
 from datetime import datetime
 from multiprocessing import Pool, cpu_count
 import pandas as pd
@@ -20,7 +21,8 @@ def cal_money_flow_event_each_stock(code):
     # 读入股票数据
     path = stock_data_path + '%s.csv' % code
     df = pd.read_csv(path, encoding='gbk', skiprows=1, parse_dates=['交易日期'])
-    df = df[['股票代码', '股票名称', '交易日期', '成交额', '中户资金买入额']]
+    df = df[['股票代码', '股票名称', '交易日期', '成交额', '总市值', '收盘价', '前收盘价', '机构资金买入额', '机构资金卖出额', '大户资金买入额', '大户资金卖出额',
+             '中户资金买入额', '中户资金卖出额', '散户资金买入额', '散户资金卖出额']]
     df.sort_values('交易日期', inplace=True)
 
     # 计算上市天数，并删除上市天数不足一年的股票
@@ -32,21 +34,25 @@ def cal_money_flow_event_each_stock(code):
 
     # 删除'中户资金买入额', '成交额'字段为空的行
     df.dropna(subset=['中户资金买入额', '成交额'], how='any', inplace=True, axis=0)
-    df['中户资金买入额'] *= 10000
-    df['factor'] = df['中户资金买入额'] / df['成交额']
+    df[['机构资金买入额', '机构资金卖出额', '大户资金买入额', '大户资金卖出额',
+        '中户资金买入额', '中户资金卖出额', '散户资金买入额', '散户资金卖出额']] *= 10000
+    # 事件生成
+    df['散户资金卖出占比'] = df['散户资金卖出额'] / df['成交额']  # 散户资金卖出额占比
+    ratio_s = df['散户资金卖出占比'] > 0.2
+    df['中户资金买入占比'] = df['中户资金买入额'] / df['成交额']  # 中户资金买入额占比
+    ratio_m = df['中户资金买入占比'] > 0.5
+    ratio_l = df['大户资金买入额'] > 0
 
-    # 筛选事件
-    df['event_资金流_1'] = None
-    df['event_资金流_2'] = None
-    df.loc[df['factor'] > 0.4, 'event_资金流_1'] = 1
-    df.loc[df['factor'] > 0.45, 'event_资金流_2'] = 1
+    # 筛选事件  修改因子
+    df['选股因子'] = None
+    df.loc[ratio_s & ratio_m & ratio_l, '选股因子'] = 1
 
     # 删除没有事件的日期
-    df.dropna(subset=['event_资金流_1', 'event_资金流_2'], how='all', inplace=True, axis=0)
+    df.dropna(subset=['选股因子'], how='all', inplace=True, axis=0)
 
     # 输出
     df['事件日期'] = df['交易日期']  # 直接新建一列，补rename
-    df = df[['股票代码', '股票名称', '事件日期', 'event_资金流_1', 'event_资金流_2']]
+    df = df[['股票代码', '股票名称', '事件日期', '选股因子']]
 
     return df
 
@@ -62,7 +68,7 @@ if __name__ == '__main__':
     stock_list = get_code_list_in_one_dir(stock_data_path)
 
     # 并行处理
-    multiply_process = True
+    multiply_process = False
     if multiply_process:
         with Pool(max(cpu_count() - 2, 1)) as pool:
             df_list = pool.map(cal_money_flow_event_each_stock, sorted(stock_list))
@@ -76,7 +82,7 @@ if __name__ == '__main__':
 
     # 输出各个事件数据
     all_stock_data = pd.concat(df_list, ignore_index=True)
-    event_list = ['event_资金流_1', 'event_资金流_2']
+    event_list = ['选股因子']
     for event in event_list:
         df = all_stock_data[all_stock_data[event] == 1]
         df.sort_values(['事件日期', '股票代码'], inplace=True)

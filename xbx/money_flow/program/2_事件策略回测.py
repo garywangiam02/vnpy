@@ -24,7 +24,7 @@ if len(sys.argv) == 3:
         stk_num_limit = int(stk_num_limit)
     hold_period = int(hold_period)
     max_cap_num = hold_period
-    not_ergodic = False
+    # not_ergodic = False
     print('\n事件名称：%s  持有天数：%s  选股数：%s' % (event, hold_period, stk_num_limit))
 
 # =====读取数据
@@ -37,7 +37,7 @@ index_df = import_index_data(root_path + '/data/trade_data/index/sh000300.csv', 
 if not_ergodic:
     # 统计事件的频率
     freq_res = frequency_statistics(all_stock_data, index_df, event)
-    print(freq_res)
+    print(freq_res.to_markdown())
 
 # =====当一个周期有多个股票的时候，按照排序规则，保留指定数量的股票
 if stk_num_limit:
@@ -96,7 +96,7 @@ for i in df.index:
     if 0 in left_days_list:  # 如果有可投资资金资金
         next_cap_num = left_days_list.index(0) + 1
         tag += '%d资金待使用；' % next_cap_num
-    print(i, date.date(), tag, left_days_list)
+    # print(i, date.date(), tag, left_days_list)
 
     # ===处理第一个周期的特殊情况:
     if i == 0:
@@ -159,8 +159,8 @@ df['资金使用率'] = (df[cap_num_cols].sum(axis=1) / df['总资金']).apply(f
 
 # 2、计算资金曲线的各项评估指标(result) & 每年（月、季）的超额收益（excess return）
 res, etn = evaluate_investment_for_event_driven(df, day_event_df, date_col='交易日期', rule_type='A')
-print(res)
-print(etn)
+print(res.to_markdown())
+print(etn.to_markdown())
 
 # 3、绘制资金曲线
 pic_title = '事件：%s 持有期：%s 资金份数：%s 持股数:%s' % (event, hold_period, max_cap_num, stk_num_limit)
@@ -171,8 +171,8 @@ draw_equity_curve(df, date_col='交易日期', data_dict={'策略表现': '净�
 if not_ergodic:
     # 4、计算资金曲线的盈利（亏损）最大的交易
     profit_max, loss_max = get_max_trade(all_stock_data, df, hold_period, view_count=5)
-    print(profit_max)
-    print(loss_max)
+    print(profit_max.to_markdown())
+    print(loss_max.to_markdown())
 
 back_test_path = root_path + '/data/回测结果/回测详情/回测结果_%s_%s_%s_%s.csv' % (event, hold_period, max_cap_num, stk_num_limit)
 df.to_csv(back_test_path, encoding='gbk', index=False)
@@ -183,7 +183,7 @@ ergodic.loc[0, '事件名称'] = event
 ergodic.loc[0, '持有天数'] = hold_period
 ergodic.loc[0, '选股数'] = str(stk_num_limit)
 
-ergodic = ergodic[['事件名称', '持有天数', '选股数', '累积净值', '年化收益', '最大回撤', '资金使用率_mean', '年化收益/资金占用',
+ergodic = ergodic[['事件名称', '持有天数', '选股数', '累积净值', '年化收益', '最大回撤', '年化收益/回撤比', '资金使用率_mean', '年化收益/资金占用',
                    '每笔交易平均盈亏', '胜率', '盈亏比', '最大回撤开始时间', '最大回撤结束时间']]
 ergodic_path = root_path + '/data/回测结果/遍历回测.csv'
 if os.path.exists(ergodic_path):

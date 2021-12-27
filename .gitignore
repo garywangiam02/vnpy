@@ -56,3 +56,4 @@ vnpy/data/tdx/future_contracts.json
 vnpy/data/tdx/tdx_future_config.json
 xbx/money_flow/data/
 xbx/coin_alpha/data
+xbx/bolling_up/data
