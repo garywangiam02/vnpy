@@ -1,0 +1,38 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Docker Image CI/CD
+on:
+  push:
+    branches: [ release_prd ]
+jobs:
+  build:
+    runs-on: ubuntu-latest      
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Image
+        run: docker build -t ${{ secrets.DOCKER_REPOSITORY }}:latest ./
+      - name: Login to registry
+        run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }} registry.cn-shenzhen.aliyuncs.com
+      - name: Push Image
+        run: docker push ${{ secrets.DOCKER_REPOSITORY }}:latest
+  pull-docker:
+    needs: [build]
+    name: Pull Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          password: ${{ secrets.HOST_PASSWORD }}
+          port: ${{ secrets.HOST_PORT }}
+          script: |
+            docker stop $(docker ps --filter ancestor=${{ secrets.DOCKER_REPOSITORY }} -q)
+            docker rm -f $(docker ps -a --filter ancestor=${{ secrets.DOCKER_REPOSITORY }}:latest -q)
+            docker rmi -f $(docker images ${{ secrets.DOCKER_REPOSITORY }}:latest -q)
+            docker login --username=${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }} registry.cn-shenzhen.aliyuncs.com
+            docker pull ${{ secrets.DOCKER_REPOSITORY }}:latest
+            docker volume create Volume_CoinAlphaRotationCta
+            docker run -d -v Volume_CoinAlphaRotationCta:${{ secrets.DATA_DIR_PATH }} -e BINANCE_API_KEY=${{ secrets.BINANCE_API_KEY }} -e BINANCE_SECRET=${{ secrets.BINANCE_SECRET }} -e TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} -e TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }} --name=CoinAlphaRotationCta ${{ secrets.DOCKER_REPOSITORY }}:latest
