@@ -12,18 +12,14 @@ from notify.wechat import *
 
 from config.config import settings
 
-if settings.DINGDING_ROBOT_ID:
-    notify_sender = DingTalkRobot(robot_id = settings.DINGDING_ROBOT_ID,secret = settings.DINGDING_SECRET)
-elif settings.TELEGRAM_TOKEN:
-    notify_sender = TgRobot(token = settings.TELEGRAM_TOKEN, chat_id = settings.TELEGRAM_CHAT_ID)
-elif settings.WECHAT_CORPID:
+if settings.WECHAT_CORPID:
     notify_sender = WechatRobot(settings.WECHAT_CORPID, settings.WECHAT_SECRET, settings.WECHAT_AGENT_ID)
 else:
     raise ValueError("框架没有检测到告警机器人配置,请检查!")
 
 
 # 装饰函数，用于异步运行
-def asyncrun(func):  
+def asyncrun(func):
     def wrapfunc(*arg, **kwargs):
         return asyncio.ensure_future(func(*arg, **kwargs))
 
@@ -36,8 +32,6 @@ def get_min_interval(df):  # 从配置df获得最小的运行时间间隔
         _df = df[df.time_interval.str.contains(rule_type)]
         if _df.shape[0] > 0:
             return str(_df['time_interval'].apply(lambda x: int(x.replace(rule_type, ''))).min()) + rule_type
-
-
 
 
 def json_response(status=200, obj={}, sort=True):
@@ -98,7 +92,7 @@ def tail(file_name, line_count=10, encoding='utf-8'):
     return lines
 
 
-def run_function_till_success(notify_sender,function, tryTimes=5, sleepTimes=60):
+def run_function_till_success(notify_sender, function, tryTimes=5, sleepTimes=60):
     '''
     将函数function尝试运行tryTimes次，直到成功返回函数结果和运行次数，否则返回False
     '''
@@ -117,20 +111,18 @@ def run_function_till_success(notify_sender,function, tryTimes=5, sleepTimes=60)
                 time.sleep(sleepTimes)  # 一分钟请求20次以内
 
 
-
-def robust(actual_do,*args, **keyargs):
-    tryTimes    = settings.DEFAULT_SLEEP_TIMES
-    sleepTimes  = settings.DEFAULT_TRY_TIMES
-    result = run_function_till_success(notify_sender,function=lambda: actual_do(*args, **keyargs), tryTimes=tryTimes, sleepTimes=sleepTimes)
+def robust(actual_do, *args, **keyargs):
+    tryTimes = settings.DEFAULT_SLEEP_TIMES
+    sleepTimes = settings.DEFAULT_TRY_TIMES
+    result = run_function_till_success(notify_sender, function=lambda: actual_do(
+        *args, **keyargs), tryTimes=tryTimes, sleepTimes=sleepTimes)
     if result:
         return result[0]
     else:
         notify_sender.send_msg(settings.TRADE_MARKET + ':' + str(tryTimes) + '次尝试获取失败，请检查网络以及参数')
-        os._exit(0)        
+        os._exit(0)
         # exit()
-
 
 
 if __name__ == "__main__":
     pass
-

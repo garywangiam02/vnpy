@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-import datetime, time, os
+import datetime
+import time
+import os
 import numpy as np
 import pandas as pd
 from trading.strategy import *
@@ -12,13 +14,13 @@ from apscheduler.schedulers.blocking import BlockingScheduler  # 后台定时器
 
 
 class trade():
-    def __init__(self, apiKey, secret, config, notify_sender,posInfer=True, proxies=False, timeout=1, verify=False):
+    def __init__(self, apiKey, secret, config, notify_sender, posInfer=True, proxies=False, timeout=1, verify=False):
         self.scheduler = BackgroundScheduler()  # 创建定时器以定时执行任务
-        #self.scheduler = BlockingScheduler()  # 后台定时器不能用时可以用阻塞版的
-        self.exchange = Binance(apiKey=apiKey, secret=secret, notify_sender = notify_sender,proxies=proxies, timeout=timeout,
+        # self.scheduler = BlockingScheduler()  # 后台定时器不能用时可以用阻塞版的
+        self.exchange = Binance(apiKey=apiKey, secret=secret, notify_sender=notify_sender, proxies=proxies, timeout=timeout,
                                 verify=verify)  # 创建交易所类与交易所通讯
         self.ccxt_exchange = ccxt.binance({"apiKey": apiKey, "secret": secret, "timeout": 30000})
-        self.sender = notify_sender  
+        self.sender = notify_sender
         self.sender_warn = self.exchange.sender  # 借用交易所类的报错器发送紧急报错
         self.proxies = proxies  # bool型，有无挂代理
         self.config = config  # 读取各策略配置
@@ -66,7 +68,7 @@ class trade():
         else:
             print('最小时间间隔设置错误，请修改')
             raise ValueError
-        self.scheduler.start()  # 定时器开始工作
+        # self.scheduler.start()  # 定时器开始工作
 
     def main(self):  # 母类在每个最小时间间隔都会执行的函数
         time.sleep(0.1)  # 等待其他子策略被调用，避免子类定时调用的延时情况
@@ -89,7 +91,7 @@ class trade():
                 output.append(
                     [son.name, son.symbol, son.time_interval, son.strategy_name, son.para, son.time, son.signal,
                      son.price, son.signal_leverage, son.available_cash, son.target_amount, son.pricePrecision])
-            if(~np.isnan(son.last_amt) and np.isnan(son.signal)): # 有持仓的子类还需记录之前持有的数量
+            if(~np.isnan(son.last_amt) and np.isnan(son.signal)):  # 有持仓的子类还需记录之前持有的数量
                 hold_amt.append([son.symbol, son.last_amt])
             son.output = None
             son.signal = np.nan
@@ -109,17 +111,18 @@ class trade():
 
         file_path = f'{path_root_out}/select_symbol_debug.csv'
 
-        self.output.to_csv(file_path, mode='a', index=False, header=False) if os.path.exists(file_path) else self.output.to_csv(file_path, mode='w', index=False, header=True)
+        self.output.to_csv(file_path, mode='a', index=False, header=False) if os.path.exists(
+            file_path) else self.output.to_csv(file_path, mode='w', index=False, header=True)
         # 将子类的信号进行加总和过滤
         self.order_amt = self.output[~np.isnan(self.output.target_amount)].groupby('symbol').agg(
             {'price': 'mean', 'target_amount': 'sum', 'pricePrecision': 'first'})  # 各合约目标持仓数量
         self.order_amt = self.order_amt.merge(self.position[['symbol', 'positionAmt']], how='left',
                                               on='symbol')  # 拼接合约当前仓位
-        print("下单预处理信号"+str(self.order_amt)) 
+        print("下单预处理信号" + str(self.order_amt))
         if self.hold_amt.shape[0] > 0:
             self.hold_amt = self.hold_amt[~np.isnan(self.hold_amt.last_amt)].groupby('symbol').agg(
                 {'last_amt': 'sum'}).reset_index()
-            print("hold_amt:"+str(self.hold_amt))    
+            print("hold_amt:" + str(self.hold_amt))
             self.order_amt = self.order_amt.merge(self.hold_amt, how='left', on='symbol')
             self.order_amt['last_amt'] = self.order_amt.last_amt.fillna(0)
             self.order_amt['orderAmt'] = self.order_amt['target_amount'] + self.order_amt['last_amt'] - self.order_amt[
@@ -129,7 +132,7 @@ class trade():
         self.order_amt = self.order_amt[
             0.975 * np.abs(self.order_amt['price'] * self.order_amt['orderAmt']) >= 5]  # 过滤名义价值小于五美元的订单
         self.order_amt['side'] = np.where(self.order_amt['orderAmt'] > 0, 'BUY', 'SELL')  # 得到订单的方向
-        print("下单统计信号"+str(self.order_amt))
+        print("下单统计信号" + str(self.order_amt))
         if self.order_amt.shape[0] == 0:
             print(datetime.datetime.now(), '本周期无需交易')
         else:
@@ -151,19 +154,17 @@ class trade():
             son_signal_file_path = f'{path_root_out}/son_signal_with_real_price.csv'
             self.output.to_csv(son_signal_file_path, mode='a', index=False, header=False) if os.path.exists(
                 son_signal_file_path) else self.output.to_csv(son_signal_file_path, mode='w',
-                                                                          index=False, header=True)
+                                                              index=False, header=True)
             self.allocate_profit()  # 调整子策略可用资金
         time.sleep(3)
         self.profit_report()
-        self.bnb_burn()
+        # self.bnb_burn()
 
     def bnb_burn(self):
         """
         bnb 燃烧相关函数
         """
-        replenish_bnb(self.ccxt_exchange, self.assets)
-
-
+        replenish_bnb(self.exchange, self.assets)
 
     def change_leverage(self, symbol, leverage):  # 调整合约杠杆
         try:
@@ -187,7 +188,7 @@ class trade():
         self.assets = pd.DataFrame(account['assets'], dtype=float)  # 帐户的总信息
         self.account_equity = self.assets[self.assets['asset'] == 'USDT']['marginBalance'].iloc[0] - self.assets[
             'unrealizedProfit'].sum()  # 帐户权益
-        account_file_path = f'{path_root_out}/account_balance.txt'     
+        account_file_path = f'{path_root_out}/account_balance.txt'
         with open(account_file_path, 'a+') as f:
             _ = str(datetime.datetime.now()) + ' ' + str(self.account_equity) + '\n'
             f.write(_)
@@ -231,7 +232,7 @@ class trade():
              account_unrealize_return, account_realize_return])
         account_info.index = ['帐户初始资金', '帐户当前资金', '帐户已实现利润', '帐户未实现利润', '帐户浮动收益率(当前)', '帐户已实现收益率']
         text += '# =====帐户收益信息' + '\n' + account_info.to_string() + '\n\n'
-        #self.sender.send_msg(text)  # 发送报告到微信
+        self.sender.send_msg(text)  # 发送报告到微信
         print(text)
 
     def rebalance(self):
@@ -253,7 +254,7 @@ class trade():
             therotical_equity += son.available_cash
         ratio = self.account_equity * self.weight_sum / therotical_equity  # 计算调整比例
         if check:  # 检查模式只在偏离过大才修正
-            if abs(therotical_equity - self.account_equity* self.weight_sum) / (self.account_equity* self.weight_sum ) >= cali_ratio:
+            if abs(therotical_equity - self.account_equity * self.weight_sum) / (self.account_equity * self.weight_sum) >= cali_ratio:
                 for son in self.son:  # 每个子策略等比例调整，不影响每个子策略的权重
                     son.available_cash = round(ratio * son.available_cash, 2)
         else:  # 强行修正
@@ -270,17 +271,17 @@ class trade():
             return self.get_precision()
         for i in self.config:  # 获取精度成功后将精度写入配置
             _symbol_info = symbol_info[(symbol_info.symbol == self.config[i]['symbol'])]
-            self.config[i]['pricePrecision'] = int(-np.log10(float(_symbol_info['filters'].iloc[0][0]['tickSize'])))# 价格精度
+            self.config[i]['pricePrecision'] = int(-np.log10(float(_symbol_info['filters'].iloc[0][0]['tickSize'])))  # 价格精度
             self.config[i]['quantityPrecision'] = _symbol_info['quantityPrecision'].iloc[0]  # 数量精度
 
     def get_limit_order_data(self, ratio=0.02):
         # ===为了达到成交的目的，计算实际委托价格会向上或者向下浮动一定比例默认为0.02
         order_data = []
-        self.order_amt = self.order_amt.merge(self.symbol_info[['symbol','quantityPrecision']],how='left',on='symbol')
+        self.order_amt = self.order_amt.merge(self.symbol_info[['symbol', 'quantityPrecision']], how='left', on='symbol')
         for i in self.order_amt.iterrows():
             price = round(i[1]['price'] * (1 + ratio), int(i[1]['pricePrecision'])) if i[1]['side'] == 'BUY' else round(
                 i[1]['price'] * (1 - ratio), int(i[1]['pricePrecision']))
-            quantity = round(i[1]['orderAmt'],int(i[1]['quantityPrecision']))
+            quantity = round(i[1]['orderAmt'], int(i[1]['quantityPrecision']))
             data = {'symbol': i[1]['symbol'], 'price': price, 'quantity': np.abs(quantity),
                     'side': i[1]['side'], 'type': 'LIMIT', 'timeInForce': 'GTC'}
             order_data.append(data)
@@ -317,8 +318,8 @@ class trade():
             # 将成交价格记录到下单数量的表格中以计算各个子策略的盈亏
             self.order_amt['avgPrice'] = np.where(self.order_amt['symbol'] == _info['symbol'], float(_info['avgPrice']), self.order_amt['avgPrice']
                                                   ) if 'avgPrice' in self.order_amt.columns else np.where(self.order_amt['symbol'] == _info['symbol'], float(_info['avgPrice']), np.nan)
-            self.order_text += '\n交易对：'+str(_info['symbol'])+'\n订单号：'+str(_info['orderId'])+'\n原始委托数量：'+str(_info['origQty'])+'\n成交数量：'+str(_info['cumQuote'])+'\n原始委托价格：'+str(
-                _info['price'])+'\n平均成交价：'+str(_info['avgPrice'])+'\n方向：'+str(_info['side'])+'，'+str(_info['positionSide'])+'\n订单状态：'+str(_info['status'])+'\n'
+            self.order_text += '\n交易对：' + str(_info['symbol']) + '\n订单号：' + str(_info['orderId']) + '\n原始委托数量：' + str(_info['origQty']) + '\n成交数量：' + str(_info['cumQuote']) + '\n原始委托价格：' + str(
+                _info['price']) + '\n平均成交价：' + str(_info['avgPrice']) + '\n方向：' + str(_info['side']) + '，' + str(_info['positionSide']) + '\n订单状态：' + str(_info['status']) + '\n'
 
         except:
             _info = {}
@@ -327,7 +328,7 @@ class trade():
             self.order_amt['avgPrice'] = np.where(self.order_amt['symbol'] == _info['symbol'], float(_info['avgPrice']), self.order_amt['avgPrice']
                                                   ) if 'avgPrice' in self.order_amt.columns else np.where(self.order_amt['symbol'] == _info['symbol'], float(_info['avgPrice']), np.nan)
             print('\n订单查询出错，查询id：', order_id)
-            self.order_text += '\n订单查询出错，查询id：'+str(order_id)
+            self.order_text += '\n订单查询出错，查询id：' + str(order_id)
 
     # 订单的检查，发送订单信息的文本到微信
     def order_check(self):
@@ -338,7 +339,7 @@ class trade():
         for order_info in self.all_order_info:
             task += [self.get_order_info(order_info['symbol'], order_info['orderId'])]
         loop.run_until_complete(asyncio.gather(*task))
-        self.sender.send_msg(self.order_text)#发送订单交易信息
+        self.sender.send_msg(self.order_text)  # 发送订单交易信息
         print(self.order_text)
 
     def allocate_profit(self, c_rate=0.0004):
@@ -364,7 +365,7 @@ class trade():
                         son.last_amt = _row['target_amount']
                     elif (np.abs(_row['target_amount']) < np.abs(son.last_amt)):  # 减仓的情况结算利润，更新可用资金
                         son.available_cash += (_row['avgPrice'] - son.last_price) * (
-                                son.last_amt - _row['target_amount']) - np.abs(
+                            son.last_amt - _row['target_amount']) - np.abs(
                             _row['avgPrice'] * np.abs(son.last_amt - _row['target_amount'])) * c_rate
                         son.last_amt = _row['target_amount']
                     else:
@@ -377,7 +378,7 @@ class trade():
                     son.last_amt = _row['target_amount']
                 else:  # 之前开仓，现在平仓，那么结算收益且记录
                     son.available_cash += (_row['avgPrice'] - son.last_price) * son.last_amt - np.abs(son.last_amt) * \
-                                          _row['avgPrice'] * c_rate
+                        _row['avgPrice'] * c_rate
                     son.last_amt = 0
                     son.last_price = np.nan
             elif np.sign(_row['target_amount']) != 0:  # 如果是上次无记录或者上次平仓，现在开仓，那么需要记录开仓数量和价格
@@ -388,8 +389,7 @@ class trade():
                 son.last_price = np.nan
                 son.last_amt = 0
 
-
-    def adjust_strategys(self,operation,configs):
+    def adjust_strategys(self, operation, configs):
         """
         调整待执行的策略列表
          operation
@@ -414,135 +414,129 @@ class trade():
            }
         """
         if operation == 'add':
-           self.add_strategeys(configs)
+            self.add_strategeys(configs)
         elif operation == 'delete':
-           self.delete_strategys(configs)
-        elif operation == 'unset':  
-           self.unset_strategys(configs)
-        
+            self.delete_strategys(configs)
+        elif operation == 'unset':
+            self.unset_strategys(configs)
 
         # 判断是否需要调整母类运行时间间隔
-        before_min_interval =  self.min_interval
+        before_min_interval = self.min_interval
         self.min_interval = get_min_interval(self.config_df)  # 获得最小时间间隔
-        if  before_min_interval != self.min_interval:
+        if before_min_interval != self.min_interval:
             self.scheduler.remove_job('main')
             if self.min_interval.find('m') >= 0:
                 self.scheduler.add_job(self.main, trigger='cron', minute='*/' + self.min_interval.split('m')[0],
                                        misfire_grace_time=10, max_instances=3, id='main')
             elif self.min_interval.find('h') >= 0:
                 self.scheduler.add_job(self.main, trigger='cron', hour='*/' + self.min_interval.split('h')[0],
-                                       misfire_grace_time=10, max_instances=3, id='main')                               
-           
-    def add_strategeys(self,configs):
+                                       misfire_grace_time=10, max_instances=3, id='main')
+
+    def add_strategeys(self, configs):
         """
         新增策略 并合并已有仓位
         """
         # 去重
-        current_strategys =  list(self.config_df.index)
+        current_strategys = list(self.config_df.index)
         operating_son = []
         filtered_configs = {k: v for k, v in configs.items() if k not in current_strategys}
         if not filtered_configs:
             return
-        self.config.update(filtered_configs) # 更新配置,有则覆盖,无则添加
-        self.config_df = pd.DataFrame(self.config).T 
+        self.config.update(filtered_configs)  # 更新配置,有则覆盖,无则添加
+        self.config_df = pd.DataFrame(self.config).T
         self.weight_sum = self.config_df['weight'].sum()  # 计算累计权重和
-        self.get_precision() # 更新精度
+        self.get_precision()  # 更新精度
 
-        for strategy_name,config in filtered_configs.items():
-           # 添加子类定时调度  
-           exec("self.%s=trade_son(config,self.exchange,'%s')" % (strategy_name, strategy_name))  # 通过策略配置创建子类
-           exec("self.son.append(self.%s)" % strategy_name)   # 将子类保存在类变量son中
-           exec("operating_son.append(self.%s)" % strategy_name)  # 将子类保存在类变量operating_son中
+        for strategy_name, config in filtered_configs.items():
+            # 添加子类定时调度
+            exec("self.%s=trade_son(config,self.exchange,'%s')" % (strategy_name, strategy_name))  # 通过策略配置创建子类
+            exec("self.son.append(self.%s)" % strategy_name)   # 将子类保存在类变量son中
+            exec("operating_son.append(self.%s)" % strategy_name)  # 将子类保存在类变量operating_son中
 
-        self.rebalance() # rebalance
-        for add_son in  operating_son:  
+        self.rebalance()  # rebalance
+        for add_son in operating_son:
             self.change_leverage(symbol=add_son.symbol, leverage=10)  # 调整杠杆
             if add_son.time_interval.find('m') >= 0:  # 添加循环间隔是分钟的子类的定时任务
-                      self.scheduler.add_job(add_son.scheduler, trigger='cron', minute='*/' + add_son.time_interval.split('m')[0],
-                                         misfire_grace_time=1, max_instances=3, id=add_son.name)
+                self.scheduler.add_job(add_son.scheduler, trigger='cron', minute='*/' + add_son.time_interval.split('m')[0],
+                                       misfire_grace_time=1, max_instances=3, id=add_son.name)
             elif add_son.time_interval.find('h') >= 0:  # 添加循环间隔是小时的子类的定时任务
-                  self.scheduler.add_job(add_son.scheduler, trigger='cron', hour='*/' + add_son.time_interval.split('h')[0],
-                                       misfire_grace_time=1, max_instances=3, id=add_son.name)  
+                self.scheduler.add_job(add_son.scheduler, trigger='cron', hour='*/' + add_son.time_interval.split('h')[0],
+                                       misfire_grace_time=1, max_instances=3, id=add_son.name)
 
         # 执行已有仓位合并
         account = self.exchange.f_account()
         position = pd.DataFrame(account['positions'], dtype=float)  # 所有持仓信息
-        position.set_index(['symbol'], drop=False, inplace= True)
-        filter_config_symbols =  [config['symbol'] for config in filtered_configs.values()] 
+        position.set_index(['symbol'], drop=False, inplace=True)
+        filter_config_symbols = [config['symbol'] for config in filtered_configs.values()]
         position = position[position.symbol.isin(filter_config_symbols) & position.positionAmt != 0]  # 只保留被新增策略管理的币种所持有的合约信息
-        symbol_set = set(position.symbol).intersection(set(filter_config_symbols)) # 取交集
+        symbol_set = set(position.symbol).intersection(set(filter_config_symbols))  # 取交集
         for symbol in symbol_set:
             accorded_son = [son for son in self.son if son.symbol == symbol]
-            if  accorded_son:
-                for son in  accorded_son:
-                    son.last_price =  position.at[symbol,'entryPrice'] # 上次的开仓价格
-                    son.last_amt = position.at[symbol,'positionAmt']/len(accorded_son)  # 用于记录上次的开仓的方向和数量（卖空的情况为负数）
-        
-                                       
+            if accorded_son:
+                for son in accorded_son:
+                    son.last_price = position.at[symbol, 'entryPrice']  # 上次的开仓价格
+                    son.last_amt = position.at[symbol, 'positionAmt'] / len(accorded_son)  # 用于记录上次的开仓的方向和数量（卖空的情况为负数）
 
-    def delete_strategys(self,configs):
+    def delete_strategys(self, configs):
         """
         删除策略
         """
         if not configs:
             return
-        current_strategys =  list(self.config_df.index)
+        current_strategys = list(self.config_df.index)
         filtered_son = [k for k in configs.keys() if k in current_strategys]
-        clear_symbols = [ x.split('_')[0] for x in filtered_son]
-        for strategy_name  in filtered_son:
-           # 从子类中删除  
-           self.scheduler.remove_job(strategy_name)
-           self.clear_strategy_position(strategy_name) 
-           self.config.pop(strategy_name) # 更新配置信息
-           self.config_df.drop(index = strategy_name,inplace=True) 
-           for item in self.son[:]:
-              if item.name == strategy_name:
-                  self.son.remove(item)
-                  break
+        clear_symbols = [x.split('_')[0] for x in filtered_son]
+        for strategy_name in filtered_son:
+            # 从子类中删除
+            self.scheduler.remove_job(strategy_name)
+            self.clear_strategy_position(strategy_name)
+            self.config.pop(strategy_name)  # 更新配置信息
+            self.config_df.drop(index=strategy_name, inplace=True)
+            for item in self.son[:]:
+                if item.name == strategy_name:
+                    self.son.remove(item)
+                    break
 
-        self.weight_sum = self.config_df['weight'].sum()  # 计算累计权重和        
-        self.rebalance() 
+        self.weight_sum = self.config_df['weight'].sum()  # 计算累计权重和
+        self.rebalance()
 
-    def clear_symbol_position(self,clear_symbol_name,position_amount):
+    def clear_symbol_position(self, clear_symbol_name, position_amount):
         """
         币种平指定仓位
         clear_symbol_name : 币种
         position_amount : 待平仓位
         """
-        if position_amount == 0 :
+        if position_amount == 0:
             return
-        self.all_order_info = []    
+        self.all_order_info = []
         direction = "BUY" if position_amount < 0 else "SELL"
-        param = {"symbol":clear_symbol_name,"side": direction, "type": "MARKET","quantity":abs(position_amount)} 
+        param = {"symbol": clear_symbol_name, "side": direction, "type": "MARKET", "quantity": abs(position_amount)}
         asyncio.set_event_loop(asyncio.new_event_loop())
-        loop = asyncio.get_event_loop() 
-        loop.run_until_complete(self.send_order(param)) 
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self.send_order(param))
 
-        
-
-    def clear_strategy_position(self,strategy_name):
+    def clear_strategy_position(self, strategy_name):
         """
         以市价对指定策略清仓
         """
         for son in self.son:
             if(son.name == strategy_name):
-                self.clear_symbol_position(son.symbol,son.last_amt)
-                return  
+                self.clear_symbol_position(son.symbol, son.last_amt)
+                return
 
-
-    def unset_strategys(self,configs):
+    def unset_strategys(self, configs):
         """
         重置持仓
         """
-        current_strategys =  set(self.config_df.index)
+        current_strategys = set(self.config_df.index)
         expected_strategys = set(configs.keys())
         new_position_strategy = expected_strategys - current_strategys
         old_clear_strategy = current_strategys - expected_strategys
-        add_config = { key: value for key, value in configs.items() if key in  new_position_strategy}
-        delete_config = { key: value for key, value in self.config.items() if key in  old_clear_strategy}
+        add_config = {key: value for key, value in configs.items() if key in new_position_strategy}
+        delete_config = {key: value for key, value in self.config.items() if key in old_clear_strategy}
         self.add_strategeys(add_config)
         self.delete_strategys(delete_config)
-        
+
 
 class trade_son():
     # 子类只负责计算信号
@@ -645,7 +639,7 @@ class trade_son():
             if len(temp_data) == 0:  # 获取数据的异常处理
                 time.sleep(1)
                 return _get_data(end, max_len=max_len)
-            symbol_data += temp_data
+            symbol_data = temp_data + symbol_data
             temp_time = pd.to_datetime(temp_data[0][0], unit='ms') + pd.DateOffset(hours=8)
             print(self.symbol, time_interval, '当前获取到', temp_time)
             if (temp_time < start or temp_time == earliest):

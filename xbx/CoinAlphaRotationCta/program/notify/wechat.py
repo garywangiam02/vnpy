@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
+import datetime
+
 
 class WechatRobot:
     '''
@@ -12,7 +14,6 @@ class WechatRobot:
         self.secret = secret
         self.agentid = agentid
 
-    # 发送文字信息
     def send_msg(self, *mssg):
         content = ''
         for i in mssg:
@@ -36,10 +37,10 @@ class WechatRobot:
         # 以后客户端只需带上这个Token前来请求数据即可，无需再次带上用户名和密码
         url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={}".format(token)
         data = {
-            "toparty": "1",
+            "touser": "WangYang",
             "msgtype": "text",
             "agentid": self.agentid,
-            "text": {"content": content + '\n' + datetime.now().strftime("%m-%d %H:%M:%S")},
+            "text": {"content": content + '\n' + datetime.datetime.now().strftime("%m-%d %H:%M:%S")},
             "safe": "0"
         }
 
@@ -140,4 +141,3 @@ class WechatRobot:
         except Exception:
             print("send_file()的requests.post()失败，请检查网络连接。")
         return result
-

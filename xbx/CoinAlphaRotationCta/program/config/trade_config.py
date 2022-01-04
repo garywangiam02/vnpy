@@ -9,8 +9,8 @@ import os
 # 子账号
 # ===创建交易所
 BINANCE_CONFIG = {
-    'apiKey': '',
-    'secret': '',
+    'apiKey': '4pokhR5naxqW9DaenMpUdU7qcvDsRuvKvy8OzlABrlPxWo640Y5Q8eKNMdniU7i8',
+    'secret': 'g8u9Aj6x7IldERb9MGzDDiVCPSK9GIYVhyVLOj6ZCijRXKElqs8Ri5cRoJhRrMPn',
     'timeout': 30000,
     'rateLimit': 10,
     'hostname': 'binancezh.com',  # 无法fq的时候启用
@@ -63,7 +63,49 @@ stratagy_list = [
     },    
 ]
 
-
+"""
+v1
+stratagy_list = [   
+    {
+        'hold_period': '1H',  # 持仓周期
+        'c_factor': 'c11', # 复合因子1号
+        'factors':[
+            {
+            'factor': 'adapt_boll_v3_sharpe',   # 选币时参考的因子
+            'para': 11,  # 策略的参数
+            'if_reverse': True,
+            'weight':0.4,
+            },
+            {
+            'factor': 'adapt_boll_v3_equity',   # 选币时参考的因子
+            'para': 11,  # 策略的参数
+            'if_reverse': True,
+            'weight':0.6,
+            },
+        ],
+        'selected_coin_num': selected_coin_num,  # 做空或做多币的数量
+    },
+    {
+        'hold_period': '1H',  # 持仓周期
+        'c_factor': 'c12', # 复合因子1号
+        'factors':[
+            {
+            'factor': 'adapt_boll_v3_sharpe',   # 选币时参考的因子
+            'para': 12,  # 策略的参数
+            'if_reverse': True,
+            'weight':0.5,
+            },
+            {
+            'factor': 'adapt_boll_v3_equity',   # 选币时参考的因子
+            'para': 12,  # 策略的参数
+            'if_reverse': True,
+            'weight':0.5,
+            },
+        ],
+        'selected_coin_num': selected_coin_num,  # 做空或做多币的数量
+    },  
+]
+"""
 """ 
 {
     'hold_period': '1H',  # 持仓周期
