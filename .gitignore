@@ -59,3 +59,5 @@ xbx/coin_alpha/data
 xbx/bolling_up/data
 xbx/data_manager/data
 xbx/CoinAlphaRotationCta/.env
+xbx/CoinAlphaRotationCta/logs
+xbx/CoinAlphaRotationCta/pm2.yaml

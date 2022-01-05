@@ -68,7 +68,7 @@ class trade():
         else:
             print('最小时间间隔设置错误，请修改')
             raise ValueError
-        # self.scheduler.start()  # 定时器开始工作
+        self.scheduler.start()  # 定时器开始工作
 
     def main(self):  # 母类在每个最小时间间隔都会执行的函数
         time.sleep(0.1)  # 等待其他子策略被调用，避免子类定时调用的延时情况

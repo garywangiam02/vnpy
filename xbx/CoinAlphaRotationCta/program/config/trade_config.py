@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+import os
 import ccxt
 
 from trading.utility import robust
 import warnings
 warnings.filterwarnings('ignore')
-import os
 
 # 子账号
 # ===创建交易所
@@ -25,42 +25,42 @@ BINANCE_CONFIG = {
 exchange = ccxt.binance(BINANCE_CONFIG)
 
 
-trade_usdt = 0 
+trade_usdt = 0
 
 black_symbol_list = ['BTCSTUSDT']
 
-MAX_LEVERAGE = 2  #最大杠杆倍数
+MAX_LEVERAGE = 3  # 最大杠杆倍数
 
 
 # ===获取交易所相关数据
 exchange_info = robust(exchange.fapiPublic_get_exchangeinfo)
 _symbol_list = [x['symbol'] for x in exchange_info['symbols']]
-_symbol_list = [symbol for symbol in _symbol_list if symbol.endswith('USDT')] #过滤usdt合约
-symbol_list = [symbol for symbol in _symbol_list if symbol not in black_symbol_list] # 过滤黑名单
+_symbol_list = [symbol for symbol in _symbol_list if symbol.endswith('USDT')]  # 过滤usdt合约
+symbol_list = [symbol for symbol in _symbol_list if symbol not in black_symbol_list]  # 过滤黑名单
 
 # ===交易策略列表
 selected_coin_num = int(len(symbol_list) / 5)
 
-stratagy_list = [   
+stratagy_list = [
     {
         'hold_period': '1H',  # 持仓周期
-        'c_factor': 'c12', # 复合因子1号
-        'factors':[
+        'c_factor': 'c12',  # 复合因子1号
+        'factors': [
             {
-            'factor': 'adapt_boll_v3_slop_ma',   # 选币时参考的因子
-            'para': [12,72],  # 策略的参数
-            'if_reverse': True,
-            'weight':0.5,
+                'factor': 'adapt_boll_v3_slop_ma',   # 选币时参考的因子
+                'para': [12, 72],  # 策略的参数
+                'if_reverse': True,
+                'weight':0.5,
             },
             {
-            'factor': 'adapt_boll_v3_r2',   # 选币时参考的因子
-            'para': [12,72],  # 策略的参数
-            'if_reverse': True,
-            'weight':0.5,
+                'factor': 'adapt_boll_v3_r2',   # 选币时参考的因子
+                'para': [12, 72],  # 策略的参数
+                'if_reverse': True,
+                'weight':0.5,
             },
         ],
         'selected_coin_num': selected_coin_num,  # 做空或做多币的数量
-    },    
+    },
 ]
 
 """
@@ -126,7 +126,6 @@ stratagy_list = [
     ],
     'selected_coin_num': selected_coin_num,  # 做空或做多币的数量
 },"""
-
 
 
 # ===每次获取K线数据的数量
