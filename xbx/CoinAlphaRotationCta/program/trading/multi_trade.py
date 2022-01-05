@@ -224,7 +224,7 @@ class trade():
         _ = pd.DataFrame(_)
         _.columns = ['子类名称', '初始资金', '当前资金', '当前仓位', '已实现利润', '未实现利润', '浮动收益率（当前）', '已实现收益率']
         _ = ['\n' + y.to_string() + '\n' for x, y in _.iterrows()]
-        text += '# =====各策略类收益信息' + ''.join(_) + '\n\n'
+        # text += '# =====各策略类收益信息' + ''.join(_) + '\n\n'
         account_realize_return = str(round(100 * account_realize_profit / account_initial_cash, 2)) + '%'
         account_unrealize_return = str(round(100 * account_unrealize_profit / account_available_cash, 2)) + '%'
         account_info = pd.Series(
