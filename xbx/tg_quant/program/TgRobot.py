@@ -11,9 +11,10 @@ from telegram.ext import (CallbackQueryHandler, CommandHandler, Filters,
 
 from config.Config import *
 from manager.Utility import *
+from manager.Functions import get_asset
 
 # Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',level=logging.INFO)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
@@ -197,6 +198,7 @@ def do_kill(update, context):
             return
     update.message.reply_text(f'pid "{pid}" not find')
 
+
 @restricted
 def do_list_strategy(update, context):
     """
@@ -206,19 +208,30 @@ def do_list_strategy(update, context):
         cmd = 'pm2 list'
         __do_exec(cmd, update, context, is_script=False)
         return
-    else :
+    else:
         cmd = 'docker ps -a'
         __do_exec(cmd, update, context, is_script=False)
         return
+
 
 @restricted
 def do_list_account(update, context):
     """
     查询账户列表
     """
-    account_list = [value for value in json.loads(BINANCE_API_CONFIGS).keys()]
-    update.message.reply_text(str(account_list))
-                
+    items = json.loads(BINANCE_API_CONFIGS)
+    ttl = []
+    for key in items:
+        ttl.append(
+            {
+                'account_name': key,
+                'apiKey': items[key]["apiKey"],
+                'secret': items[key]["secret"],
+            }
+        )
+    message = get_asset(ttl)
+    update.message.reply_text(message)
+
 
 @restricted
 def do_start_strategy(update, context):
@@ -273,23 +286,23 @@ def do_clearPos(update, context):
     if len(context.args) == 2:
         account_name = context.args[0]
         percent = int(context.args[1])
-        exchange = exchange_config[account_name] 
+        exchange = exchange_config[account_name]
         if exchange:
-           clear_pos(exchange= exchange,percent=percent)
-           update.message.reply_text('对指定账户清仓完毕!')
+            clear_pos(exchange=exchange, percent=percent)
+            update.message.reply_text('对指定账户清仓完毕!')
         else:
-           update.message.reply_text('请输入正确的账户信息!')
-    elif len(context.args) == 1: 
+            update.message.reply_text('请输入正确的账户信息!')
+    elif len(context.args) == 1:
         account_name = context.args[0]
-        exchange = exchange_config[account_name] 
+        exchange = exchange_config[account_name]
         if exchange:
-           clear_pos(exchange= exchange)
-           update.message.reply_text('对指定账户清仓完毕!')
+            clear_pos(exchange=exchange)
+            update.message.reply_text('对指定账户清仓完毕!')
         else:
-           update.message.reply_text('请输入正确的账户信息!')
+            update.message.reply_text('请输入正确的账户信息!')
     else:
         for exchange in exchange_config.values():
-           clear_pos(exchange= exchange)
+            clear_pos(exchange=exchange)
         update.message.reply_text('所有账户清仓完毕!')
 
 
@@ -342,9 +355,10 @@ def start_tg_robot():
         dp.add_handler(MessageHandler(Filters.text, do_exec))
 
     dp.add_error_handler(error)
-    updater.start_polling(timeout =600)
+    updater.start_polling(timeout=600)
     logger.info('Telegram shell bot started.')
     updater.idle()
+
 
 if __name__ == '__main__':
     start_tg_robot()
