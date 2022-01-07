@@ -3,8 +3,8 @@ import ccxt
 import json
 
 
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", '5042431790:AAFNANyl7nebVY2S8yGF_RSLxrFI4Yudn1I')  # tg token
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", -612110663)  # 用于实盘操作告警
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", '')  # tg token
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", 0)  # 用于实盘操作告警
 ENABLED_USERS = os.environ.get("ENABLED_USERS", 5095949480)  # 合法用户id列表
 BINANCE_API_CONFIGS = os.environ.get("BINANCE_API_CONFIGS", '')  # 账户列表
 CTRL_MODE = os.environ.get("CTRL_MODE", 'PM2')

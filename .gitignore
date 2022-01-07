@@ -61,3 +61,4 @@ xbx/data_manager/data
 xbx/CoinAlphaRotationCta/.env
 xbx/CoinAlphaRotationCta/logs
 xbx/CoinAlphaRotationCta/pm2.yaml
+xbx/tg_quant/pm2.yaml
