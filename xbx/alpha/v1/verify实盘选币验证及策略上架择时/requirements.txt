@@ -1,0 +1,9 @@
+numpy==1.18.1
+requests==2.24.0
+pytz==2020.1
+Flask==1.1.2
+matplotlib==3.2.1
+ccxt==1.49.1
+TA_Lib==0.4.19
+pandas==1.1.5
+fracdiff==0.4.1

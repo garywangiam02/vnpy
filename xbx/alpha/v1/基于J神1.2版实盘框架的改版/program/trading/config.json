@@ -1,0 +1,116 @@
+{
+  "system": {
+    "debug": true,
+    "loop": false,
+    "cheat_seconds": 0,
+    "long_sleep_time": 20,
+    "web_query_kline_size": 1000
+  },
+  "robust": {
+    "sleep_seconds": 20,
+    "try_times": 10
+  },
+  "kline": {
+    "type": "swap",
+    "fetcher": {
+      "type": "s3",
+      "worker": {
+        "worker_count": 3
+      },
+      "kline_per_limit": 1000,
+      "config": {
+        "web": {
+          "fix_time": true
+        },
+        "s3": {
+          "region_name": "zxczxc",
+          "bucket_name": "czxczxc"
+        },
+        "db": {
+          "driver": "driver",
+          "host": "xxxx.rds.amazonaws.com",
+          "port": 3306,
+          "username": "asdasd",
+          "password": "dfgdfgdfg",
+          "db_name": "asdasdasd"
+        }
+      }
+    },
+    "pusher": {
+      "type": "s3",
+      "worker": {
+        "worker_count": 3
+      },
+      "config": {
+        "s3": {
+          "region_name": "zxczxc",
+          "bucket_name": "czxczxc"
+        },
+        "db": {
+          "driver": "driver",
+          "host": "xxxx.rds.amazonaws.com",
+          "port": 3306,
+          "username": "asdasd",
+          "password": "dfgdfgdfg",
+          "db_name": "asdasdasd",
+          "batch_save_buffer": 1000,
+          "conn_pool_size": 3
+        },
+        "web": {
+            "fix_time": true
+        }
+      }
+    }
+  },
+  "trade": {
+    "trade_market": "coin_alpha_v3",
+    "trade_ratio": 1
+  },
+  "strategy_list": [
+    {
+      "hold_period": "4H",
+      "c_factor": "lowback_dgq4",
+      "factors": [
+        {
+          "factor": "bias",
+          "if_reverse": false,
+          "para": 4,
+          "weight": 0.3
+        },
+        {
+          "factor": "cci",
+          "if_reverse": true,
+          "para": 24,
+          "weight": 0.2
+        },
+        {
+          "factor": "REG",
+          "if_reverse": false,
+          "para": 8,
+          "weight": 0.1
+        },
+        {
+          "factor": "lcsd",
+          "if_reverse": true,
+          "para": 24,
+          "weight": 0.1
+        },
+        {
+          "factor": "K",
+          "if_reverse": false,
+          "para": 8,
+          "weight": 0.1
+        }
+      ],
+      "selected_coin_num": 1
+    }
+  ],
+  "binance": {
+    "apiKey": "asdasd2zkT77vukd7OMogmyOa9czbbF4cZTO7iyWeoXCE3BKWUJ5eDNjyauCGYTGCRGx62asda",
+    "secret": "uJdJZGGnOXjiYh8OLZ9MEbWQtdLgcaJaN9NQkWNjPaKJjdlJETmO9Z57PKxS8hCQ"
+  },
+  "dingding": {
+    "robot_id": "asdasdas",
+    "secret": "erteryertyrt"
+  }
+}

@@ -1,0 +1,27 @@
+FROM python:3.7-buster
+RUN apt-get update
+RUN apt-get install -y libpq-dev python-dev
+RUN apt-get install -y python3-pip
+RUN pip install pandas==1.1.5
+RUN pip install numpy
+RUN pip install ccxt
+RUN pip install sklearn
+RUN pip install fracdiff
+RUN pip install pymysql
+RUN pip install sqlalchemy
+RUN pip install configparser
+RUN pip install pytz
+RUN pip install fire
+RUN pip install apscheduler
+RUN pip install boto3
+
+WORKDIR /opt/talib
+RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+RUN tar -xzvf ta-lib-0.4.0-src.tar.gz
+WORKDIR /opt/talib/ta-lib
+RUN ./configure --prefix=/usr
+RUN make
+RUN make install
+WORKDIR /opt/talib
+RUN pip install TA-Lib
+RUN pip install awslambdaric
