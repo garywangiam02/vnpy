@@ -29,7 +29,7 @@ trade_usdt = 0
 
 black_symbol_list = ['BTCSTUSDT']
 
-MAX_LEVERAGE = 3  # 最大杠杆倍数
+MAX_LEVERAGE = 2  # 最大杠杆倍数
 
 
 # ===获取交易所相关数据
@@ -39,7 +39,8 @@ _symbol_list = [symbol for symbol in _symbol_list if symbol.endswith('USDT')]  #
 symbol_list = [symbol for symbol in _symbol_list if symbol not in black_symbol_list]  # 过滤黑名单
 
 # ===交易策略列表
-selected_coin_num = int(len(symbol_list) / 5)
+# selected_coin_num = int(len(symbol_list) / 5)
+selected_coin_num = 3
 
 stratagy_list = [
     {

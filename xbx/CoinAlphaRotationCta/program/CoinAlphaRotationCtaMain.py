@@ -92,12 +92,13 @@ if __name__ == '__main__':
                          notify_sender=notify_sender, posInfer=False, proxies=False, timeout=1)
     select_coin_apaptbollv3()
     scheduler = BackgroundScheduler()
-    scheduler.add_job(reset_coin_config, 'cron', month='1-12', day='1',
-                      hour='9', minute='43', id='reset_coin_config')  # 每月1号执行一次
-    scheduler.add_job(select_coin_apaptbollv3, 'cron', month='1-12', day='1',
-                      hour='9', minute='45', id='select_coin_apaptbollv3')  # 每月1号执行一次
-    # scheduler.add_job(reset_coin_config,'cron',day_of_week = 'sun', hour='9',minute = '43',id = 'reset_coin_config') #每周运行一次
-    # scheduler.add_job(select_coin_apaptbollv3,'cron',day_of_week = 'sun', hour='9',minute = '45',id = 'select_coin_apaptbollv3') #每周运行一次
+    # scheduler.add_job(reset_coin_config, 'cron', month='1-12', day='1',
+    #                   hour='9', minute='43', id='reset_coin_config')  # 每月1号执行一次
+    # scheduler.add_job(select_coin_apaptbollv3, 'cron', month='1-12', day='1',
+    #                   hour='9', minute='45', id='select_coin_apaptbollv3')  # 每月1号执行一次
+    scheduler.add_job(reset_coin_config, 'cron', day_of_week='sun', hour='9', minute='43', id='reset_coin_config')  # 每周运行一次
+    scheduler.add_job(select_coin_apaptbollv3, 'cron', day_of_week='sun', hour='9',
+                      minute='45', id='select_coin_apaptbollv3')  # 每周运行一次
     #scheduler.add_job(reset_coin_config,'cron',minute = '*/3',id = 'reset_coin_config')
     #scheduler.add_job(select_coin_apaptbollv3,'cron',minute='*/6',id = 'select_coin_apaptbollv3')
 
