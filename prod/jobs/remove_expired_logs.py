@@ -44,7 +44,9 @@ if __name__ == "__main__":
     for dirpath, dirnames, filenames in os.walk(str(log_path)):
 
         for file_name in filenames:
-
+            if file_name == 'service.log':
+                file_path = os.path.abspath(os.path.join(dirpath, file_name))
+                os.remove(file_path)
             for k in delete_dates:
                 if k in file_name:
                     file_path = os.path.abspath(os.path.join(dirpath, file_name))
