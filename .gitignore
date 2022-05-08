@@ -43,7 +43,6 @@ zcodes
 .python-version
 app/mongo/data
 prod/gary*
-prod/binanc*
 *.vntrader*
 *.csv
 *.db
