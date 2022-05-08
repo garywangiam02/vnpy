@@ -1,6 +1,0 @@
-pymysql==1.0.2
-ccxt==1.47.49
-pandas==1.1.5
-icecream==2.1.1
-sqlalchemy==1.4.22
-numpy==1.19.5

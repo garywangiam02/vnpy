@@ -1,7 +1,0 @@
-{
-    "module_name": "select_compound_coin",
-    "method_name": "main",
-    "arg_map": {
-        "config_origin": {}
-    }
-}
