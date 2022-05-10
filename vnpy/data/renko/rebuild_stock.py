@@ -1,12 +1,17 @@
 # encoding: UTF-8
 
 # 股票砖图数据重构器
+# v2： 20200910
+# 支持使用1分钟数据，进行快速更新
+# 支持检查是否发生复权数据，如果发生复权，将现有renko数据全部清除，重新进行
 
 import os
 import copy
 import csv
 import signal
 import traceback
+import pandas as pd
+import numpy as np
 
 from queue import Queue
 from datetime import datetime, timedelta
@@ -19,8 +24,9 @@ from vnpy.data.mongo.mongo_data import MongoData
 from vnpy.data.renko.config import STOCK_RENKO_DB_NAME, HEIGHT_LIST
 from vnpy.component.cta_renko_bar import CtaRenkoBar
 from vnpy.trader.object import TickData, RenkoBarData, Exchange, Color
-from vnpy.trader.utility import get_trading_date, get_stock_exchange
-
+from vnpy.trader.utility import get_trading_date, get_stock_exchange, extract_vt_symbol
+from vnpy.data.stock.adjust_factor import get_all_adjust_factor
+from vnpy.data.common import stock_to_adj
 
 class StockRenkoRebuilder(FakeStrategy):
 
@@ -48,6 +54,12 @@ class StockRenkoRebuilder(FakeStrategy):
 
         self.cache_folder = setting.get('cache_folder', None)
 
+        self.bar_folder = setting.get('bar_folder', None)
+
+        self.bar_df_dict = {}
+        # 复权因子
+        self.adjust_factors = get_all_adjust_factor()
+
     def get_last_bar(self, renko_name):
         """
          通过mongo获取最新一个bar的数据
@@ -64,19 +76,24 @@ class StockRenkoRebuilder(FakeStrategy):
         last_renko_close_dt = None
         bar = None
         for d in qryData:
-            exchange = Exchange(d.get('exchange', 'LOCAL'))
-            bar = RenkoBarData(gateway_name='',
-                               symbol='',
-                               exchange=exchange,
-                               datetime=None)
             d.pop('_id', None)
-            d.pop('exchange', None)
+            symbol = d.get('symbol')
+            exchange = d.pop('exchange', None)
+            d.pop('vt_exchange', None)
+            if exchange == '' or exchange is None:
+                exchange = get_stock_exchange(symbol)
+                if exchange == "":
+                    exchange = Exchange.LOCAL.value
+
+            bar = RenkoBarData(gateway_name='',
+                               symbol=symbol,
+                               exchange=Exchange(exchange),
+                               datetime=None)
             d.update({'open_price': d.pop('open')})
             d.update({'close_price': d.pop('close')})
             d.update({'high_price': d.pop('high')})
             d.update({'low_price': d.pop('low')})
             bar.__dict__.update(d)
-            bar.exchange = Exchange(d.get('exchange'))
             bar.color = Color(d.get('color'))
 
             last_renko_open_dt = d.get('datetime', None)
@@ -86,8 +103,177 @@ class StockRenkoRebuilder(FakeStrategy):
 
         return bar, last_renko_close_dt
 
+    def load_bar_csv_to_df(self, vt_symbol, data_start_date='2016-01-01', data_end_date='2099-01-01'):
+        """
+        加载回测bar数据到DataFrame
+        1. 增加前复权/后复权
+        :param vt_symbol:
+        :param bar_file:
+        :param data_start_date:
+        :param data_end_date:
+        :return:
+        """
+
+        if not self.bar_folder:
+            self.write_error(f'参数没有配置bar_folder路径')
+            return False
+
+        if vt_symbol in self.bar_df_dict:
+            return True
+
+        symbol, exchange = extract_vt_symbol(vt_symbol)
+
+        bar_file = os.path.join(self.bar_folder, exchange.value, f'{symbol}_1m.csv')
+        self.write_log(u'loading {} from {}'.format(vt_symbol, bar_file))
+        if bar_file is None or not os.path.exists(bar_file):
+            self.write_error(u'回测时，{}对应的csv bar文件{}不存在'.format(vt_symbol, bar_file))
+            return False
+
+        try:
+            data_types = {
+                "datetime": str,
+                "open": float,
+                "high": float,
+                "low": float,
+                "close": float,
+                "open_interest": float,
+                "volume": float,
+                "instrument_id": str,
+                "symbol": str,
+                "total_turnover": float,
+                "limit_down": float,
+                "limit_up": float,
+                "trading_day": str,
+                "date": str,
+                "time": str
+            }
+            # 加载csv文件 =》 dateframe
+            symbol_df = pd.read_csv(bar_file, dtype=data_types)
+            # 转换时间，str =》 datetime
+            symbol_df["datetime"] = pd.to_datetime(symbol_df["datetime"], format="%Y-%m-%d %H:%M:%S")
+            # 设置时间为索引
+            symbol_df = symbol_df.set_index("datetime")
+
+            start_date = datetime.strptime(data_start_date, "%Y-%m-%d")
+            end_date = datetime.strptime(data_end_date, "%Y-%m-%d")
+            # 裁剪数据
+            symbol_df = symbol_df.loc[start_date:end_date]
+
+            # 复权转换
+            adj_list = self.adjust_factors.get(vt_symbol, [])
+            # 按照结束日期，裁剪复权记录
+            adj_list = [row for row in adj_list if
+                        row['dividOperateDate'].replace('-', '') <= data_end_date.replace('-', '')]
+
+            if adj_list:
+                self.write_log(f'需要对{vt_symbol}进行前复权处理')
+                for row in adj_list:
+                    row.update({'dividOperateDate': row.get('dividOperateDate') + ' 09:31:00'})
+                # list -> dataframe, 转换复权日期格式
+                adj_data = pd.DataFrame(adj_list)
+                adj_data["dividOperateDate"] = pd.to_datetime(adj_data["dividOperateDate"], format="%Y-%m-%d %H:%M:%S")
+                adj_data = adj_data.set_index("dividOperateDate")
+                # 调用转换方法，对open,high,low,close, volume进行复权, fore, 前复权， 其他，后复权
+                symbol_df = stock_to_adj(symbol_df, adj_data, adj_type='fore')
+
+            # 添加到待合并dataframe dict中
+            self.bar_df_dict.update({vt_symbol: symbol_df})
+
+        except Exception as ex:
+            self.write_error(u'回测时读取{} csv文件{}失败:{}'.format(vt_symbol, bar_file, ex))
+            self.write_log(u'回测时读取{} csv文件{}失败:{}'.format(vt_symbol, bar_file, ex))
+            return False
+
+        return True
+
+    def start_with_bar(self, symbol, price_tick, height, start_date='2016-01-01'):
+        """启动renko重建工作，使用分钟bar"""
+        self.symbol = symbol.upper()
+        self.price_tick = price_tick
+
+        if not isinstance(height, list):
+            height = [height]
+
+        exchange_value = get_stock_exchange(self.symbol)
+        vt_symbol = f'{self.symbol}.{exchange_value}'
+
+        # 复权转换
+        adj_list = self.adjust_factors.get(vt_symbol, [])
+
+        db_last_close_dt = None
+        for h in height:
+            bar_name = '{}_{}'.format(self.symbol, h)
+            bar_setting = {'name': bar_name,
+                           'symbol': self.symbol,
+                           'price_tick': price_tick}
+            if isinstance(h, str) and 'K' in h:
+                kilo_height = int(h.replace('K', ''))
+                renko_height = price_tick * kilo_height
+                bar_setting.update({'kilo_height': kilo_height})
+            else:
+                renko_height = price_tick * int(h)
+                bar_setting.update({'renko_height': price_tick * int(h)})
+
+            self.renko_bars[bar_name] = CtaRenkoBar(None, cb_on_bar=self.on_renko_bar, setting=bar_setting)
+            bar, bar_last_close_dt = self.get_last_bar(bar_name)
+
+            # 检查是否要清除
+            if bar_last_close_dt:
+                if len(adj_list) > 0:
+                    last_adj_date = adj_list[-1]['dividOperateDate']
+                    if (db_last_close_dt - timedelta(days=7)).strftime('%Y%m%d') > last_adj_date.replace('-', ''):
+                        self.write_log(f'移除现有的renko bar')
+                        self.remove_renkos(symbol=symbol, height=h)
+                        continue
+
+                if db_last_close_dt:
+                    db_last_close_dt = min(bar_last_close_dt, db_last_close_dt)
+                else:
+                    db_last_close_dt = bar_last_close_dt
+
+            if bar:
+                self.write_log(u'重新添加最后一根{} Bar:{}'.format(bar_name, bar.__dict__))
+                # 只添加bar，不触发onbar事件
+                self.renko_bars[bar_name].add_bar(bar, is_init=True)
+                self.renko_bars[bar_name].update_renko_height(bar.close_price, renko_height)
+
+        # 创建tick更新线程
+        self.thread = Thread(target=self.run, daemon=True)
+        self.active = True
+        self.thread.start()
+
+        # 读取bar_data, 转换为tick，灌输进去
+        # 开始时间~结束时间
+        start_day = datetime.strptime(start_date, '%Y-%m-%d')
+        if isinstance(db_last_close_dt, datetime):
+            if start_day < db_last_close_dt:
+                start_day = db_last_close_dt
+        cur_trading_date = get_trading_date(datetime.now())
+
+        if self.load_bar_csv_to_df(vt_symbol=vt_symbol,
+                                   data_start_date=start_day.strftime('%Y-%m-%d')):
+
+            df = self.bar_df_dict.get(vt_symbol, None)
+            if df is not None:
+                for idx, bar_data in df.iterrows():
+                    if 'close' in bar_data:
+                        price = float(bar_data.get('close', 0))
+                    else:
+                        price = float(bar_data.get('close_price', 0))
+
+                    volume = int(bar_data.get('volume', 0))
+                    self.queue.put(item=(idx, price, volume))
+
+        self.write_log(u'加载完毕')
+        self.loaded = True
+
+        while (self.active):
+            sleep(1)
+
+        self.exit()
+
     def start(self, symbol, price_tick, height, start_date='2016-01-01', end_date='2099-01-01', refill=False):
-        """启动重建工作"""
+        """启动renko重建工作，使用tick"""
         self.symbol = symbol.upper()
         self.price_tick = price_tick
         if not isinstance(height, list):
@@ -277,6 +463,15 @@ class StockRenkoRebuilder(FakeStrategy):
                                     upsert=True,
                                     replace=False)
 
+    def remove_renkos(self, symbol, height):
+        """移除砖图"""
+        if not isinstance(height, list):
+            height = [height]
+
+        for renko_height in height:
+            self.write_log(f'清除砖图{symbol}_{renko_height}')
+            self.mongo_client.db_delete(db_name=self.db_name, col_name=f'{symbol}_{renko_height}')
+
     def check_index(self):
         """检查索引是否存在，不存在就建立新索引"""
         for col_name in self.renko_bars.keys():
@@ -311,7 +506,7 @@ class StockRenkoRebuilder(FakeStrategy):
 
     def export(self, symbol, height=10, start_date='2016-01-01', end_date='2099-01-01', csv_file=None):
         """ 导出csv"""
-        qry = {'tradingDay': {'$gt': start_date, '$lt': end_date}}
+        qry = {'trading_day': {'$gt': start_date, '$lt': end_date}}
         results = self.mongo_client.db_query_by_sort(db_name=self.db_name,
                                                      col_name='_'.join([symbol, str(height)]), filter_dict=qry,
                                                      sort_name='$natural', sort_type=1)

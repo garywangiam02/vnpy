@@ -47,7 +47,7 @@ test_setting['end_date'] = '20211130'
 
 # 测试资金相关, 资金最大仓位， 期初资金
 test_setting['percent_limit'] = 20
-test_setting['init_capital'] = 500000
+test_setting['init_capital'] = 1000000
 
 # 测试日志相关， Ture，开始详细日志， False, 只记录简单日志
 test_setting['debug'] = False
@@ -98,7 +98,7 @@ para_minute_len = 15
 
 symbol_info = symbol_datas.get(symbol)
 underlying_symbol = symbol_info.get('underlying_symbol')
-symbol_info.update({'bar_file': VNPY_ROOT + f'/bar_data/tdx/{symbol}_20170101_1m.csv'})
+symbol_info.update({'bar_file': VNPY_ROOT + f'/bar_data/tdx/{symbol}_20160101_1m.csv'})
 symbol_datas.update({symbol: symbol_info})
 
 # 更新测试名称
@@ -116,7 +116,7 @@ strategy_setting = {
         "setting": {
             "backtesting": True,
             "class_name": "Strategy8MacdEmaGroup",
-            "max_invest_percent": 50,
+            "max_invest_percent": 10,
             "bar_names": [bar_name]
         }
     }

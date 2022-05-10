@@ -42,13 +42,13 @@ test_setting = {}
 test_setting['name'] = 'channel_break_{}'.format(datetime.now().strftime('%m%d_%H%M'))
 
 # 测试时间段, 从开始日期计算，过了init_days天，才全部激活交易
-test_setting['start_date'] = '20180101'
+test_setting['start_date'] = '20210601'
 test_setting['init_days'] = 1
 test_setting['end_date'] = '20211201'
 
 # 测试资金相关, 资金最大仓位， 期初资金
-test_setting['percent_limit'] = 40
-test_setting['init_capital'] = 50000
+test_setting['percent_limit'] = 20
+test_setting['init_capital'] = 1000000
 
 
 
@@ -97,7 +97,7 @@ symbol = 'RB99'
 
 symbol_info = symbol_datas.get(symbol)
 underlying_symbol = symbol_info.get('underlying_symbol')
-symbol_info.update({'bar_file': VNPY_ROOT + f'/bar_data/tdx/{symbol}_20170101_1m.csv'})
+symbol_info.update({'bar_file': VNPY_ROOT + f'/bar_data/tdx/{symbol}_20160101_1m.csv'})
 symbol_datas.update({symbol: symbol_info})
 
 # 更新测试名称
@@ -110,7 +110,7 @@ vt_symbol = symbol + '.' + symbol_info.get('exchange')
 # 回测的K线
 kline_name = 'M30'
 para_windows = 20
-para_ma_len = 20
+para_ma_len = 21
 
 # 回测的策略配置
 strategy_setting = {
@@ -121,7 +121,7 @@ strategy_setting = {
         "setting": {
             "backtesting": True,
             "single_lost_rate":0.02,
-            "max_invest_rate": 0.4,
+            "max_invest_rate": 0.1,
             "para_windows":para_windows,
             "para_ma_len":para_ma_len,
             "kline_name":kline_name,

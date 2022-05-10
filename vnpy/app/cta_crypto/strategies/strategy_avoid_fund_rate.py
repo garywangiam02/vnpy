@@ -19,6 +19,18 @@ from vnpy.component.cta_grid_trade import CtaGridTrade, uuid, CtaGrid
 from vnpy.component.cta_line_bar import get_cta_bar_type, TickData, BarData, CtaMinuteBar, CtaHourBar, CtaDayBar
 from vnpy.data.binance.binance_future_data import BinanceFutureData
 
+# {
+#     "AOVID_FUND_FEE": {
+#         "class_name": "StrategyAvoidFundFee",
+#         "vt_symbol": "",
+#         "setting": {
+#             "activate_market": false,
+#             "abcktesting": false,
+#             "x_minute": 1,
+#             "avoid_rate": 0.0005
+#         }
+#     }
+# }
 
 ########################################################################
 class StrategyAvoidFundFee(CtaFutureTemplate):

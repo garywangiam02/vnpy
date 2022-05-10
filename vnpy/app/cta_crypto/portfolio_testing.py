@@ -9,6 +9,10 @@ from __future__ import division
 
 import sys
 import os
+VNPY_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..','..' ))
+if VNPY_ROOT not in sys.path:
+    sys.path.append(VNPY_ROOT)
+    print(f'append {VNPY_ROOT} into sys.path ...')
 import gc
 import pandas as pd
 import traceback

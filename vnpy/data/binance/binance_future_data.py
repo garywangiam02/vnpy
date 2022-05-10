@@ -1,10 +1,17 @@
 # 币安合约数据
 
 import os
-import json
 import sys
+# 将repostory的目录，作为根目录，添加到系统环境中。
+VNPY_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__),'..','..','..', ))
+if VNPY_ROOT not in sys.path:
+    sys.path.append(VNPY_ROOT)
+    print(f'append {VNPY_ROOT} into sys.path')
+
+import json
 from typing import Dict, List, Any
 from datetime import datetime, timedelta
+from time import sleep
 from vnpy.api.rest.rest_client import RestClient
 from vnpy.trader.object import (
     Interval,
@@ -14,12 +21,6 @@ from vnpy.trader.object import (
     HistoryRequest
 )
 from vnpy.trader.utility import save_json, load_json
-
-# 将repostory的目录，作为根目录，添加到系统环境中。
-VNPY_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__),'..','..','..', ))
-if VNPY_ROOT not in sys.path:
-    sys.path.append(VNPY_ROOT)
-    print(f'append {VNPY_ROOT} into sys.path')
 
 BINANCE_INTERVALS = ["1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1M"]
 
@@ -157,7 +158,47 @@ class BinanceFutureData(RestClient):
                 start_dt = end + TIMEDELTA_MAP[req.interval] * req.interval_num
                 start_time = int(datetime.timestamp(start_dt))
 
+            # 等待0.1秒
+            sleep(0.1)
+
         return bars
+
+    def get_fund_rate(self, symbol=""):
+
+        params = {}
+        if symbol:
+            params.update({"symbol": symbol})
+
+        # Get response from server
+        resp = self.request(
+            "GET",
+            "/fapi/v1/premiumIndex",
+            data={},
+            params=params
+        )
+
+        # Break if request failed with other status code
+        if resp.status_code // 100 != 2:
+            msg = f"获取资费失败，状态码：{resp.status_code}，信息：{resp.text}"
+            self.write_log(msg)
+            return {} if symbol else []
+        else:
+            datas = resp.json()
+            if not datas:
+                msg = f"获取资费为空"
+                self.write_log(msg)
+                return {} if symbol else []
+
+            if isinstance(datas, list):
+                for d in datas:
+                    for k in list(d.keys()):
+                        if k in ['nextFundingTime', 'time']:
+                            d.update({k: datetime.fromtimestamp(d.get(k) / 1000).strftime('%Y-%m-%d %H:%M:%S')})
+            elif isinstance(datas, dict):
+                for k in list(datas.keys()):
+                    if k in ['nextFundingTime', 'time']:
+                        datas.update({k: datetime.fromtimestamp(datas.get(k) / 1000).strftime('%Y-%m-%d %H:%M:%S')})
+            return datas
 
     def export_to(self, bars, file_name):
         """导出bar到文件"""
@@ -208,7 +249,7 @@ class BinanceFutureData(RestClient):
                     "name": name,
                     "price_tick": pricetick,
                     "symbol_size": 20,
-                    "margin_rate": round(float(d['requiredMarginPercent']) / 100, 5),
+                    "margin_rate" : round(float(d['requiredMarginPercent']) / 100,5),
                     "min_volume": min_volume,
                     "product": Product.FUTURES.value,
                     "commission_rate": 0.005
@@ -225,6 +266,7 @@ class BinanceFutureData(RestClient):
         contracts = load_json(f, auto_save=False)
         return contracts
 
+
     def save_contracts(self):
         """保存合约配置"""
         contracts = self.get_contracts()
@@ -234,10 +276,9 @@ class BinanceFutureData(RestClient):
             save_json(f, contracts)
             self.write_log(f'保存合约配置=>{f}')
 
-
 if __name__== '__main__':
 
-    start_dt = datetime.now() - timedelta(days=1000)
+    start_dt = datetime.now() - timedelta(days=10)
 
     req = HistoryRequest(
         symbol='BTCUSDT',
@@ -248,6 +289,7 @@ if __name__== '__main__':
         interval_num=1,
     )
     Data = BinanceFutureData()
-    Bars = Data.get_bars(req=req)
-    csvPath = VNPY_ROOT.replace('\\',r'/') + "/bar_data/binance/{}.csv".format(req.symbol)
+    # Bars = Data.get_bars(req=req)
+    Bars = Data.get_fund_rate(symbol='BTCUSDT')
+    csvPath = VNPY_ROOT.replace('\\',r'/') + "/bar_data/binance/fund_rate/{}.csv".format(req.symbol)
     Data.export_to(Bars,csvPath)

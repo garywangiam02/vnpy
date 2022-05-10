@@ -18,13 +18,14 @@ from vnpy.trader.utility import get_csv_last_dt, append_data
 
 # 获取币安合约交易的所有期货合约
 future_data = BinanceFutureData()
+contracts = future_data.save_contracts()
 contracts = BinanceFutureData.load_contracts()
 if len(contracts) == 0:
     future_data.save_contracts()
     contracts = BinanceFutureData.load_contracts()
 
 # 开始下载日期
-start_date = '20170101'
+start_date = '20190101'
 
 if __name__ == "__main__":
 
@@ -62,6 +63,20 @@ if __name__ == "__main__":
 
     # 逐一合约进行下载
     for vt_symbol, contract_info in contracts.items():
+        # if vt_symbol not in [
+        #     'BTCUSDT.BINANCE',
+        #     'LUNAUSDT.BINANCE',
+        #     'GMTUSDT.BINANCE',
+        #     'SOLUSDT.BINANCE',
+        #     'DOTUSDT.BINANCE',
+        #     'ETHUSDT.BINANCE',
+        #     'BNBUSDT.BINANCE',
+        #     'BCHUSDT.BINANCE',
+        #     'DOTUSDT.BINANCE',
+        #     'LTCUSDT.BINANCE',
+        #     'XRPUSDT.BINANCE',
+        # ]:
+        #     continue
         symbol = contract_info.get('symbol')
 
         bar_file_path = os.path.abspath(os.path.join(

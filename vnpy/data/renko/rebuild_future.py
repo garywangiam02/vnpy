@@ -53,6 +53,21 @@ class FutureRenkoRebuilder(FakeStrategy):
         self.future_contracts = get_future_contracts()
         self.cache_folder = setting.get('cache_folder', None)
 
+    def get_exchange(self, symbol):
+        underlying_symbol = get_underlying_symbol(symbol)
+
+        contract_info = self.future_contracts.get(underlying_symbol, None)
+
+        if contract_info is None:
+            return Exchange.LOCAL
+
+        exchange = contract_info.get('exchange')
+
+        if exchange == '':
+            return Exchange.LOCAL
+
+        return Exchange(exchange)
+
     def get_last_bar(self, renko_name):
         """
          通过mongo获取最新一个bar的数据
@@ -69,10 +84,20 @@ class FutureRenkoRebuilder(FakeStrategy):
         last_renko_close_dt = None
         bar = None
         for d in qryData:
-            bar = RenkoBarData(gateway_name='tdx', exchange=Exchange.LOCAL, datetime=None, symbol=self.symbol)
+            exchange = d.pop('exchange', '')
+            if len(exchange) == 0 and self.exchange:
+                exchange = self.exchange
+            else:
+                exchange = Exchange(exchange)
+            bar = RenkoBarData(gateway_name='tdx', exchange=exchange, datetime=None, symbol=self.symbol)
             d.pop('_id', None)
+            d.pop('vt_symbol', None)
+            if 'open' in d and 'open_price' not in d:
+                d.update({'open_price': d.pop('open')})
+                d.update({'close_price': d.pop('close')})
+                d.update({'high_price': d.pop('high')})
+                d.update({'low_price': d.pop('low')})
             bar.__dict__.update(d)
-            bar.exchange = Exchange(d.get('exchange'))
             bar.color = Color(d.get('color'))
             last_renko_open_dt = d.get('datetime', None)
             if last_renko_open_dt is not None:
@@ -81,7 +106,7 @@ class FutureRenkoRebuilder(FakeStrategy):
 
         return bar, last_renko_close_dt
 
-    def start(self, symbol, price_tick, height, start_date='2018-01-01', end_date='2099-01-01', refill=False):
+    def start(self, symbol, price_tick, height, start_date='2016-01-01', end_date='2099-01-01', refill=False):
         """启动重建工作"""
         self.underlying_symbol = get_underlying_symbol(symbol).upper()
         self.symbol = symbol.upper()
@@ -330,8 +355,14 @@ class FutureRenkoRebuilder(FakeStrategy):
 
     def export(self, symbol, height=10, start_date='2016-01-01', end_date='2099-01-01', csv_file=None):
         """ 导出csv"""
+        self.underlying_symbol = get_underlying_symbol(symbol).upper()
+        info = self.future_contracts.get(self.underlying_symbol, None)
+        if info:
+            self.exchange = Exchange(info.get('exchange'))
+        else:
+            self.exchange = Exchange.LOCAL
 
-        qry = {'tradingDay': {'$gt': start_date, '$lt': end_date}}
+        qry = {'trading_day': {'$gt': start_date, '$lt': end_date}}
         results = self.mongo_client.db_query_by_sort(db_name=self.db_name, col_name='_'.join([symbol, str(height)]),
                                                      filter_dict=qry, sort_name='$natural', sort_type=1)
 
@@ -343,23 +374,42 @@ class FutureRenkoRebuilder(FakeStrategy):
                                                                  end_date.replace('-', ''))
             f = open(csv_file, 'w', encoding=u'utf-8', newline="")
             dw = None
+            last_bar_dt = None
+            last_bar_counts = 0
             for data in results:
+                # 排除mongo得缺省_id
                 data.pop('_id', None)
-                data['index'] = data.pop('datetime', None)
-                data['trading_date'] = data.pop('trading_day', None)
-
+                # 排除vnpy 1.x中不使用得字段
+                data.pop('dayVolume', None)
+                data.pop('tradeStatus', None)
+                data.pop('traded', None)
+                exchange = data.get('exchange', '')
+                if len(exchange) == 0 and self.exchange:
+                    data.update({'exchange': self.exchange.value})
+                    data.update({'vt_symbol': f'{symbol}.{self.exchange.value}'})
                 # 排除集合竞价导致的bar
-                bar_start_dt = data.get('index')
+                bar_start_dt = data.get('datetime')
                 if bar_start_dt is None or not isinstance(bar_start_dt, datetime):
                     continue
                 bar_end_dt = bar_start_dt + timedelta(seconds=int(data.get('seconds', 0)))
                 if bar_start_dt.hour in [8, 20] and bar_end_dt.hour in [8, 20]:
                     continue
+                # 处理跳空得多根renkobar
+                if last_bar_dt == bar_start_dt:
+                    # 相同开始时间得bar，增加1毫秒
+                    last_bar_counts += 1
+                    bar_start_dt = bar_start_dt + timedelta(microseconds=last_bar_counts)
 
+                else:
+                    last_bar_dt = bar_start_dt
+                    last_bar_counts = 0
+
+                # 转换为字符串，支持毫秒
+                data.update({'datetime': bar_start_dt.strftime('%Y-%m-%d %H:%M:%S.%f')})
                 if header is None and dw is None:
                     header = sorted(data.keys())
-                    header.remove('index')
-                    header.insert(0, 'index')
+                    header.remove('datetime')
+                    header.insert(0, 'datetime')
                     dw = csv.DictWriter(f, fieldnames=header, dialect='excel', extrasaction='ignore')
                     dw.writeheader()
                 if dw:
@@ -368,27 +418,25 @@ class FutureRenkoRebuilder(FakeStrategy):
             f.close()
             self.write_log(u'导出成功,文件:{}'.format(csv_file))
         else:
-            self.write_error(u'导出失败')
+            self.write_error(f'{symbol}导出renko失败')
 
     def export_refill_scripts(self):
-        contracts = self.mongo_client.db_query(db_name='Contract', col_name='mi_symbols', filter_dict={},
-                                               sort_key='short_symbol')
+        """生成脚本，可复制保存成 prod/jobs/export_all_future_renkos.sh """
+        contracts = get_future_contracts()
 
-        for contract in contracts:
-            short_symbol = contract.get('short_symbol')
-            min_diff = contract.get('priceTick')
-            command = 'python refill_renko.py {} {}99 {}'.format(self.setting.get('host', 'localhost'),
-                                                                 short_symbol.upper(), min_diff)
+        for underlying_symbol, contract in contracts.items():
+            price_tick = contract.get('price_tick')
+            command = 'python refill_future_renko.py {} {}99 {}'.format(self.setting.get('host', 'localhost'),
+                                                                        underlying_symbol.upper(), price_tick)
             self.write_log(command)
 
     def export_all(self, start_date='2016-01-01', end_date='2099-01-01', csv_folder=None):
-        contracts = self.mongo_client.db_query(db_name='Contract', col_name='mi_symbols', filter_dict={},
-                                               sort_key='short_symbol')
+        contracts = get_future_contracts()
 
-        for contract in contracts:
-            short_symbol = contract.get('short_symbol')
-            symbol = '{}99'.format(short_symbol)
-            self.write_log(u'导出:{}合约'.format(short_symbol))
+        for underlying_symbol, contract in contracts.items():
+
+            symbol = '{}99'.format(underlying_symbol)
+            self.write_log(u'导出:{}合约'.format(underlying_symbol))
             for height in HEIGHT_LIST:
                 if csv_folder:
                     csv_file = os.path.abspath(os.path.join(csv_folder, 'future_renko_{}_{}_{}_{}.csv'

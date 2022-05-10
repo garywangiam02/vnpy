@@ -29,18 +29,18 @@ if __name__ == '__main__':
 
             "M30":
                 {
-                    "data_file": "/root/workspace/vnpy/log/channel_break_1203_1839_RB99/channel_break_RB99_M30_M30.csv",
+                    "data_file": "log/channel_break_1203_1948_RB99/channel_break_RB99_M30_M30.csv",
                     "main_indicators": [
                         "pre_high", "pre_low","ma21"
                     ], # pre_high,pre_low,ma21,atr
                     "sub_indicators": [
                         "atr"
                     ],  # "dif",'dea',, 'macd'
-                    "trade_file": "/root/workspace/vnpy/log/channel_break_1203_1839_RB99/channel_break_RB99_M30_trade.csv",
-                    "dist_file": "/root/workspace/vnpy/log/channel_break_1203_1839_RB99/channel_break_RB99_M30_dist.csv",
-                    "bi_file": "/root/workspace/vnpy/log/channel_break_1203_1839_RB99.SSE/channel_break_RB99_M30_M30_bi.csv",
-                    "duan_file": "/root/workspace/vnpy/log/channel_break_1203_1839_RB99/channel_break_RB99_M30_M30_duan.csv",
-                    "bi_zs_file": "/root/workspace/vnpy/log/channel_break_1203_1839_RB99/channel_break_RB99_M30_M30_zs.csv",
+                    "trade_file": "log/channel_break_1203_1948_RB99/channel_break_RB99_M30_trade.csv",
+                    "dist_file": "log/channel_break_1203_1948_RB99/channel_break_RB99_M30_dist.csv",
+                    "bi_file": "log/channel_break_1203_1948_RB99.SSE/channel_break_RB99_M30_M30_bi.csv",
+                    "duan_file": "log/channel_break_1203_1948_RB99/channel_break_RB99_M30_M30_duan.csv",
+                    "bi_zs_file": "log/channel_break_1203_1948_RB99/channel_break_RB99_M30_M30_zs.csv",
                     # "dist_include_list": ["short_break","top_div","top_div2",
                     #                       "long_break", "rev","break_fail","break_fail2","break_fail3"
                     #                       ]

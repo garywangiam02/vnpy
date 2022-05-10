@@ -8,7 +8,7 @@ from vnpy.data.mongo.mongo_data import MongoData
 from vnpy.trader.constant import Exchange
 from vnpy.trader.object import TickData, RenkoBarData
 from vnpy.trader.utility import get_trading_date, extract_vt_symbol
-from vnpy.data.renko.config import FUTURE_RENKO_DB_NAME
+from vnpy.data.renko.config import FUTURE_RENKO_DB_NAME, STOCK_RENKO_DB_NAME
 
 
 class RenkoSource(object):
@@ -36,7 +36,7 @@ class RenkoSource(object):
 
     def write_error(self, content):
         if self.strategy:
-            self.strategy.writeCtaError(content)
+            self.strategy.write_error(content)
         else:
             print(content, file=sys.stderr)
 

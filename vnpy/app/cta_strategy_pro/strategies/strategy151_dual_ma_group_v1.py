@@ -17,7 +17,7 @@ from vnpy.component.cta_position import CtaPosition
 from vnpy.component.cta_grid_trade import CtaGridTrade, uuid, CtaGrid
 from vnpy.component.cta_line_bar import get_cta_bar_type, TickData, BarData, CtaMinuteBar, CtaHourBar, CtaDayBar
 from vnpy.component.cta_utility import check_duan_not_rt, check_bi_not_rt, check_chan_xt, DI_BEICHI_SIGNALS, \
-    DING_BEICHI_SIGNALS,duan_bi_is_end
+    DING_BEICHI_SIGNALS, duan_bi_is_end
 from vnpy.data.tdx.tdx_future_data import TdxFutureData
 from vnpy.trader.utility import extract_vt_symbol, get_full_symbol, get_trading_date
 
@@ -34,16 +34,17 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
         持仓期间，如果触碰x根bar的前低，离场
         离场后，
     """
-    author = u'李来佳'
+    author = u'大佳'
     # 输入参数 [ 快均线长度_慢均线长度_K线周期]
     bar_names = ['f60_s250_M15', 'f120_s500_M15', 'f250_s1000_M15']
 
-    x_minute = 1 # 使用缠论的K线的时间周期
+    x_minute = 1  # 使用缠论的K线的时间周期
 
+    export_csv = []  # 1、如果为空白，回测时缺省都输出k线csv；2、不为空白时，作为输出的过滤条件
     # 策略在外部设置的参数
     parameters = ["max_invest_pos", "max_invest_margin", "max_invest_rate",
-                  "bar_names","x_minute",
-                  "backtesting"]
+                  "bar_names", "x_minute",
+                  "backtesting", "export_csv"]
 
     # ----------------------------------------------------------------------
     def __init__(self, cta_engine,
@@ -81,7 +82,6 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
 
             # 创建信号K线
             for bar_name in self.bar_names:
-
                 kline_setting = {}
                 para_fast_len, para_slow_len, name = bar_name.split('_')
                 kline_class, interval_num = get_cta_bar_type(name)
@@ -94,7 +94,7 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
                 kline_setting['para_atr1_len'] = max(20, para_fast_len)  # ATR均值
                 kline_setting['para_ma1_len'] = para_fast_len  # 第1条均线
                 kline_setting['para_ma2_len'] = para_slow_len  # 第2条均线
-                kline_setting['para_active_chanlun'] = True    # 激活缠论
+                kline_setting['para_active_chanlun'] = True  # 激活缠论
                 kline_setting['price_tick'] = self.price_tick
                 kline_setting['underly_symbol'] = get_underlying_symbol(vt_symbol.split('.')[0]).upper()
                 self.write_log(f'创建K线:{kline_setting}')
@@ -113,6 +113,7 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
             kline_setting['para_active_chanlun'] = True
 
             self.kline_x = CtaMinuteBar(self, self.on_bar_k, kline_setting)
+            self.kline_x.max_hold_bars = 1000
             self.klines.update({self.kline_x.name: self.kline_x})
             self.write_log(f'添加{self.vt_symbol} 缠论k线:{kline_setting}')
 
@@ -132,6 +133,9 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
 
         # 输出信号K线
         for kline_name in self.bar_names:
+            if len(self.export_csv) > 0 and kline_name not in self.export_csv:
+                continue
+
             kline = self.klines.get(kline_name)
             kline.export_filename = os.path.abspath(
                 os.path.join(self.cta_engine.get_logs_path(),
@@ -151,6 +155,7 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
                 {'name': f'ma{kline.para_ma2_len}', 'source': 'line_bar', 'attr': 'line_ma2', 'type_': 'list'}
 
             ]
+
             # 输出分笔csv文件
             kline.export_bi_filename = os.path.abspath(
                 os.path.join(self.cta_engine.get_logs_path(),
@@ -167,6 +172,8 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
                              u'{}_{}_duan.csv'.format(self.strategy_name, kline.name)))
 
         # 输出缠论下单K线
+        if len(self.export_csv) > 0 and self.kline_x.name not in self.export_csv:
+            return
         self.kline_x.export_filename = os.path.abspath(
             os.path.join(self.cta_engine.get_logs_path(),
                          u'{}_{}.csv'.format(self.strategy_name, self.kline_x.name)))
@@ -411,6 +418,15 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
         # 显示各指标信息
         self.display_tns()
 
+    def get_last_bi(self, kline, cross_price):
+        """获取最后一笔，其高低点穿过cross_price"""
+        max_bis = min(10, len(kline.bi_list))
+        for i in range(1, max_bis):
+            if float(kline.bi_list[-i].high) > cross_price > float(kline.bi_list[-i].low):
+                return kline.bi_list[-i]
+
+        return None
+
     def tns_open_logic(self):
         """
         开仓逻辑
@@ -427,19 +443,35 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
                 signal = self.policy.signals.get(kline_name, {})
                 long_break = signal.get('long_break', None)
                 relong_break = signal.get('relong_break', None)
+                long_stop = signal.get('long_stop', None)
 
                 # 首次金叉时, 做多突破线=前面15根bar的最高价1.03倍或者加1ATR
                 if kline.ma12_count == 1 and signal.get('last_signal', '') != 'long':
-                    long_break = max(kline.high_array[-int(kline.para_ma1_len/2):])
+                    # 计算突破价格
+                    long_break = max(kline.high_array[-int(kline.para_ma1_len / 2):])
                     long_break = min(long_break * 1.03,
                                      long_break + 2 * kline.cur_atr1,
                                      long_break + 2 * kline.bi_height_ma())
+
                     signal.update({"long_break": long_break})
-                    signal.update({'last_signal': 'long', 'last_signal_time': self.cur_datetime})
+
+                    # 计算止损价格, 获取最后一笔，其穿过金叉价格
+                    last_bi = self.get_last_bi(kline=kline, cross_price=kline.ma12_cross)
+                    if last_bi:
+                        long_stop = float(last_bi.low)
+                    else:
+                        long_stop = kline.ma12_cross - 2 * kline.bi_height_ma()
+
+                    # 添加信号
+                    signal.update(
+                        {'last_signal': 'long', 'last_signal_time': self.cur_datetime, 'long_stop': long_stop})
+
+                    # 剔除做空信号
                     signal.pop("short_break", None)
                     signal.pop("relong_break", None)
                     signal.pop("reshort_break", None)
-                    signal.pop("exit_bi_start",None)
+                    signal.pop("exit_bi_start", None)
+
                     self.policy.signals.update({kline_name: signal})
                     self.policy.save()
                     dist_record = OrderedDict()
@@ -455,65 +487,90 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
                 if kline.ma12_count < kline.para_ma1_len \
                         and long_break \
                         and long_break + self.kline_x.bi_height_ma() > kline.cur_price >= long_break:
-                    long_break = None
-                    signal.pop('long_break', None)
-                    if kline_name in self.policy.short_klines:
-                        self.write_log(u'从做空信号队列中移除:{}'.format(kline_name))
-                        self.policy.short_klines.remove(kline_name)
-                    if kline_name not in self.policy.long_klines:
-                        self.write_log(u'从做多信号队列中增加:{}'.format(kline_name))
-                        self.policy.long_klines.append(kline_name)
-                        dist_record = OrderedDict()
-                        dist_record['datetime'] = self.cur_datetime
-                        dist_record['symbol'] = self.idx_symbol
-                        dist_record['price'] = self.cur_99_price
-                        dist_record['operation'] = 'long_break'
-                        dist_record['volume'] = 0
-                        self.save_dist(dist_record)
-                        continue
+
+                    # 突破进场，只在相邻两个交叉点超过1个笔高度时，才激活
+                    if len(kline.ma12_cross_list) > 2:
+                        cross_diff = abs(
+                            kline.ma12_cross_list[-1].get('cross') - kline.ma12_cross_list[-2].get('cross'))
+                        if cross_diff > kline.bi_height_ma():
+                            long_break = None
+                            signal.pop('long_break', None)
+                            signal.update({'long_stop': float(kline.cur_bi.low)})
+                            if kline_name in self.policy.short_klines:
+                                self.write_log(u'从做空信号队列中移除:{}'.format(kline_name))
+                                self.policy.short_klines.remove(kline_name)
+                                signal.pop("short_stop", None)
+                            if kline_name not in self.policy.long_klines:
+                                self.write_log(u'从做多信号队列中增加:{}'.format(kline_name))
+                                self.policy.long_klines.append(kline_name)
+
+                                self.policy.save()
+
+                                dist_record = OrderedDict()
+                                dist_record['datetime'] = self.cur_datetime
+                                dist_record['symbol'] = self.idx_symbol
+                                dist_record['price'] = self.cur_99_price
+                                dist_record['operation'] = 'long_break'
+                                dist_record['volume'] = 0
+                                self.save_dist(dist_record)
+                                continue
 
                 # 根据缠论K线，如果出现方向做空线段，且出现底分型，可以进场
                 # 如果是顶部回落导致的离场，在当前一笔，不能接多
                 if (long_break or (relong_break and kline.cur_bi.start != signal.get('exit_bi_start'))) \
-                        and check_duan_not_rt(self.kline_x, Direction.SHORT) \
-                        and len(self.kline_x.cur_duan.bi_list) >= 3 \
-                        and kline.cur_bi.direction == -1 \
-                        and kline.cur_duan.direction == -1 \
-                        and duan_bi_is_end(kline.cur_duan, Direction.SHORT):
-                    if long_break:
-                        long_break = None
-                        signal.pop('long_break', None)
-                    if relong_break:
-                        relong_break = None
-                        signal.pop('relong_break', None)
-                        signal.pop('exit_bi_start', None)
+                        and self.kline_x.cur_bi.direction == 1 \
+                        and long_stop \
+                        and kline.cur_price > long_stop \
+                        and kline.cur_bi.direction == 1:
 
-                    if kline_name in self.policy.short_klines:
-                        self.write_log(u'从做空信号队列中移除:{}'.format(kline_name))
-                        self.policy.short_klines.remove(kline_name)
-                    if kline_name not in self.policy.long_klines:
-                        self.write_log(u'从做多信号队列中增加:{}'.format(kline_name))
-                        self.policy.long_klines.append(kline_name)
-                        signal.update({'entry_bi_start': kline.cur_bi.start})
-                        dist_record = OrderedDict()
-                        dist_record['datetime'] = self.cur_datetime
-                        dist_record['symbol'] = self.idx_symbol
-                        dist_record['price'] = self.cur_99_price
-                        dist_record['operation'] = 'long_entry'
-                        dist_record['volume'] = 0
-                        self.save_dist(dist_record)
-                        self.policy.save()
-                        continue
+                    # 进一步判断，只有在完全突破后反抽，或者，距离金叉点很近得时候才进场
+                    if kline.cur_bi.low > kline.bi_list[-4].high or \
+                            (kline.cur_bi.low < kline.ma12_cross + 0.18 * kline.bi_height_ma() \
+                        and kline.cur_bi.start >= signal.get('last_signal_time').strftime("%Y-%m-%d %H:%M:%S")):
+                        # 如果是突破进场，完成后，就移除突破进场价格
+                        if long_break:
+                            long_break = None
+                            signal.pop('long_break', None)
 
+                        # 如果是重新进场，完成后，就移除重新进场信号
+                        if relong_break:
+                            relong_break = None
+                            signal.pop('relong_break', None)
+                            signal.pop('exit_bi_start', None)
+
+                        if kline_name in self.policy.short_klines:
+                            self.write_log(u'从做空信号队列中移除:{}'.format(kline_name))
+                            self.policy.short_klines.remove(kline_name)
+                            signal.pop("short_stop", None)
+                        if kline_name not in self.policy.long_klines:
+                            self.write_log(u'从做多信号队列中增加:{}'.format(kline_name))
+                            self.policy.long_klines.append(kline_name)
+                            signal.update({'entry_bi_start': kline.cur_bi.start,
+                                           'long_stop': max(long_stop, kline.cur_price - 2 * kline.bi_height_ma())})
+                            self.policy.save()
+                            dist_record = OrderedDict()
+                            dist_record['datetime'] = self.cur_datetime
+                            dist_record['symbol'] = self.idx_symbol
+                            dist_record['price'] = self.cur_99_price
+                            dist_record['operation'] = 'long_entry'
+                            dist_record['volume'] = 0
+                            self.save_dist(dist_record)
+                            self.policy.save()
+                            continue
+
+                # 重新进场
                 if relong_break and kline.cur_price >= relong_break:
                     relong_break = None
                     signal.pop('relong_break', None)
                     if kline_name in self.policy.short_klines:
                         self.write_log(u'从做空信号队列中移除:{}'.format(kline_name))
                         self.policy.short_klines.remove(kline_name)
+                        signal.pop("short_stop", None)
                     if kline_name not in self.policy.long_klines:
                         self.write_log(u'从做多信号队列中增加:{}'.format(kline_name))
                         self.policy.long_klines.append(kline_name)
+                        signal.update({'long_stop': max(long_stop, kline.cur_price - 2 * kline.bi_height_ma())})
+
                         self.policy.save()
                         dist_record = OrderedDict()
                         dist_record['datetime'] = self.cur_datetime
@@ -529,15 +586,30 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
                 signal = self.policy.signals.get(kline_name, {})
                 short_break = signal.get('short_break', None)
                 reshort_break = signal.get('reshort_break', None)
+                short_stop = signal.get('short_stop', None)
 
                 # 首次死叉时, 做空突破线=前面15根bar的最低价0.997倍或者减1ATR
                 if kline.ma12_count == -1 and signal.get('last_signal', '') != 'short':
-                    short_break = min(kline.low_array[-int(kline.para_ma1_len/2):])
+
+                    # 计算突破点
+                    short_break = min(kline.low_array[-int(kline.para_ma1_len / 2):])
                     short_break = max(short_break * 0.97,
                                       short_break - 2 * kline.cur_atr1,
                                       short_break - 2 * float(kline.bi_height_ma()))
+
                     signal.update({"short_break": short_break})
-                    signal.update({'last_signal': 'short', 'last_signal_time': self.cur_datetime})
+                    # 计算止损价格, 获取最后一笔，其穿过死叉价格
+                    last_bi = self.get_last_bi(kline=kline, cross_price=kline.ma12_cross)
+                    if last_bi:
+                        short_stop = float(last_bi.high)
+                    else:
+                        short_stop = kline.ma12_cross + 2 * kline.bi_height_ma()
+
+                    # 添加信号
+                    signal.update(
+                        {'last_signal': 'short', 'last_signal_time': self.cur_datetime, 'short_stop': short_stop})
+
+                    # 移除做多信号
                     signal.pop("long_break", None)
                     signal.pop("relong_break", None)
                     signal.pop("reshort_break", None)
@@ -558,55 +630,68 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
                 if kline.ma12_count > -kline.para_ma1_len \
                         and short_break \
                         and short_break - self.kline_x.bi_height_ma() < kline.cur_price <= short_break:
-                    short_break = None
-                    signal.pop('short_break', None)
+                    if len(kline.ma12_cross_list) > 2:
+                        cross_diff = abs(
+                            kline.ma12_cross_list[-1].get('cross') - kline.ma12_cross_list[-2].get('cross'))
+                        if cross_diff > kline.bi_height_ma():
+                            short_break = None
+                            signal.pop('short_break', None)
 
-                    if kline_name in self.policy.long_klines:
-                        self.write_log(u'从做多信号队列中移除:{}'.format(kline_name))
-                        self.policy.long_klines.remove(kline_name)
-                    if kline_name not in self.policy.short_klines:
-                        self.write_log(u'从做空信号队列中增加:{}'.format(kline_name))
-                        self.policy.short_klines.append(kline_name)
-                        dist_record = OrderedDict()
-                        dist_record['datetime'] = self.cur_datetime
-                        dist_record['symbol'] = self.idx_symbol
-                        dist_record['price'] = self.cur_99_price
-                        dist_record['operation'] = 'short_break'
-                        dist_record['volume'] = 0
-                        self.save_dist(dist_record)
-                        self.policy.save()
-                        continue
+                            if kline_name in self.policy.long_klines:
+                                self.write_log(u'从做多信号队列中移除:{}'.format(kline_name))
+                                self.policy.long_klines.remove(kline_name)
+                                signal.pop('long_stop', None)
+                            if kline_name not in self.policy.short_klines:
+                                self.write_log(u'从做空信号队列中增加:{}'.format(kline_name))
+                                self.policy.short_klines.append(kline_name)
+                                signal.update({'short_stop': min(short_stop, kline.cur_price + 2 * kline.bi_height_ma())})
+                                self.policy.save()
+                                dist_record = OrderedDict()
+                                dist_record['datetime'] = self.cur_datetime
+                                dist_record['symbol'] = self.idx_symbol
+                                dist_record['price'] = self.cur_99_price
+                                dist_record['operation'] = 'short_break'
+                                dist_record['volume'] = 0
+                                self.save_dist(dist_record)
+                                self.policy.save()
+                                continue
 
                 # 存在开空突破时，如果kline_x出现做多线段，或者 kline出现做多分笔
-                if (short_break or (reshort_break and kline.cur_bi.start != signal.get('exit_bi_start')))\
-                        and check_duan_not_rt(self.kline_x, Direction.LONG) \
-                        and len(self.kline_x.cur_duan.bi_list) >= 3 \
-                        and kline.cur_bi.direction == 1 \
-                        and kline.cur_duan.direction == 1 \
-                        and duan_bi_is_end(kline.cur_duan, Direction.LONG):
-                    if short_break:
-                        short_break = None
-                        signal.pop('short_break', None)
-                    if reshort_break:
-                        reshort_break = None
-                        signal.pop('reshort_break', None)
+                if (short_break or (reshort_break and kline.cur_bi.start != signal.get('exit_bi_start'))) \
+                        and self.kline_x.cur_bi.direction == -1 \
+                        and short_stop \
+                        and kline.cur_price < short_stop \
+                        and kline.cur_bi.direction == -1:
+                    # 进一步判断，只有在完全突破后反抽，或者，距离死叉点很近得时候才进场
+                    if kline.cur_bi.high < kline.bi_list[-4].low or \
+                            (kline.cur_bi.high > kline.ma12_cross - 0.18 * kline.bi_height_ma() \
+                        and kline.cur_bi.start >= signal.get('last_signal_time').strftime("%Y-%m-%d %H:%M:%S")):
+                        if short_break:
+                            short_break = None
+                            signal.pop('short_break', None)
+                        if reshort_break:
+                            reshort_break = None
+                            signal.pop('reshort_break', None)
 
-                    if kline_name in self.policy.long_klines:
-                        self.write_log(u'从做多信号队列中移除:{}'.format(kline_name))
-                        self.policy.long_klines.remove(kline_name)
-                    if kline_name not in self.policy.short_klines:
-                        self.write_log(u'从做空信号队列中增加:{}'.format(kline_name))
-                        self.policy.short_klines.append(kline_name)
-                        signal.update({ 'entry_bi_start': kline.cur_bi.start})
-                        dist_record = OrderedDict()
-                        dist_record['datetime'] = self.cur_datetime
-                        dist_record['symbol'] = self.idx_symbol
-                        dist_record['price'] = self.cur_99_price
-                        dist_record['operation'] = 'short_entry'
-                        dist_record['volume'] = 0
-                        self.save_dist(dist_record)
-                        self.policy.save()
-                        continue
+                        if kline_name in self.policy.long_klines:
+                            self.write_log(u'从做多信号队列中移除:{}'.format(kline_name))
+                            self.policy.long_klines.remove(kline_name)
+                            signal.pop('long_stop', None)
+                        if kline_name not in self.policy.short_klines:
+                            self.write_log(u'从做空信号队列中增加:{}'.format(kline_name))
+                            self.policy.short_klines.append(kline_name)
+                            signal.update({'entry_bi_start': kline.cur_bi.start})
+                            signal.update({'short_stop': min(short_stop, kline.cur_price + 2 * kline.bi_height_ma())})
+                            self.policy.save()
+                            dist_record = OrderedDict()
+                            dist_record['datetime'] = self.cur_datetime
+                            dist_record['symbol'] = self.idx_symbol
+                            dist_record['price'] = self.cur_99_price
+                            dist_record['operation'] = 'short_entry'
+                            dist_record['volume'] = 0
+                            self.save_dist(dist_record)
+                            self.policy.save()
+                            continue
 
                 if reshort_break and kline.cur_price <= reshort_break:
                     reshort_break = None
@@ -614,9 +699,12 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
                     if kline_name in self.policy.long_klines:
                         self.write_log(u'从做多信号队列中移除:{}'.format(kline_name))
                         self.policy.long_klines.remove(kline_name)
+                        signal.pop('long_stop', None)
                     if kline_name not in self.policy.short_klines:
                         self.write_log(u'从做空信号队列中增加:{}'.format(kline_name))
                         self.policy.short_klines.append(kline_name)
+                        signal.update({'short_stop': min(short_stop, kline.cur_price + kline.bi_height_ma())})
+                        self.policy.save()
                         dist_record = OrderedDict()
                         dist_record['datetime'] = self.cur_datetime
                         dist_record['symbol'] = self.idx_symbol
@@ -649,25 +737,42 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
                         ding_beichi_price = float(kline.cur_duan.high)
                         self.write_log(f'添加顶背驰信号，价格:{ding_beichi_price}')
                         signal.update({'ding_beichi_price': ding_beichi_price})
+                        if float(kline.cur_bi.high) - signal.get('long_stop', kline.cur_price) > kline.bi_height_ma():
+                            signal.update({'long_stop': float(kline.cur_bi.low)})
 
                     elif ding_beichi_price:
                         self.write_log(f'移除{ding_beichi_price}的顶背驰信号')
-                        signal.pop('ding_beichi_price',None)
+                        signal.pop('ding_beichi_price', None)
+
+                # 较长一笔的提损
+                if kline.cur_duan.end == kline.cur_bi.end \
+                    and check_bi_not_rt(kline, Direction.LONG) \
+                    and kline.cur_bi.height > 2 * kline.bi_height_ma() \
+                    and float(kline.cur_bi.high) - signal.get('long_stop', kline.cur_price) > kline.bi_height_ma():
+                    signal.update({'long_stop': float(kline.cur_bi.high) - kline.bi_height_ma()})
 
                 # 多头离场逻辑1： 下坡最近若干根bar的前低
-                long_exit = min(kline.low_array[- int(kline.para_ma1_len/3):])
+                pre_len = min(int(kline.para_ma1_len / 3), 10)
+                long_exit = min(kline.low_array[-pre_len:])
                 if ding_beichi_price \
-                        and kline.cur_price <= long_exit < ding_beichi_price\
+                        and kline.cur_price <= long_exit < ding_beichi_price \
                         and kline.cur_bi.start != signal.get('entry_bi_start'):
                     self.write_log(u'{}多头,{} 周期离场'.format(self.vt_symbol, kline_name))
                     self.policy.long_klines.remove(kline_name)
 
                     # 设置前10根bar的最高，作为重新入场
                     if kline.ma12_count > 0:
-                        signal.update({"relong_break": max(kline.high_array[-int(kline.para_ma1_len/2):]),
+                        signal.update({"relong_break": max(kline.high_array[-pre_len:]),
                                        "relong_count": 12,
                                        "exit_bi_start": kline.cur_bi.start})
                         self.policy.signals.update({kline_name: signal})
+
+                long_stop = signal.get('long_stop', None)
+                if long_stop and kline.cur_price < long_stop \
+                        and kline.cur_price < kline.close_array[-1] < kline.line_ma2[-1]\
+                        and kline_name in self.policy.long_klines:
+                    self.write_log(u'{}多头,{} 周期破止损:{}离场'.format(self.vt_symbol, kline_name, long_stop))
+                    self.policy.long_klines.remove(kline_name)
 
                 continue
 
@@ -684,25 +789,42 @@ class Strategy151DualMaGroupV1(CtaProFutureTemplate):
                         self.write_log(f'添加底背驰信号，价格:{di_beichi_price}')
                         signal.update({'di_beichi_price': di_beichi_price})
 
+                        if signal.get('short_stop', kline.cur_price) - float(kline.cur_bi.low) > kline.bi_height_ma():
+                            signal.update({'short_stop': float(kline.cur_bi.high)})
+
                     elif di_beichi_price:
                         self.write_log(f'移除{di_beichi_price}的顶背驰信号')
                         signal.pop('di_beichi_price', None)
 
+                if kline.cur_duan.end == kline.cur_bi.end \
+                    and check_bi_not_rt(kline, Direction.SHORT) \
+                    and kline.cur_bi.height > 2 * kline.bi_height_ma() \
+                    and signal.get('short_stop', kline.cur_price) - float(kline.cur_bi.low) > kline.bi_height_ma():
+                    signal.update({'short_stop': float(kline.cur_bi.low) + kline.bi_height_ma()})
+
                 # 空头离场逻辑： 突破若干根bar的前高
-                short_exit = max(kline.high_array[-int(kline.para_ma1_len/3):])
+                pre_len = min(int(kline.para_ma1_len / 3), 10)
+                short_exit = max(kline.high_array[-pre_len:])
                 if di_beichi_price \
                         and kline.cur_price >= short_exit > di_beichi_price \
                         and kline.cur_bi.start != signal.get('entry_bi_start'):
                     self.write_log(u'{}空头, {} 周期离场'.format(self.vt_symbol, kline_name))
                     self.policy.short_klines.remove(kline_name)
 
-                if kline.ma12_count < 0:
-                    signal = self.policy.signals.get(kline_name, None)
-                    signal.update({"reshort_break": min(kline.low_array[-int(kline.para_ma1_len/2):]),
-                                   "reshort_count": 12,
-                                   "exit_bi_start": kline.cur_bi.start})
+                    if kline.ma12_count < 0:
+                        signal = self.policy.signals.get(kline_name, None)
+                        signal.update({"reshort_break": min(kline.low_array[-pre_len:]),
+                                       "reshort_count": 12,
+                                       "exit_bi_start": kline.cur_bi.start})
 
-                    self.policy.signals.update({kline_name: signal})
+                        self.policy.signals.update({kline_name: signal})
+
+                short_stop = signal.get('short_stop', None)
+                if short_stop and kline.cur_price > kline.close_array[-1] > short_stop \
+                        and kline.cur_price > kline.close_array[-1] > kline.line_ma2[-1]\
+                        and kline_name in self.policy.short_klines:
+                    self.write_log(u'{}空头,{} 周期破止损:{}离场'.format(self.vt_symbol, kline_name, short_stop))
+                    self.policy.short_klines.remove(kline_name)
 
     def on_bar_k(self, *args, **kwargs):
         """

@@ -1,0 +1,7 @@
+{
+    "account_id": "binance01",
+    "strategy_group": "cta_crypto",
+    "snapshot2file": true,
+    "trade_2_wx": true,
+    "compare_ps": false
+}

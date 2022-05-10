@@ -37,6 +37,7 @@ extra
 bar_data
 tick_data
 log
+tests
 zcodes
 .vscode
 .DS_Store

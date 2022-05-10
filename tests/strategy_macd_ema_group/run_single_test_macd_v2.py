@@ -41,13 +41,13 @@ test_setting = {}
 test_setting['name'] = 'S_macd_ema_{}'.format(datetime.now().strftime('%m%d_%H%M'))
 
 # 测试时间段, 从开始日期计算，过了init_days天，才全部激活交易
-test_setting['start_date'] = '20190101'
+test_setting['start_date'] = '20160101'
 test_setting['init_days'] = 30
 test_setting['end_date'] = '20200330'
 
 # 测试资金相关, 资金最大仓位， 期初资金
 test_setting['percent_limit'] = 20
-test_setting['init_capital'] = 1000000
+test_setting['init_capital'] = 2000000
 
 # 测试日志相关， Ture，开始详细日志， False, 只记录简单日志
 test_setting['debug'] = False
@@ -96,7 +96,7 @@ para_minute_lens = [3,15]
 
 symbol_info = symbol_datas.get(symbol)
 underlying_symbol = symbol_info.get('underlying_symbol')
-symbol_info.update({'bar_file': VNPY_ROOT + f'/bar_data/tdx/{symbol}_20170101_1m.csv'})
+symbol_info.update({'bar_file': VNPY_ROOT + f'/bar_data/tdx/{symbol}_20160101_1m.csv'})
 symbol_datas.update({symbol: symbol_info})
 
 # 更新测试名称

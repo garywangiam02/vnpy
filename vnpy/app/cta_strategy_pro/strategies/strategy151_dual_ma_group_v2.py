@@ -52,10 +52,11 @@ class Strategy151DualMaGroupV2(CtaProFutureTemplate):
 
     x_minute = 1  # 使用缠论的K线的时间周期
 
+    export_csv = []  # 1、如果为空白，回测时缺省都输出k线csv；2、不为空白时，作为输出的过滤条件
     # 策略在外部设置的参数
     parameters = ["max_invest_pos", "max_invest_margin", "max_invest_rate",
-                  "bar_names", "x_minute",
-                  "backtesting"]
+                  "bar_names","x_minute",
+                  "backtesting","export_csv"]
 
     # ----------------------------------------------------------------------
     def __init__(self, cta_engine,
@@ -143,6 +144,9 @@ class Strategy151DualMaGroupV2(CtaProFutureTemplate):
 
         # 输出信号K线
         for kline_name in self.bar_names:
+            if len(self.export_csv) > 0 and kline_name not in self.export_csv:
+                continue
+
             kline = self.klines.get(kline_name)
             kline.export_filename = os.path.abspath(
                 os.path.join(self.cta_engine.get_logs_path(),
@@ -178,6 +182,8 @@ class Strategy151DualMaGroupV2(CtaProFutureTemplate):
                              u'{}_{}_duan.csv'.format(self.strategy_name, kline.name)))
 
         # 输出缠论下单K线
+        if len(self.export_csv) > 0 and self.kline_x.name not in self.export_csv:
+            return
         self.kline_x.export_filename = os.path.abspath(
             os.path.join(self.cta_engine.get_logs_path(),
                          u'{}_{}.csv'.format(self.strategy_name, self.kline_x.name)))
