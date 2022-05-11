@@ -93,6 +93,7 @@ class MainEngine:
             gateway = gateway_class(self.event_engine)
             gateway_name = gateway.gateway_name
 
+        self.write_log(f'添加{gateway_name}网关')
         self.gateways[gateway_name] = gateway
 
         # Add gateway supported exchanges into engine
@@ -152,7 +153,11 @@ class MainEngine:
         """
         gateway = self.gateways.get(gateway_name, None)
         if not gateway:
-            self.write_error(f"找不到底层接口：{gateway_name}")
+            # 增加兼容得写法，如果没有输入gateway_name，但当前只有一个gateway时，就使用当前gateway
+            if len(self.gateways.keys()) == 1:
+                return self.gateways.values()[0]
+
+            self.write_error(f"在{self.gateways.keys()}中找不到底层接口：{gateway_name}")
         return gateway
 
     def get_engine(self, engine_name: str) -> "BaseEngine":

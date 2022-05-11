@@ -1,16 +1,66 @@
 {
-    "Future_grid_tick_BTCUSDT": {
+    "Grid_BNBUSDT": {
+        "class_name": "StrategyGridTradeFuture_v2",
+        "vt_symbol": "BNBUSDT.BINANCE",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "activate_market": false,
+            "max_invest_rate": 0.02,
+            "grid_height_percent": 7.5,
+            "grid_lots": 8,
+            "x_minute": 15
+        }
+    },
+    "Grid_BTCUSDT": {
         "class_name": "StrategyGridTradeFuture_v2",
         "vt_symbol": "BTCUSDT.BINANCE",
         "auto_init": true,
         "auto_start": true,
         "setting": {
             "activate_market": false,
-            "backtesting": false,
-            "max_invest_rate": 0.1,
-            "grid_height_percent": 3.5,
+            "max_invest_rate": 0.02,
+            "grid_height_percent": 7.5,
             "grid_lots": 8,
             "x_minute": 15
+        }
+    },
+    "Grid_ETHUSDT": {
+        "class_name": "StrategyGridTradeFuture_v2",
+        "vt_symbol": "ETHUSDT.BINANCE",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "activate_market": false,
+            "max_invest_rate": 0.02,
+            "grid_height_percent": 7.5,
+            "grid_lots": 8,
+            "x_minute": 15
+        }
+    },
+    "Grid_SOLUSDT": {
+        "class_name": "StrategyGridTradeFuture_v2",
+        "vt_symbol": "SOLUSDT.BINANCE",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "activate_market": false,
+            "max_invest_rate": 0.02,
+            "grid_height_percent": 7.5,
+            "grid_lots": 8,
+            "x_minute": 15
+        }
+    },
+    "S144_BNBUSDT": {
+        "class_name": "StrategyMacdChannelGroup_v1_6",
+        "vt_symbol": "BNBUSDT.BINANCE",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "max_invest_rate": 0.01,
+            "bar_names": [
+                "f12_s26_n9_M30"
+            ]
         }
     },
     "S144_BTCUSDT": {
@@ -19,10 +69,45 @@
         "auto_init": true,
         "auto_start": true,
         "setting": {
-            "backtesting": false,
-            "max_invest_rate": 0.1,
+            "max_invest_rate": 0.01,
             "bar_names": [
-                "f12_s26_n6_M30"
+                "f12_s26_n9_M120"
+            ]
+        }
+    },
+    "S144_ETHUSDT": {
+        "class_name": "StrategyMacdChannelGroup_v1_6",
+        "vt_symbol": "ETHUSDT.BINANCE",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "max_invest_rate": 0.01,
+            "bar_names": [
+                "f12_s26_n9_M120"
+            ]
+        }
+    },
+    "S144_SOLUSDT": {
+        "class_name": "StrategyMacdChannelGroup_v1_6",
+        "vt_symbol": "SOLUSDT.BINANCE",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "max_invest_rate": 0.01,
+            "bar_names": [
+                "f12_s26_n9_M120"
+            ]
+        }
+    },
+    "S144_XRPUSDT": {
+        "class_name": "StrategyMacdChannelGroup_v1_6",
+        "vt_symbol": "XRPUSDT.BINANCE",
+        "auto_init": true,
+        "auto_start": true,
+        "setting": {
+            "max_invest_rate": 0.01,
+            "bar_names": [
+                "f12_s26_n9_M120"
             ]
         }
     }

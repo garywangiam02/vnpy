@@ -1,0 +1,21 @@
+{
+    "create_time": "",
+    "save_time": "2022-05-11 08:00:39",
+    "grids": {
+        "SOLUSDT.BINANCE": {
+            "update_time": "2022-05-10 21:04:50",
+            "high_price": 73.97,
+            "grid_height": 5.55,
+            "open_prices": [
+                62.87,
+                57.32,
+                51.77,
+                46.22,
+                40.67,
+                35.12,
+                29.57,
+                24.02
+            ]
+        }
+    }
+}

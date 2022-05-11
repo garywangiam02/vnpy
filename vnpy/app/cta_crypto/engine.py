@@ -480,7 +480,7 @@ class CtaEngine(BaseEngine):
 
         # Check if sending order successful
         if not vt_orderid:
-            vt_orderids
+            return vt_orderids
 
         vt_orderids.append(vt_orderid)
 

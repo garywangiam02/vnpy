@@ -1536,6 +1536,9 @@ class GridKline(QtWidgets.QWidget):
     # 配置项3：sub_indicators， 副图指标
     #       指标变量必须在data_file文件中存在字段
 
+    # 配置项目: trade_symbol_filters,交易记录过滤，缺省[]时不执行过滤
+    # 根据交易记录中得symbol字段内容进行过滤，满足过滤条件得交易记录才使用。
+
     # 配置项4：trade_list_file，开平仓交易记录
     #       每条记录包含开仓，平仓，收益信息
     #       回测时，每个策略实例，都产生trade_list.csv文件
@@ -1563,9 +1566,12 @@ class GridKline(QtWidgets.QWidget):
 
     # 配置项12: bi_file / duan_file / bi_zs_file / duan_zs_file，支持缠论的画线
 
-    def __init__(self, parent=None, kline_settings={}, title='', relocate=True):
+    def __init__(self, parent=None, kline_settings={}, title='', relocate=True,screen_file=""):
         self.parent = parent
         super(GridKline, self).__init__(parent)
+        self.width = 1920
+        self.height = 1080
+
         # widget的标题
         if title:
             self.setWindowTitle(title)
@@ -1590,6 +1596,9 @@ class GridKline(QtWidgets.QWidget):
         self.setLayout(self.grid_layout)
 
         self.relocate = relocate
+
+        self.screen_file = screen_file
+
         self.init_ui()
 
     def init_ui(self):
@@ -1598,13 +1607,14 @@ class GridKline(QtWidgets.QWidget):
         id = 1
 
         for kline_name, kline_setting in self.kline_settings.items():
-            canvas = getattr(self, f'canvas_{id}')
+            canvas = getattr(self, f'canvas_{id}',None)
             if id > 8:
                 print(f'最多支持8个K线同时展现', file=sys.stderr)
                 continue
-
-            # 创建K线图表
-            canvas = KLineWidget(display_vol=False, display_sub=True)
+            if canvas is None:
+                # 创建K线图表
+                canvas = KLineWidget(display_vol=False, display_sub=True)
+                setattr(self, f'canvas_{id}', canvas)
             canvas.show()
             # K线标题
             canvas.KLtitle.setText(f'{kline_name}', size='18pt')
@@ -1644,10 +1654,15 @@ class GridKline(QtWidgets.QWidget):
                 if len(kline_names) == 0:
                     break
             row += 1
-
-        self.show()
+        if len(self.screen_file) == 0:
+            self.show()
 
         self.load_multi_kline()
+
+        if len(self.screen_file) > 0:
+            p = self.grab()
+            p.save(self.screen_file,'png')
+            self.close()
 
     # ----------------------------------------------------------------------
     def load_multi_kline(self):
@@ -1678,6 +1693,8 @@ class GridKline(QtWidgets.QWidget):
                                 main_indicators=kline_setting.get('main_indicators', []),
                                 sub_indicators=kline_setting.get('sub_indicators', [])
                                 )
+                # 交易记录过滤
+                trade_symbol_filters = kline_setting.get('trade_symbol_filters', [])
 
                 # 加载开、平仓的交易信号（一般是回测系统产生的）
                 trade_list_file = kline_setting.get('trade_list_file', None)
@@ -1685,6 +1702,11 @@ class GridKline(QtWidgets.QWidget):
                     print(f'loading {trade_list_file}')
                     t1 = datetime.now()
                     df_trade_list = pd.read_csv(trade_list_file)
+
+                    # 如果需要过滤记录，过滤vt_symbol这个字段
+                    if len(trade_symbol_filters) > 0 and 'vt_symbol' in df_trade_list.columns:
+                        df_trade_list = df_trade_list[df_trade_list.vt_symbol.str.contains("|".join(trade_symbol_filters)).any(level=0)]
+
                     self.kline_dict[kline_name].add_signals(df_trade_list)
                     t2 = datetime.now()
                     s = (t2-t1).microseconds
@@ -1696,6 +1718,10 @@ class GridKline(QtWidgets.QWidget):
                     print(f'loading {trade_file}')
                     t1 = datetime.now()
                     df_trade = pd.read_csv(trade_file)
+                    # 如果需要过滤记录，过滤vt_symbol这个字段
+                    if len(trade_symbol_filters)> 0 and 'vt_symbol' in df_trade.columns:
+                        df_trade = df_trade[df_trade.vt_symbol.str.contains("|".join(trade_symbol_filters)).any(level=0)]
+
                     t2 = datetime.now()
                     s = (t2 - t1).microseconds
                     print(f'finished load in {s} ms')
