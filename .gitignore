@@ -44,6 +44,7 @@ zcodes
 .python-version
 app/mongo/data
 prod/gary*
+prod/binance*
 *.vntrader*
 *.csv
 *.db
